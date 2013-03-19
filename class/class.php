@@ -103,12 +103,12 @@ class Aldea
 			$edificioSlot[]=array($reg['edificio'],$reg['slot']);
 		}
 
-		for ($i=1;$i<count($edificioSlot);$i++)
+		for ($i=0;$i<count($edificioSlot);$i++)
 		{
 			for ($j=0;$j<count($edificioSlot);$j++)
 			{
 
-				if ($edificioSlot[$j][1]==$i)
+				if ($edificioSlot[$j][1]==$i+1)
 				{
 					$slot=$edificioSlot[$j][0];
 				}
@@ -117,8 +117,8 @@ class Aldea
 			if ($slot===0)
 			{
 				?>
-				<a href="construir.php?s=<?php echo $i;?>">				
-					<img src="img/elementos/aldea/solar.png" id="solar<?php echo $i; ?>" class="slot" title="Construir edificio">
+				<a href="construir.php?s=<?php echo $i+1;?>">				
+					<img src="img/elementos/aldea/solar.png" id="solar<?php echo $i+1; ?>" class="slot" title="Construir edificio">
 				</a>
 				<?php
 			}
