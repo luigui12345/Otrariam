@@ -1,0 +1,19 @@
+ERROR TROPAS NO CONSUMEN CEREAL SI HABIAN VUELTO DE UN ATRACO Y NO HAS ACTUALIZADO
+NO SE ACTUALIZAN LAS COSAS QUE PASAN EN LA CIUDAD QUE ATACAS
+
+Cambiar en el mercado recurso_busca a campo enum.
+Poder quitar ofertas del mercado.
+Poder cancelar ataques.
+Usar prepare y '?' para evitar inyecciones sql.
+Usar URLs amigables
+Poner nombres en ingles a las variables y funciones prograsivamente.
+Crear los datos de todas las unidades.
+Crear los datos de mas niveles de edificios.
+Hacer un ranking que tenga en cuenta poblacion, tropas, ataques y edificios.
+Ponerle un diseño aceptable.
+Poder crear Alianzas
+Poder hacer Atracos
+Poder Fundar aldeas
+Poder Conquistar aldeas
+
+update mapa set nombre = "Terreno Libre", tipo = "Naturaleza", habitantes = 0, madera = 0, barro=0,hierro=0,cereal=0,last_update=0,capital='',id_usuario =0

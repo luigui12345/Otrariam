@@ -1,0 +1,15 @@
+Para testear hay que comprobar que las siguiente cosas funcionan correctamente.
+
+Se produce de acuerdo a la producción por hora
+Javascript actualiza los recursos correspondientes que pondría PHP
+Si se está construyendo un edificio de producción se debe producir lo normal hasta que se contruye y la nueva producción a partir de cuando se ha construido.
+Los recursos no pueden superar el almacen
+Si se ha ampliado el almacen regular los recursos a la capacidad anterior hasta la hora que se contruye y a partir de ahí tener en cuenta la nueva capacidad.
+Que los recursos actualizados por javascript no superen el almacen
+Que se aplique la bonificacion correspondiente por ayuntamiento
+Que el mapa no se salga de los límites (10x10)
+Que el tiempo restante se actualice correctamente y se actualice a los 0 segundos.
+Que los mensajes no se borren hasta que los 2 usuarios los hayan borrado
+Que cuando se actualiza y ha llegado un comerciante a una aldea se descuente el tiempo de vuelta correspondiente o si ha vuelto
+Que los comerciantes se apliquen correctamente según la cantidad de recursos.
+Que cuando ataques calcule los ataques, refuerzos, intercambios, reclutamientos, ampliaciones y otras cosas de la aldea atacada
