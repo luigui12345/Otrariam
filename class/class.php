@@ -752,8 +752,14 @@ class Aldea
 			header("Location:index.php");
 			exit;
 		}
-
+		
 		$slot=$_GET['s'];
+
+		if ($slot==0||$slot>10) //Si el slot no es correcto
+		{
+			header("Location:index.php");
+			exit;
+		}
 
 		//Cogemos los datos del ayuntamiento
 		$sql="select produccion from edificios_aldea where edificio='Ayuntamiento' and id_ciudad=$this->id_ciudad limit 1";
@@ -769,6 +775,12 @@ class Aldea
 		$sql="select barro,madera,hierro,cereal,tiempo from costes_construcciones where edificio = '".$reg['edificio']."' and nivel = ".$reg['nivel']."+1 limit 1";
 		$res=$this->mysqli->query($sql);
 		$ret=$res->fetch_array();
+
+		if (Datos::recursosSuficientes($this->id_ciudad,$ret["madera"]."-".$ret["barro"]."-".$ret["hierro"]."-".$ret["cereal"])==0)
+		{
+			header("Location:index.php");
+			exit;
+		}
 
 		//Cobra los recursos del edificio
 		$sql="update mapa set madera = madera-".$ret["madera"].", barro = barro-".$ret["barro"].",hierro = hierro-".$ret["hierro"].",cereal = cereal-".$ret["cereal"]." where id_usuario = $this->id_usuario";

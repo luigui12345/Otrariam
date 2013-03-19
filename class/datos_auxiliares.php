@@ -371,6 +371,7 @@ class Datos
 		
 		return $nTropas;
 	}
+
 }
 
 ?>

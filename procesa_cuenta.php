@@ -1,4 +1,5 @@
 <?php
+include("class/class.php");
 include("class/perfil.php");
 $per=new Perfil();
 
