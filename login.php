@@ -68,7 +68,7 @@
 
     </li>
 
-    <a href="https://github.com/Flash-back/JuegoEnProceso" target="_blank" title="Descargar código fuente">
+    <a href="https://github.com/Flash-back/Otrariam" target="_blank" title="Descargar código fuente">
         <li id="menu_github">
             <i class="icon-github"></i>
         </li>
