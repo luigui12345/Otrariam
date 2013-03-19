@@ -22,7 +22,7 @@
 <div id="wrap">
 
 
-<img src="img/elementos/fondos/fondo.jpg" id="fondo">
+<img src="img/elementos/fondos/fondo.png" id="fondo">
 
 
 <div id="wrap_r">

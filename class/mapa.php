@@ -126,8 +126,8 @@ class Mapa
 
 			<div id="bottom_perfil_aldea">
 			<a href='edificio.php?s=<?php echo Datos::slotPorEdificio('mercado');?>&x=<?php echo $reg['x']; ?>&y=<?php echo $reg['y']; ?>'>Enviar Recursos<i class="icon-double-angle-right"></i></a><br />
-			<a href='redactar_mensaje.php?usuario=<?php echo Datos::usuario($reg['id_usuario']);?>'>Enviar Mensaje<i class="icon-double-angle-right"></i></a><br />
-			<a href='mover_tropas.php?x=<?php echo $reg['x']; ?>&y=<?php echo $reg['y']; ?>'>Enviar Tropas<i class="icon-double-angle-right"></i></a>
+			<a href='mover_tropas.php?x=<?php echo $reg['x']; ?>&y=<?php echo $reg['y']; ?>'>Enviar Tropas<i class="icon-double-angle-right"></i></a><br/>
+			<a href='perfil.php?usuario=<?php echo Datos::usuario($reg['id_usuario']);?>'>Ver Perfil<i class="icon-double-angle-right"></i></a>
 			</div>
 
 			<?php

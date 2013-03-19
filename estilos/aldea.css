@@ -14,6 +14,12 @@ font-family: Cambria, "Times New Roman", Verdana, Tahoma;
 }
 
 
+/*GENERAL*/
+
+a{
+text-decoration: none;
+}
+
 #wrap{
 width: 1150px;
 height: auto;
@@ -184,6 +190,10 @@ top: 195px;
 left: 74px;
 }
 
+#solar10{
+top: 80px;
+left: 120px;
+}
 
 #boton_level{
 position: absolute;
@@ -785,6 +795,7 @@ font-size: 20px;
 text-decoration: underline;
 }
 
+
 .recurso_coste{
 width: 24px;
 height: 24px;
@@ -832,14 +843,31 @@ font-weight: 500;
 
 /*Formularios edificio*/
 
+.info_juego{
+background-color: #AAA;
+border: 1px solid #999;
+border-radius: 5px;
+-moz-border-radius: 5px;
+-webkit-border-radius: 5px;
+-o-border-radius: 5px;
+}
+
 .form_edificio{
 float: left;
 }
 
 .form_edificio p{
+width: 100%;
 float: left;
+}
+
+.border{
 padding-bottom: 15px;
 border-bottom: 1px dashed #AAA;
+}
+
+#mostar_reclutamiento p{
+margin: 8px 0px;
 }
 
 .form_edificio p strong{
@@ -862,6 +890,28 @@ box-shadow: 0 0 2px #92BBFA;
 .form_edificio input[type="submit"]{
 margin-top: 20px;
 display: block;
+}
+
+
+/*Clases*/
+
+.enlace, .enlace a{
+color: #0080FF;
+}
+
+.enlace:hover, .enlace a:hover{
+color: #6AB5FF;
+}
+
+
+.remove{
+font-size: 24px;
+color: #0080FF;
+padding: 5px;
+}
+
+.remove:hover{
+color: #6AB5FF;
 }
 
 
@@ -941,6 +991,9 @@ border: 1px solid #A0B5FC;
 box-shadow: 0 0 2px #92BBFA;
 }
 
+#mercado1, #mercado2, #mercado3, #mercado4{
+width: 100%;
+}
 
 #mercado1{
 display: block;

@@ -154,7 +154,12 @@ Class Alianza
 		$res=$this->mysqli->query($sql);
 		while($reg=$res->fetch_array())
 		{
-			echo Datos::usuario($reg['id_usuario']). " <a href='procesa_alianza.php?a=3&i=".$_GET['i']."&usuario=".Datos::usuario($reg['id_usuario'])."'>Eliminar</a><br />";
+			?>
+			<p>
+			<a href="perfil.php?usuario=<?php echo Datos::usuario($reg['id_usuario']); ?>" class="enlace"><?php echo Datos::usuario($reg['id_usuario']); ?></a>
+			<a href='procesa_alianza.php?a=3&i=".$_GET['i']."&usuario=".Datos::usuario($reg['id_usuario'])."' class='boton'>Eliminar</a>
+			</p>
+			<?php
 		}
 
 	}

@@ -259,15 +259,18 @@ class Datos
 		}
 	}
 
-	public static function enlaceAlianza($id_alianza)
+	public static function enlaceAlianza($id_alianza=null)
 	{
-		$mysqli=DB::Get();
-		$sql="select id_alianza from alianzas where id_alianza=$id_alianza limit 1";
-		$res=$mysqli->query($sql);
-		if ($res->num_rows>0)
+		if (isset($id_alianza))
 		{
-			$reg=$res->fetch_array();
-			return '<a href="alianza.php?i='.$reg["id_alianza"].'">'.Datos::nombreAlianza($reg["id_alianza"]).'</a>';
+			$mysqli=DB::Get();
+			$sql="select id_alianza from alianzas where id_alianza=$id_alianza limit 1";
+			$res=$mysqli->query($sql);
+			if ($res->num_rows>0)
+			{
+				$reg=$res->fetch_array();
+				return '<a href="alianza.php?i='.$reg["id_alianza"].'">'.Datos::nombreAlianza($reg["id_alianza"]).'</a>';
+			}
 		}
 	}
 

@@ -151,6 +151,9 @@ class Mercado
 			$sql="select * from ofertas where id_ciudad!=$this->id_ciudad";
 		}
 		$res=$this->mysqli->query($sql);
+		?>
+		<p>
+		<?php
 		while ($reg=$res->fetch_array()) //Mostramos todas la ofertas
 		{
 			$n_ciudad=Datos::ciudad($reg['id_ciudad']); //Muestra el nombre de la ciudad
@@ -194,12 +197,11 @@ class Mercado
 				}
 			echo "<b>".$reg['cantidad_busca']."</b>"; 
 
+
 			if ($reg['id_ciudad']==$this->id_ciudad)
 			{
 				?>
-				<div class="eliminar" style="float:left;">
-				<a href="eliminar_oferta.php?o=<?php echo $reg['id_oferta'];?>"><img src="img/elementos/acciones/eliminar.png" width="30px" /></a>
-				</div>
+				<a href="eliminar_oferta.php?o=<?php echo $reg['id_oferta'];?>" class="remove"><i class="icon-remove"></i></a>
 				<?php
 			}
 			else
@@ -211,14 +213,17 @@ class Mercado
 				else //Si puedes pagarla
 				{
 					?>
-					 <a href='comerciar.php?id_oferta=<?php echo $reg['id_oferta'];?>'class="boton">Aceptar</a>
+					<a href='comerciar.php?id_oferta=<?php echo $reg['id_oferta'];?>'class="boton">Aceptar</a>
 					<?php
 				}
 			}
-			?>
-			<br />
-			<?php
+
 		}
+
+		?>
+		</p>
+		<?php
+
 	}
 
 	public function aceptar_oferta() //Aceptar la oferta

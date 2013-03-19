@@ -62,7 +62,7 @@ $ciudad=$_SESSION['ju_ciudad'];
 
             <div id="seccion_cuartel">
                 <div class="seccion_edificio" id="a_cuartel1">Reclutar</div>
-                <div class="seccion_edificio" id="a_cuartel2">Ataques</div>
+                <div class="seccion_edificio" id="a_cuartel2">Movimientos</div>
                 <div class="seccion_edificio" id="a_cuartel3">Refuerzos</div>
                 <div class="seccion_edificio" id="a_cuartel4">Tropas</div>
             </div>
@@ -89,6 +89,9 @@ $ciudad=$_SESSION['ju_ciudad'];
 
 
             <div id="cuartel3">
+            <h3>Refuerzos militares</h3>
+            <br/>
+            
             <b>Refuerzos recibidos en esta aldea</b><br />
             <hr />
             <?php

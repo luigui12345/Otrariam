@@ -1,11 +1,11 @@
 <?php
-$mtime = microtime();
+/*$mtime = microtime();
 $mtime = explode(" ",$mtime);
 $mtime = $mtime[1] + $mtime[0];
-$tiempoinicial = $mtime; 
+$tiempoinicial = $mtime; */
 include("class/class.php");
 $ald=new Aldea();
-$ald->comprobar_recursos('no');
+$ald->comprobar_recursos('si');
 $tro=new Tropas();
 $ciudad=$_SESSION['ju_ciudad'];
 ?>
@@ -101,11 +101,11 @@ $ciudad=$_SESSION['ju_ciudad'];
 </body>
 </html>
 <?php
-//$ald->comprobar_recursos('si');
-$mtime = microtime();
+$ald->comprobar_recursos('si');
+/*$mtime = microtime();
 $mtime = explode(" ",$mtime);
 $mtime = $mtime[1] + $mtime[0];
 $tiempofinal = $mtime;
 $tiempototal = ($tiempofinal - $tiempoinicial);
-echo "<strong>Página creada en ".$tiempototal." segundos</strong>";
+echo "<strong>Página creada en ".$tiempototal." segundos</strong>";*/
 ?>

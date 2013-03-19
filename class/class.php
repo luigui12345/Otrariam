@@ -213,10 +213,10 @@ class Aldea
 			?>
 			<p>Actualmente no perteneces a ninguna alianza.</p><br/>
 			<p><b>Fundar una alianza</b></p>
-			<img src="img/elementos/recursos/madera.png" class="recurso_coste" title="Madera"> 1000 |
-			<img src="img/elementos/recursos/ladrillo.png" class="recurso_coste" title="Ladrillo"> 1000 |
-			<img src="img/elementos/recursos/hierro.png" class="recurso_coste" title="Hierro"> 1000 |
-			<img src="img/elementos/recursos/cereal.png" class="recurso_coste" title="Cereal"> 1000 
+			<img src="img/elementos/recursos/madera.png" class="recurso_coste" title="Madera"> 500 |
+			<img src="img/elementos/recursos/ladrillo.png" class="recurso_coste" title="Ladrillo"> 500 |
+			<img src="img/elementos/recursos/hierro.png" class="recurso_coste" title="Hierro"> 500 |
+			<img src="img/elementos/recursos/cereal.png" class="recurso_coste" title="Cereal"> 500 
 
 			<form name="form_fundar" method="post" action="procesa_alianza.php?a=4">
 						<input type="text" name="nombre" class="input_enviar" required/>
@@ -246,7 +246,7 @@ class Aldea
 		{
 			?>
 
-			<div style="float:left;">
+			<div style="float:left;width:100%;">
 
 			<div id="mercado2">
 			<form name="form_ofrecer" method="post" action="procesa_comercio.php">
@@ -352,24 +352,52 @@ class Aldea
 				?>
 				<form name="form_tropas" action="reclutar.php" method="post" class="form_edificio">
 					<?php
-					if ($reg['parte_ejercito']=='infanteria')
+					if ($reg['parte_ejercito'] =='infanteria')
 					{
 						?>
-						<p><img src='img/elementos/tropas/legionario.png' class='icono_tropa'><strong><?php echo str_replace("_", " ",$reg['nombre']);?>:</strong>
-						<?php
+							<?php
+							if($reg['nombre']=='legionario'){
+							?>
+							<p><img src='img/elementos/tropas/legionario.png' class='icono_tropa' title='Legionario'>
+							<strong>Legionario: </strong>
+							
+							<?php
+							}
+							else if($reg['nombre']=='pretoriano'){
+							?>
+							<p><img src='img/elementos/tropas/pretoriano.png' class='icono_tropa' title='Pretoriano'>
+							<strong>Pretoriano: </strong>
+							
+							<?php					}
+							else if($reg['nombre']=='triario'){
+							?>
+							<p><img src='img/elementos/tropas/triario.png' class='icono_tropa' title='Triario'>
+							<strong>Triario: </strong>
+							<?php	
+							}
+
+
+
 					}
-					else if ($reg['parte_ejercito']=='caballeria')
+					else if ($reg['parte_ejercito'] == 'caballeria')
 					{
 						?>
-						<p><img src='img/elementos/tropas/caballeria_l.png' class='icono_tropa'><strong><?php echo str_replace("_", " ",$reg['nombre']);?>:</strong>
+						<p><img src='img/elementos/tropas/pretoriano.png' class='icono_tropa'><strong><?php echo str_replace("_", " ",$reg['nombre']);?>:</strong>
 						<?php
 					}
+					//Pasar el recurso Tiempo a un formato horario
+					$segundos = $reg["tiempo"];
+					$horas = intval($segundos/3600);
+					$restoSegundos = $segundos%3600;
+					$recurso_tiempo = $horas.':'.date("i:s",mktime (0,0,$restoSegundos,0,0,0));
+
+
 					?>
 					<img src='img/elementos/recursos/madera.png' class='recurso_coste' title='Madera'><?php echo $reg['madera']; ?>
 			 		| <img src='img/elementos/recursos/ladrillo.png' class='recurso_coste' title='Ladrillo'><?php echo $reg['barro']; ?>
 			 		| <img src='img/elementos/recursos/hierro.png' class='recurso_coste' title='Hierro'> <?php echo $reg['hierro']; ?>
 			 		| <img src='img/elementos/recursos/cereal.png' class='recurso_coste' title='Cereal'><?php echo $reg['cereal']; ?>
-			 		| <img src='img/elementos/recursos/tiempo.png' class='recurso_coste' title='Tiempo'><?php echo $reg['tiempo']; ?>
+			 		| <img src='img/elementos/recursos/tiempo.png' class='recurso_coste' title='Tiempo'><?php echo $recurso_tiempo; ?>
 
 					<input type="text" name="n_tropa<?php echo $j;?>" />
 					</p>
@@ -381,10 +409,11 @@ class Aldea
 		}
 		?>		
 
-			<div id="mostrar_reclutamiento" style="float:left;">
+			<p id="mostrar_reclutamiento">
 			<?php $this->tropas->mostar_reclutamiento(); ?>
-			</div>
 			<input type="submit" value="Reclutar" class="boton">
+			</p>
+			
 
 		</form>
 
@@ -433,17 +462,7 @@ class Aldea
 				</div>
 
 
-				<?php
-				if ($reg['nivel']>0) //Si se ha construido el Cuartel
-				{
-					$this->muestra_cuartel();
-				}
-				else
-				{
-					?>
-					<?php
-				}
-
+			<?php
 		}
 
 		else if ($reg['edificio'] == "mercado") //Si el edificio es el mercado
@@ -697,11 +716,11 @@ class Aldea
 				$res=$this->mysqli->query($sql);
 				if ($res->num_rows > 0) //Comprueba que no hay construcciones en curso
 				{
-					echo "</br>Ya se está construyendo.";
+					echo "</br>Ya se está construyendo otro edificio.";
 				}
 				else if (Datos::edificioDisponible($edificio,$this->id_ciudad)==0)
 				{
-					echo "<br />No cumples los requisitos para construir este edificio";
+					echo "<br />No cumples los requisitos para construir este edificio.";
 				}
 				else if (Datos::edificioDisponible($edificio,$this->id_ciudad)==1)
 				{
@@ -716,7 +735,7 @@ class Aldea
 		}
 		else
 		{
-			echo "</br>No se pude ampliar mas.";
+			echo "</br>Este edificio no puede ampliarse más.";
 		}
 
 	}
