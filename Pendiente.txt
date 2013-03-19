@@ -1,13 +1,11 @@
 ERROR TROPAS NO CONSUMEN CEREAL SI HABIAN VUELTO DE UN ATRACO Y NO HAS ACTUALIZADO
 
 Cambiar en el mercado recurso_busca a campo enum.
-Poder quitar ofertas del mercado.
 Poder cancelar ataques.
 Usar prepare y '?' para evitar inyecciones sql.
 Usar URLs amigables
 Poner nombres en ingles a las variables y funciones prograsivamente.
 Crear los datos de todas las unidades.
-Crear los datos de mas niveles de edificios.
 Hacer un ranking que tenga en cuenta poblacion, tropas, ataques y edificios.
 Poder hacer Atracos
 Poder Fundar aldeas

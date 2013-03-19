@@ -92,7 +92,7 @@ class Login
 			}
 
 			//Creamos la ciudad
-			$sql="update mapa set nombre = 'Pueblo de $nombre',tipo = 'Pueblo', id_usuario = $id_usuario, habitantes = 6, madera = 500,barro=500,hierro=500,cereal=500,capital = 'si', last_update = $tiempo  where x = $x and y = $y";
+			$sql="update mapa set nombre = 'Pueblo de $nombre',tipo = 'Pueblo', id_usuario = $id_usuario, habitantes = 6, madera = 400,barro=400,hierro=400,cereal=400,capital = 'si', last_update = $tiempo  where x = $x and y = $y";
 			$res=$this->mysqli->query($sql);
 			//************************
 			$id_ciudad = Datos::id_ciudad($id_usuario);
@@ -100,10 +100,10 @@ class Login
 			//Le ponemos los edificios básicos
 			$sql="insert into edificios_aldea values 
 			(null,'ayuntamiento',0,'ninguno',0,2,0,$id_ciudad),
-			(null,'granja',0,'cereal',5,1,0,$id_ciudad),
-			(null,'leñador',0,'madera',5,1,0,$id_ciudad),
-			(null,'barrera',0,'barro',5,1,0,$id_ciudad),
-			(null,'mina',0,'hierro',5,1,0,$id_ciudad),
+			(null,'granja',0,'cereal',3,1,0,$id_ciudad),
+			(null,'leñador',0,'madera',3,1,0,$id_ciudad),
+			(null,'barrera',0,'barro',3,1,0,$id_ciudad),
+			(null,'mina',0,'hierro',3,1,0,$id_ciudad),
 			(null,'almacen',0,'capacidad',800,2,0,$id_ciudad),
 			(null,'mercado',0,'comercio',0,4,0,$id_ciudad),
 			(null,'cuartel',0,'tropas',0,4,0,$id_ciudad),

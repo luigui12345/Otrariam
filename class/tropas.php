@@ -590,6 +590,33 @@ class Tropas
 		return $refuerzo;
 	}
 
+	public function datosTropas()
+	{
+		$sql="select * from datos_tropas";
+		$res=$this->mysqli->query($sql);
+		?>
+		<table border="0" cellspacing="0" cellpadding="0" class="tabla_reportes">
+		<tr><td>Nombre</td><td>Ataque</td><td>Defensa</td><td>Defensa Caballeria</td><td>Velocidad</td><td>Capacidad</td></tr>
+		<?php
+		while($reg=$res->fetch_array())
+		{
+			?>
+			<tr>
+			<td><?php echo $reg['nombre'];?></td>
+			<td><?php echo $reg['ataque'];?></td>
+			<td><?php echo $reg['defensa'];?></td>
+			<td><?php echo $reg['defensa_caballeria'];?></td>
+			<td><?php echo $reg['velocidad'];?></td>
+			<td><?php echo $reg['capacidad'];?></td>
+			</tr>
+			<?php
+		}
+		?>
+		</table>
+		<?php
+
+	}
+
 	public function relacionTropasRefuerzos($id) //Relacion de las tropas de una ciudad con los refuerzos que tiene
 	{
 		$sql="select * from tropas where id_ciudad=$id";

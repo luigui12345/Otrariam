@@ -551,6 +551,11 @@ class MotorTropas
 
 			$tropas_restantes=array();
 
+			if ($ataque==$defensa) //Para evitar empates
+			{
+				$defensa+=10;
+			}
+
 			if ($ataque > $defensa) //Si gana el atacante
 			{
 				$relacion=$ataque/($ataque-$defensa);
@@ -685,6 +690,7 @@ class MotorTropas
 			else //Si gana el defensor
 			{
 				$relacion=$defensa/($defensa-$ataque);
+				
 				for ($i=1;$i<11;$i++)
 				{
 					if (($tropas_suyas[$i-1]/$relacion)-(intval($tropas_suyas[$i-1]/$relacion)) > 0.79)

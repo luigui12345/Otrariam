@@ -106,8 +106,9 @@ $ciudad=$_SESSION['ju_ciudad'];
 
             <div id="cuartel4">
             <h3>Tropas</h3>
-            <br/>
-
+            <?php
+            echo $tro->datosTropas();
+            ?>
             </div>
 
         </div><!--/#wrap_ejercito-->
