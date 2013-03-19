@@ -1,5 +1,4 @@
 ERROR TROPAS NO CONSUMEN CEREAL SI HABIAN VUELTO DE UN ATRACO Y NO HAS ACTUALIZADO
-NO SE ACTUALIZAN LAS COSAS QUE PASAN EN LA CIUDAD QUE ATACAS
 
 Cambiar en el mercado recurso_busca a campo enum.
 Poder quitar ofertas del mercado.
@@ -10,8 +9,6 @@ Poner nombres en ingles a las variables y funciones prograsivamente.
 Crear los datos de todas las unidades.
 Crear los datos de mas niveles de edificios.
 Hacer un ranking que tenga en cuenta poblacion, tropas, ataques y edificios.
-Ponerle un diseño aceptable.
-Poder crear Alianzas
 Poder hacer Atracos
 Poder Fundar aldeas
 Poder Conquistar aldeas

@@ -62,6 +62,8 @@ $ciudad=$_SESSION['ju_ciudad'];
 
             <?php
             $ald->muestra_cuartel();
+            echo "<br />";
+            $tro->mostrar_movimientos_tropas();
             ?>
 
         </div><!--/#aldea-->
