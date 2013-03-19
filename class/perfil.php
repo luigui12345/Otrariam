@@ -90,7 +90,14 @@ class Perfil
 
 	public function cambiar_perfil()
 	{
-		$sql="update usuarios set perfil = '".$_POST['perfil']."' where id_usuario = $this->id_usuario";
+
+		$cambiar_perfil = $_POST['perfil'];
+
+		$cambiar_perfil = htmlentities($cambiar_perfil,ENT_QUOTES);
+		$cambiar_perfil = strip_tags($cambiar_perfil,"<br>,<hr>");
+
+
+		$sql="update usuarios set perfil = '".$cambiar_perfil."' where id_usuario = $this->id_usuario";
 		$res=$this->mysqli->query($sql);
 		header("Location:perfil.php");
 	}

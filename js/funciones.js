@@ -2,22 +2,46 @@
 
 
 //**************************************************************************//
-//Login//
-$(document).ready(function(){
-	
-$("#js_login").click(function(){
-$("#form_registro").css("display", "none");
-$("#form_login").css("display", "block");
-$("#login").fadeIn("300");
+
+$(window).load(function(){
+
+
+/*Login*/
+
+$('#menu_login').ready(function(){
+
+	var login = $("#login");
+	var form_login = $("#form_login");
+	var desplegado = false;
+
+	$("#login").click(function(){
+
+	if(desplegado == false){
+	form_login.show();
+	desplegado = true;
+	}
+
+	else if(desplegado == true){
+	form_login.hide();
+	desplegado = false;
+	}
+
+	});
+
+
+	$(document).click(function(){
+	form_login.hide();
+	desplegado = false;
+	});
+
+	$('#menu_login').click(function(e) {
+	e.stopPropagation();
+	})
+
+
 });
 
-$("#js_registro").click(function(){
-$("#form_registro").css("display", "block");
-$("#form_login").css("display", "none");
-$("#login").fadeIn("300");
-});
 
-	
 
 //**************************************************************************//
 //Mercado//

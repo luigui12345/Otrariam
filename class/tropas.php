@@ -602,7 +602,24 @@ class Tropas
 		{
 			?>
 			<tr>
-			<td><?php echo $reg['nombre'];?></td>
+			<td><?php
+				if($reg['nombre']=='legionario'){
+				echo "<img src='img/elementos/tropas/legionario.png' class='icono_reporte' title='Legionarios'>";
+				}
+				else if($reg['nombre']=='pretoriano'){
+				echo "<img src='img/elementos/tropas/pretoriano.png' class='icono_reporte' title='Pretorianos'>";
+				}
+				else if($reg['nombre']=='triario'){
+				echo "<img src='img/elementos/tropas/triario.png' class='icono_reporte' title='Triarios'>";
+				}
+				else if($reg['nombre']=='caballeria_ligera'){
+				echo "<img src='img/elementos/tropas/caballeria_l.png' class='icono_reporte' title='Caballería liger'>";
+				}
+				else if($reg['nombre']=='caballeria_pesada'){
+				echo "<img src='img/elementos/tropas/caballeria_p.png' class='icono_reporte' title='Caballería pesada'>";
+				}
+			?></td>
+
 			<td><?php echo $reg['ataque'];?></td>
 			<td><?php echo $reg['defensa'];?></td>
 			<td><?php echo $reg['defensa_caballeria'];?></td>
