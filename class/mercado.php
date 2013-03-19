@@ -106,7 +106,35 @@ class Mercado
 		}
 	}
 
-	public function mostrar_ofertas() //Muestra las ofertas del mercado
+	function eliminar_oferta()
+	{
+		$sql="select * from ofertas where id_oferta=".$_GET['o']." limit 1";
+		$res=$this->mysqli->query($sql);
+		$reg=$res->fetch_array();
+		if ($reg['recurso_ofrece']=='madera')
+		{
+			$recurso='madera';
+		}
+		else if ($reg['recurso_ofrece']=='barro')
+		{
+			$recurso='barro';
+		}
+		else if ($reg['recurso_ofrece']=='hierro')
+		{
+			$recurso='hierro';
+		}
+		else if ($reg['recurso_ofrece']=='cereal')
+		{
+			$recurso='cereal';
+		}
+		$sql="update mapa set $recurso=$recurso+".$reg['cantidad_ofrece']." where id_casilla = ".$reg['id_ciudad'];
+		$res=$this->mysqli->query($sql);
+		$sql="delete from ofertas where id_oferta=".$_GET['o'];
+		$res=$this->mysqli->query($sql);
+		header("location:edificio.php?s=".Datos::slotPorEdificio('mercado'));
+	}
+
+	public function mostrar_ofertas($mias=null) //Muestra las ofertas del mercado
 	{
 		//Datos de mi ciudad
 		$sql="select * from mapa where id_casilla = $this->id_ciudad limit 1";
@@ -114,9 +142,15 @@ class Mercado
 		$ret=$res->fetch_array();
 
 		//Busco las ofertas que no son de mi ciudad
-		$sql="select * from ofertas where id_ciudad != $this->id_ciudad";
+		if (isset($mias))
+		{
+			$sql="select * from ofertas where id_ciudad=$this->id_ciudad";
+		}
+		else
+		{
+			$sql="select * from ofertas where id_ciudad!=$this->id_ciudad";
+		}
 		$res=$this->mysqli->query($sql);
-
 		while ($reg=$res->fetch_array()) //Mostramos todas la ofertas
 		{
 			$n_ciudad=Datos::ciudad($reg['id_ciudad']); //Muestra el nombre de la ciudad
@@ -160,16 +194,26 @@ class Mercado
 				}
 			echo "<b>".$reg['cantidad_busca']."</b>"; 
 
-
-			if ($reg['cantidad_busca'] > $ret[$reg['recurso_busca']] || $reg['cantidad_busca']/500 > $this->comerciantes_disponibles) //Si no puedes pagar la oferta
-			{
-				echo " <i>No tienes sufientes recursos</i>";
-			}
-			else //Si puedes pagarla
+			if ($reg['id_ciudad']==$this->id_ciudad)
 			{
 				?>
-				 <a href='comerciar.php?id_oferta=<?php echo $reg['id_oferta'];?>'class="boton">Aceptar</a>
+				<div class="eliminar" style="float:left;">
+				<a href="eliminar_oferta.php?o=<?php echo $reg['id_oferta'];?>"><img src="img/elementos/acciones/eliminar.png" width="30px" /></a>
+				</div>
 				<?php
+			}
+			else
+			{
+				if ($reg['cantidad_busca'] > $ret[$reg['recurso_busca']] || $reg['cantidad_busca']/500 > $this->comerciantes_disponibles) //Si no puedes pagar la oferta
+				{
+					echo " <i>No tienes sufientes recursos</i>";
+				}
+				else //Si puedes pagarla
+				{
+					?>
+					 <a href='comerciar.php?id_oferta=<?php echo $reg['id_oferta'];?>'class="boton">Aceptar</a>
+					<?php
+				}
 			}
 			?>
 			<br />
@@ -223,31 +267,29 @@ class Mercado
 		{
 			while($reg=$resp->fetch_array()) //Los mostramos todos
 			{	
-				if ($reg['id_ciudad_ofrece']==$this->id_ciudad) //Si nosotroso somos la ciudad que ofrecemos
+				//Cogemos los datos de mi ciudad y la que me compra
+				$sql="select x,y from mapa where id_casilla =".$reg['id_ciudad_ofrece']."";
+				$res=$this->mysqli->query($sql);
+				$red=$res->fetch_array();
+				$sql="select x,y from mapa where id_casilla =".$reg['id_ciudad_busca']."";
+				$res=$this->mysqli->query($sql);
+				$rel=$res->fetch_array();
+
+				//Cogemos la distancia que hay entre nosotros
+				$distancia_x=$red['x']-$rel['x'];
+				$distancia_y=$red['y']-$rel['y'];
+
+				//La hacemos positiva
+				if ($distancia_x<0)
 				{
-					//Cogemos los datos de mi ciudad y la que me compra
-					$sql="select x,y from mapa where id_casilla = $this->id_ciudad";
-					$res=$this->mysqli->query($sql);
-					$red=$res->fetch_array();
-					$sql="select x,y from mapa where id_casilla =".$reg['id_ciudad_busca']."";
-					$res=$this->mysqli->query($sql);
-					$rel=$res->fetch_array();
-
-					//Cogemos la distancia que hay entre nosotros
-					$distancia_x=$red['x']-$rel['x'];
-					$distancia_y=$red['y']-$rel['y'];
-
-					//La hacemos positiva
-					if ($distancia_x<0)
-					{
-						$distancia_x = -($distancia_x);
-					}
-					if ($distancia_y<0)
-					{
-						$distancia_y= -($distancia_y);
-					}
-					$distancia_ciudades = ($distancia_x)+($distancia_y);//Las casillas que nos separan
-					$tiempo_transporte = $distancia_ciudades*300; 		//Lo que van a tardar los comerciantes en llegar
+					$distancia_x = -($distancia_x);
+				}
+				if ($distancia_y<0)
+				{
+					$distancia_y= -($distancia_y);
+				}
+				$distancia_ciudades = ($distancia_x)+($distancia_y);//Las casillas que nos separan
+				$tiempo_transporte = $distancia_ciudades*300; 		//Lo que van a tardar los comerciantes en llegar
 
 					$t_acepto_oferta = $reg['fecha'];	//Hora a la que se acepto la oferta
 					$t_restantes_comercio = $tiempo_transporte+$reg['fecha']-$this->t_actual; //Tiempo que queda para que llegue el cargamento
@@ -257,7 +299,7 @@ class Mercado
 
 						if ($reg['recurso_busca']=='vuelta' && $this->t_actual>=$reg['fecha']+$tiempo_transporte) //Si ha vuelto el comerciante
 						{
-							$sql="delete from intercambios where id_ciudad_ofrece = $this->id_ciudad or id_ciudad_busca = $this->id_ciudad";
+							$sql="delete from intercambios where id_intercambio=".$reg['id_intercambio'];
 							$res=$this->mysqli->query($sql);	
 						}
 						else //Si ha llegado el comerciante
@@ -276,20 +318,20 @@ class Mercado
 
 								$t_llega=$reg['fecha']+$tiempo_transporte; //Hora a la que debia llegar el comerciante
 								//Hacemos que vuelva el comerciante
-								$sql="update intercambios set recurso_busca='vuelta', id_ciudad_busca = ".$reg['id_ciudad_busca'].",fecha=".$t_llega." where id_ciudad_ofrece = $this->id_ciudad";
+								$sql="update intercambios set recurso_busca='vuelta',fecha=".$t_llega." where id_ciudad_ofrece = ".$rem['id_ciudad_ofrece']."";
 								$res=$this->mysqli->query($sql);
 							}
 							else
 							{
 								//Me cargo a mi y a quien le llega los recursos
-								$sql="update mapa set ".$reg['recurso_busca']." = ".$reg['recurso_busca']."+".$reg['cantidad_busca']." where id_casilla = $this->id_ciudad";
+								$sql="update mapa set ".$reg['recurso_busca']." = ".$reg['recurso_busca']."+".$reg['cantidad_busca']." where id_casilla = ".$reg['id_ciudad_ofrece'];
 								$res=$this->mysqli->query($sql);
 								$sql="update mapa set ".$reg['recurso_ofrece']." = ".$reg['recurso_ofrece']."+".$reg['cantidad_ofrece']." where id_casilla =".$reg['id_ciudad_busca'];
 								$res=$this->mysqli->query($sql);
 
 								$t_llega=$reg['fecha']+$tiempo_transporte; //Hora a la que debia llegar el comerciante
 								//Hacemos que vuelva el comerciante
-								$sql="update intercambios set recurso_busca='vuelta', recurso_ofrece='vuelta',id_ciudad_ofrece = ".$reg['id_ciudad_busca'].",fecha=".$t_llega." where id_ciudad_ofrece = $this->id_ciudad";
+								$sql="update intercambios set recurso_busca='vuelta', recurso_ofrece='vuelta',fecha=".$t_llega." where id_intercambio=".$reg['id_intercambio'];
 								$res=$this->mysqli->query($sql);
 							}
 			
@@ -298,186 +340,110 @@ class Mercado
 					}
 					else //Si aun no ha llegado
 					{
-						?>
-						<script type="text/javascript" language="javascript">
-						
-						tiempo2= <?php echo $t_restantes_comercio;?>; //Tiempo que queda para que llegue el comerciante
-						is = <?php echo $i;?>; //Numero de intercambios
-						
-						document.getElementById("intercambios").style.display="block"; //Mostramos los intercambios
-
-						tiempoA[tiempoA.length]=<?php echo $t_restantes_comercio;?>; //Tiempo que le queda al viaje
-
-						ns = tiempoA.length-1; //Numero de viajes
-						
-						var capa1 = document.getElementById("envios"); 		//Cogemos el div de envios
-						var intercambio1 = document.createElement("div");	//Le añadimos un div para el intercambios
-						intercambio1.id = "timer_comercio_busco_"+ns;		//Le damos un ID
-						capa1.appendChild(intercambio1);					//Mostramos el div
-						
-						timer_comercio_busco(is);
-						
-						function timer_comercio_busco(num) //Timer de comercio
+						if ($reg['id_ciudad_ofrece']==$this->id_ciudad) //Si yo soy quien compra
 						{
-							ns = tiempoA.length-1;
-							while (ns >= 0) //Mostramos todos los intercambios
+							?>
+							<script type="text/javascript" language="javascript">
+							
+							tiempo2= <?php echo $t_restantes_comercio;?>; //Tiempo que queda para que llegue el comerciante
+							is = <?php echo $i;?>; //Numero de intercambios
+							
+							document.getElementById("intercambios").style.display="block"; //Mostramos los intercambios
+
+							tiempoA[tiempoA.length]=<?php echo $t_restantes_comercio;?>; //Tiempo que le queda al viaje
+
+							ns = tiempoA.length-1; //Numero de viajes
+							
+							var capa1 = document.getElementById("envios"); 		//Cogemos el div de envios
+							var intercambio1 = document.createElement("div");	//Le añadimos un div para el intercambios
+							intercambio1.id = "timer_comercio_busco_"+ns;		//Le damos un ID
+							capa1.appendChild(intercambio1);					//Mostramos el div
+							
+							timer_comercio_busco(is);
+							
+							function timer_comercio_busco(num) //Timer de comercio
 							{
-								if (tiempoA[ns]==0)//Si ya ha llegado un intercambio
+								ns = tiempoA.length-1;
+								while (ns >= 0) //Mostramos todos los intercambios
 								{
-									location.reload();
+									if (tiempoA[ns]==0)//Si ya ha llegado un intercambio
+									{
+										location.reload();
+									}
+									<?php
+									if ($reg['recurso_busca']=='vuelta') //Si esta volviendo el mercader
+									{?>
+										document.getElementById("timer_comercio_busco_"+ns).innerHTML="<i>"+fecha(tiempoA[ns])+"</i>";
+									<?php
+									}
+									else //Si esta yendo el mercado
+									{
+									?>
+										document.getElementById("timer_comercio_busco_"+ns).innerHTML=fecha(tiempoA[ns]);
+									<?php
+									}
+									?>
+									tiempoA[ns]--; 	//Restamos un segundo
+									ns -= 1;		//Pasamos al siguiente intercambio
 								}
-								<?php
-								if ($reg['recurso_busca']=='vuelta') //Si esta volviendo el mercader
-								{?>
-									document.getElementById("timer_comercio_busco_"+ns).innerHTML="<i>"+fecha(tiempoA[ns])+"</i>";
-								<?php
-								}
-								else //Si esta yendo el mercado
-								{
-								?>
-									document.getElementById("timer_comercio_busco_"+ns).innerHTML=fecha(tiempoA[ns]);
-								<?php
-								}
-								?>
-								tiempoA[ns]--; 	//Restamos un segundo
-								ns -= 1;		//Pasamos al siguiente intercambio
 							}
+							
+							setInterval('timer_comercio_busco('+is+')', 1000); //Hacemos que cada segundo se actualice el timer
+							</script>
+							<?php
 						}
-						
-						setInterval('timer_comercio_busco('+is+')', 1000); //Hacemos que cada segundo se actualice el timer
-						</script>
+						else if ($reg['id_ciudad_ofrece']!=$this->id_ciudad && ($reg['recurso_ofrece']!='todo' ||$reg['recurso_ofrece']=='todo' && $reg['recurso_busca']!='vuelta'))
+						{
+							?>
+							<script type="text/javascript" language="javascript">
+
+							tiempo2= <?php echo $t_restantes_comercio;?>; //Tiempo que queda para que llegue el comerciante
+							i = <?php echo $i;?>;	//Numero de intercambios
+							document.getElementById("intercambios").style.display="block"; //Mostramos los intercambios
+							tiempoB[tiempoB.length]=<?php echo $t_restantes_comercio;?>;	//Tiempo que le queda al viaje
+
+							var n = tiempoB.length-1;	//Numero de viajes
+							
+							var capa2 = document.getElementById("recibos");		//Cogemos el div de envios
+							var intercambio2 = document.createElement("div");	//Le añadimos un div para el intercambios
+							intercambio2.id = "timer_comercio_ofrezco_"+n;		//Le damos un ID
+							capa2.appendChild(intercambio2);					//Mostramos el div
+							
+							timer_comercio_ofrezco(i);
+
+							function timer_comercio_ofrezco(num) //Timer de intercambios
+							{
+								n = tiempoB.length-1;
+
+								while (n >= 0) //Mostramos todos los intercambios
+								{
+									if (tiempoB[n]==0) //Si ha llegado el intercambio
+									{
+										location.reload();
+									}
+									<?php
+									if ($reg['recurso_busca']=='vuelta')//Si vuelve el mercado
+									{?>
+										document.getElementById("timer_comercio_ofrezco_"+n).innerHTML="<i>"+fecha(tiempoB[n])+"</i>";
+									<?php
+									}
+									else //Si va el mercader
+									{
+									?>
+										document.getElementById("timer_comercio_ofrezco_"+n).innerHTML=fecha(tiempoB[n]);
+									<?php
+									}
+									?>
+									tiempoB[n]--; //Quitamos un segundo
+									n -= 1;	//Pasamos al siguiente intercambio
+								}
+							}
+							
+							setInterval('timer_comercio_ofrezco('+i+')', 1000);//Hacemos que cada segundo se actualice el timer
+							</script>
 						<?php
-					}
-				}
-
-	//*************************************************************************
-
-				if ($reg['id_ciudad_ofrece']!=$this->id_ciudad) //Si yo soy quien compra
-				{
-					//Cogemos los datos de mi ciudad y la que me compra
-					$sql="select x,y from mapa where id_casilla = $this->id_ciudad";
-					$res=$this->mysqli->query($sql);
-					$red=$res->fetch_array();
-					$sql="select x,y from mapa where id_casilla =".$reg['id_ciudad_ofrece']."";
-					$res=$this->mysqli->query($sql);
-					$rel=$res->fetch_array();
-
-					//Cogemos la distancia que hay entre nosotros
-					$distancia_x=$red['x']-$rel['x'];
-					$distancia_y=$red['y']-$rel['y'];
-
-					//La hacemos positiva
-					if ($distancia_x<0)
-					{
-						$distancia_x = -($distancia_x);
-					}
-					if ($distancia_y<0)
-					{
-						$distancia_y= -($distancia_y);
-					}
-					$distancia_ciudades = ($distancia_x)+($distancia_y);//Las casillas que nos separan
-					$tiempo_transporte = $distancia_ciudades*300; 		//Lo que van a tardar los comerciantes en llegar
-
-					$t_acepto_oferta = $reg['fecha'];	//Hora a la que se acepto la oferta
-					$t_restantes_comercio = $tiempo_transporte+$reg['fecha']-$this->t_actual; //Tiempo que queda para que llegue el cargamento
-
-					if ($t_restantes_comercio <= 0) //Si ya ha llegado
-					{
-						if ($reg['recurso_busca']=='vuelta' && $this->t_actual>=$reg['fecha']+$tiempo_transporte) //Si ha vuelto el mercado
-						{
-							$sql="delete from intercambios where id_ciudad_ofrece = $this->id_ciudad or id_ciudad_busca = $this->id_ciudad";
-							$res=$this->mysqli->query($sql);
 						}
-						else //Si ha llegado el mercader
-						{
-							//Comprobamos si es un envio o un intercambio
-							$sql="select * from intercambios where (id_ciudad_ofrece = $this->id_ciudad or id_ciudad_busca = $this->id_ciudad) and recurso_busca='enviar'";
-							$res=$this->mysqli->query($sql);
-							if ($res->num_rows>0)//Si es un envio
-							{
-								$rem=$res->fetch_array();
-								$recursos = explode('-',$rem['cantidad_ofrece']);//Cogemos las cuatro clases de recursos
-
-								//Cargo a quien le llega los recursos
-								$sql="update mapa set madera = madera+".$recursos[0].", barro = barro+".$recursos[1].",hierro = hierro+".$recursos[2].", cereal = cereal+".$recursos[3]." where id_casilla=".$rem['id_ciudad_busca'];
-								$res=$this->mysqli->query($sql);
-
-								$t_llega=$reg['fecha']+$tiempo_transporte; //Hora a la que debia llegar el comerciante
-								//Hacemos que vuelva el comerciante
-								$sql="update intercambios set recurso_busca='vuelta', id_ciudad_busca = ".$reg['id_ciudad_busca'].",fecha=".$t_llega." where id_ciudad_ofrece = $this->id_ciudad";
-								$res=$this->mysqli->query($sql);
-							}
-							else
-							{
-								//Me cargo a mi y a quien le llega los recursos
-								$sql="update mapa set ".$reg['recurso_busca']." = ".$reg['recurso_busca']."+".$reg['cantidad_busca']." where id_casilla = ".$reg['id_ciudad_busca'];
-								$res=$this->mysqli->query($sql);
-
-								$sql="update mapa set ".$reg['recurso_ofrece']." = ".$reg['recurso_ofrece']."+".$reg['cantidad_ofrece']." where id_casilla =$this->id_ciudad";
-								$res=$this->mysqli->query($sql);
-
-								$t_llega=$reg['fecha']+$tiempo_transporte; //Hora a la que debia llegar el comerciante
-								//Hacemos que vuelva el comerciante
-								$sql="update intercambios set recurso_busca='vuelta', recurso_ofrece='vuelta', id_ciudad_busca = ".$reg['id_ciudad_busca'].",fecha=".$t_llega." where id_ciudad_busca = $this->id_ciudad";
-								$res=$this->mysqli->query($sql);
-							}
-						}
-
 					}
-
-					else //Si aun no ha llegado
-					{
-						
-						?>
-						<script type="text/javascript" language="javascript">
-
-						tiempo2= <?php echo $t_restantes_comercio;?>; //Tiempo que queda para que llegue el comerciante
-						i = <?php echo $i;?>;	//Numero de intercambios
-						document.getElementById("intercambios").style.display="block"; //Mostramos los intercambios
-						tiempoB[tiempoB.length]=<?php echo $t_restantes_comercio;?>;	//Tiempo que le queda al viaje
-
-						var n = tiempoB.length-1;	//Numero de viajes
-						
-						var capa2 = document.getElementById("recibos");		//Cogemos el div de envios
-						var intercambio2 = document.createElement("div");	//Le añadimos un div para el intercambios
-						intercambio2.id = "timer_comercio_ofrezco_"+n;		//Le damos un ID
-						capa2.appendChild(intercambio2);					//Mostramos el div
-						
-						timer_comercio_ofrezco(i);
-
-						function timer_comercio_ofrezco(num) //Timer de intercambios
-						{
-							n = tiempoB.length-1;
-
-							while (n >= 0) //Mostramos todos los intercambios
-							{
-								if (tiempoB[n]==0) //Si ha llegado el intercambio
-								{
-									location.reload();
-								}
-								<?php
-								if ($reg['recurso_busca']=='vuelta')//Si vuelve el mercado
-								{?>
-									document.getElementById("timer_comercio_ofrezco_"+n).innerHTML="<i>"+fecha(tiempoB[n])+"</i>";
-								<?php
-								}
-								else //Si va el mercader
-								{
-								?>
-									document.getElementById("timer_comercio_ofrezco_"+n).innerHTML=fecha(tiempoB[n]);
-								<?php
-								}
-								?>
-								tiempoB[n]--; //Quitamos un segundo
-								n -= 1;	//Pasamos al siguiente intercambio
-							}
-						}
-						
-						setInterval('timer_comercio_ofrezco('+i+')', 1000);//Hacemos que cada segundo se actualice el timer
-						</script>
-						<?php
-					}
-				}
 				$i++;
 			}
 		}
@@ -499,9 +465,10 @@ class Mercado
 			$comerciantes_por_recurso=ceil($comerciantes_por_recurso);
 		}
 		//Buscamos los intercambios en marcha
-		$sql="select * from intercambios where id_ciudad_ofrece = $this->id_ciudad or (id_ciudad_busca = $this->id_ciudad)";
+					
+		$sql="select * from intercambios where (id_ciudad_ofrece = $this->id_ciudad or (id_ciudad_busca = $this->id_ciudad and (recurso_ofrece!='todo' or (recurso_ofrece='todo' and recurso_busca!='vuelta'))))";
 		$resp=$this->mysqli->query($sql);
-		
+
 		while ($reg=$resp->fetch_array())
 		{
 			if ($reg['id_ciudad_ofrece']==$this->id_ciudad) //Si somos quienes llevamos los recursos

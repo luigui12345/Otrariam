@@ -1,6 +1,4 @@
 <?php
-$time_start = microtime(true);
-
 include("class/class.php");
 $ald=new Aldea();
 $ald->comprobar_recursos('no');
@@ -100,7 +98,4 @@ $ciudad=$_SESSION['ju_ciudad'];
 </html>
 <?php
 $ald->comprobar_recursos('si');
-$time_end = microtime(true);
-$time_total = $time_end - $time_start;
-echo "El código se ha ejecutado en $time_total segundos";
 ?>

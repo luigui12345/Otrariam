@@ -317,10 +317,9 @@ class Aldea
 			$this->mercado->mostrar_ofertas(); //Mostramos las ofertas
 			?>
 			</div><!--Mercado4-->
-
 			<?php
 		}
-		
+		$this->mercado->mostrar_ofertas('mias'); //Mostramos las ofertas
 	}
 
 	public function muestra_cuartel() //Muestra el edificio del cuartel

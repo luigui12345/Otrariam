@@ -1,6 +1,6 @@
 <?php
 include("class/class.php");
-$mer=new Mercado('no');
+$mer=new Mercado();
 
 if ($_POST['accion']=='ofertar')
 {
