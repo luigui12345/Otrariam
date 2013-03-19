@@ -1,5 +1,5 @@
 <?php
-require_once("class/perfil.php");
+include("class/perfil.php");
 $per=new Perfil();
 
 if (isset($_POST['s']))

@@ -11,7 +11,7 @@ class Mapa
 		$this->mysqli=DB::Get();
 		$this->id_ciudad=$_SESSION['ju_ciudad'];
 		$this->t_actual=strtotime(date('Y-m-d H:i:s'));
-		$sql="select * from mapa where id_casilla = $this->id_ciudad";
+		$sql="select x,y from mapa where id_casilla = $this->id_ciudad limit 1";
 		$res=$this->mysqli->query($sql);
 		$reg=$res->fetch_array();
 		$this->x=$reg['x'];
@@ -58,7 +58,7 @@ class Mapa
 		{
 			for ($j=-2;$j<3;$j++) //Hacemos que se muestren 5 cuadros por fila
 			{	
-				$sql="select * from mapa where x = $this->x + $j and y = $this->y + $i"; //Comprueba si el terreno esta ocupado
+				$sql="select nombre,x,y from mapa where x = $this->x + $j and y = $this->y + $i"; //Comprueba si el terreno esta ocupado
 				$res=$this->mysqli->query($sql);
 				$reg=$res->fetch_array();
 				if ($reg["nombre"]!="Terreno Libre") //Sino esta ocupado se pone verde
@@ -107,15 +107,9 @@ class Mapa
 			$x=safe($_GET['x']);
 			$y=safe($_GET['y']);
 			//Datos de la aldea seleccionada
-			$sql="select * from mapa where x = $x and y = $y limit 1";
+			$sql="select id_usuario,x,y,habitantes from mapa where x = $x and y = $y limit 1";
 			$res=$this->mysqli->query($sql);
 			$reg=$res->fetch_array();
-
-			//Datos del propietario de la aldea
-			$sql="select * from usuarios where id_usuario =".$reg['id_usuario'];
-			$res=$this->mysqli->query($sql);
-			$red=$res->fetch_array();
-
 			?>
 
 			<div id="perfil_aldea">
@@ -124,7 +118,7 @@ class Mapa
 			<p>Eje X: <b><?php echo $reg['x']; ?></b></p>
 			<p>Eje Y: <b><?php echo $reg['y']; ?></b></p>
 
-			<p>Propietario: <b><?php echo $red['nombre']; ?></b></p>
+			<p>Propietario: <b><?php echo Datos::usuario($reg['id_usuario']);?></b></p>
 			<p>Habitantes: <b><?php echo $reg['habitantes']; ?></b></p>
 			</div>
 
@@ -132,7 +126,7 @@ class Mapa
 
 			<div id="bottom_perfil_aldea">
 			<a href='edificio.php?s=<?php echo Datos::slotPorEdificio('mercado');?>&x=<?php echo $reg['x']; ?>&y=<?php echo $reg['y']; ?>'>Enviar Recursos<i class="icon-double-angle-right"></i></a><br />
-			<a href='redactar_mensaje.php?usuario=<?php echo $red['nombre']; ?>'>Enviar Mensaje<i class="icon-double-angle-right"></i></a><br />
+			<a href='redactar_mensaje.php?usuario=<?php echo Datos::usuario($reg['id_usuario']);?>'>Enviar Mensaje<i class="icon-double-angle-right"></i></a><br />
 			<a href='mover_tropas.php?x=<?php echo $reg['x']; ?>&y=<?php echo $reg['y']; ?>'>Enviar Tropas<i class="icon-double-angle-right"></i></a>
 			</div>
 

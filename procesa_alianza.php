@@ -1,6 +1,6 @@
 <?php
-require_once("class/class.php");
-require_once("class/alianza.php");
+include("class/class.php");
+include("class/alianza.php");
 $ali=new Alianza();
 if ($_GET['a']==1)
 {

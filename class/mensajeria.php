@@ -1,9 +1,4 @@
 <?php
-require_once('FirePHPCore/FirePHP.class.php');
-require_once("init.php");
-require_once('seguridad.php');
-require_once('datos_auxiliares.php');
-require_once('mysqli.php');
 class Mensajeria
 {
 	private $id_usuario;
@@ -47,13 +42,6 @@ class Mensajeria
 			</tr>
 
 			<?php
-			/*
-			echo Datos::usuario($reg['id_emisor'])." | ".$reg['asunto'];
-			echo "<a href='mensaje.php?mensaje=".$reg['id_mensaje']."'>Leer</a> ";
-			echo "<a href='eliminar_mensaje.php?mensaje=".$reg['id_mensaje']."'><i class='icon-trash'></i></a> <br/>";
-			*/
-
-
 		}
 		?>
 
@@ -168,9 +156,10 @@ class Mensajeria
 	{
 		$id_mensaje=safen($_GET['mensaje']); //ID mensaje a eliminar
 
-		$sql="select * from mensajes where id_mensaje = $id_mensaje";
+		$sql="select COUNT(*)from mensajes where id_mensaje = $id_mensaje limit 1";
 		$res=$this->mysqli->query($sql);
-		if ($res->num_rows == 0)
+		$reg=$res->fetch_array();
+		if ($reg[0] == 0)
 		{
 			header("Location:mensajeria.php");
 			exit;

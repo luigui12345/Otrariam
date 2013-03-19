@@ -1,8 +1,8 @@
 <?php
-require_once("class/class.php");
+include("class/class.php");
+include("class/mensajeria.php");
 $ald=new Aldea();
 $ald->comprobar_recursos('no');
-require_once("class/mensajeria.php");
 $men=new Mensajeria();
 ?>
 

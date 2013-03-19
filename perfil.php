@@ -1,9 +1,8 @@
 <?php
-require_once("class/class.php");
-require_once("class/perfil.php");
+include("class/class.php");
+include("class/perfil.php");
 $ald=new Aldea();
 $per=new Perfil();
-$ciudad=$_SESSION['ju_ciudad'];
 ?>
 
 <!DOCTYPE html>

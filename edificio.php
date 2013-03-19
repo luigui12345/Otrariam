@@ -1,6 +1,5 @@
 <?php
-require_once("class/class.php");
-require_once("class/mercado.php");
+include("class/class.php");
 $ald=new Aldea();
 $ald->comprobar_recursos('no');
 $ciudad=$_SESSION['ju_ciudad'];
@@ -62,7 +61,7 @@ $ciudad=$_SESSION['ju_ciudad'];
         <div id="wrap_aldea">
 
 
-			<div id="wrapper_recursos">
+			<div id="wrap_centro">
 
 			<?php
 			if (Datos::edificioPorSlot($_GET['s'])=='mercado')
@@ -90,26 +89,17 @@ $ciudad=$_SESSION['ju_ciudad'];
 				</div>
 			<?php
 			}
-			else if (Datos::edificioPorSlot($_GET['s'])=='cuartel')
-			{
-			?>	<div id="seccion_cuartel">
-				<div class="seccion_edificio" id="a_cuartel1">Cuartel</div>
-				<div class="seccion_edificio" id="a_cuartel2">Tropas</div>
-				</div>
-				<br />
-				<br />
-				<?php
-			}
 
-			$ald->muestra_edificio(Datos::edificioPorSlot($_GET['s']),'si');
+
+			$ald->muestra_edificio(Datos::edificioPorSlot($_GET['s']));
 			?>
 
-			</div><!--Wrapper_recursos-->
+			</div><!--wrap_centro-->
+			
 
-
-        <div id="info_aldea">
-            <?php include("include/produccion.php"); ?>
-        </div>
+	        <div id="info_aldea">
+	            <?php include("include/produccion.php"); ?>
+	        </div>
 
 
         </div><!--/#wrap_aldea-->

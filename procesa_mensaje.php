@@ -1,5 +1,6 @@
 <?php
-require_once("class/mensajeria.php");
+include("class/class.php");
+include("class/mensajeria.php");
 $men=new Mensajeria();
 if ($_POST['accion']=="enviar")
 {

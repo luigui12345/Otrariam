@@ -1,5 +1,5 @@
 <?php
-require_once("class/class.php");
+include("class/class.php");
 $ald=new Aldea();
 $ald->comprobar_recursos('no');
 $ciudad=$_SESSION['ju_ciudad'];

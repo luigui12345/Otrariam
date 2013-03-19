@@ -1,6 +1,6 @@
 <?php
-require_once("class/class.php");
-require_once("class/mapa.php");
+include("class/class.php");
+include("class/mapa.php");
 $ald=new Aldea();
 $ald->comprobar_recursos('no');
 $map=new Mapa();

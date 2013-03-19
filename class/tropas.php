@@ -15,6 +15,7 @@ class Tropas
 	public function mostrar_movimientos_tropas() //Para mostrar los movimientos de tropas que esta realizando mi aldea
 	{
 		?>
+		
 		<div id="movimientos_tropas">
 		<?php
 		//Buscamos los ataques que estoy haciendo
@@ -39,20 +40,37 @@ class Tropas
 				<tbody>
 				<tr>
 				<?php
-				for ($i=1;$i<11;$i++)
+				for ($i=1;$i<6;$i++)
 				{
 				?>
-					<td><?php echo Datos::tropa('tropa'.$i);?></td>
+					<td><?php
+
+							if(Datos::tropa("tropa$i")=='legionario'){
+							echo "<img src='img/elementos/tropas/legionario.png' class='icono_reporte' title='Legionarios'>";
+							}
+							else if(Datos::tropa("tropa$i")=='pretoriano'){
+							echo "<img src='img/elementos/tropas/pretoriano.png' class='icono_reporte' title='Pretorianos'>";
+							}
+							else if(Datos::tropa("tropa$i")=='triario'){
+							echo "<img src='img/elementos/tropas/triario.png' class='icono_reporte' title='Triarios'>";
+							}
+							else if(Datos::tropa("tropa$i")=='caballeria_ligera'){
+							echo "<img src='img/elementos/tropas/caballeria_l.png' class='icono_reporte' title='Caballería liger'>";
+							}
+							else if(Datos::tropa("tropa$i")=='caballeria_pesada'){
+							echo "<img src='img/elementos/tropas/caballeria_p.png' class='icono_reporte' title='Caballería pesada'>";
+							}
+					?></td>
 				<?php
 				}
 				?>
 				</tr>
 				<tr>
 				<?php
-				for ($i=1;$i<11;$i++)
+				for ($i=1;$i<6;$i++)
 				{
 				?>
-					<td><?php echo $reg['tropa'.$i];?></td>
+					<td><?php echo "<b>".$reg['tropa'.$i]."</b>";?></td>
 				<?php
 				}
 				?>
@@ -85,20 +103,37 @@ class Tropas
 				<tbody>
 				<tr>
 				<?php
-				for ($i=1;$i<11;$i++)
+				for ($i=1;$i<6;$i++)
 				{
 				?>
-					<td><?php echo Datos::tropa('tropa'.$i);?></td>
+					<td><?php
+
+							if(Datos::tropa("tropa$i")=='legionario'){
+							echo "<img src='img/elementos/tropas/legionario.png' class='icono_reporte' title='Legionarios'>";
+							}
+							else if(Datos::tropa("tropa$i")=='pretoriano'){
+							echo "<img src='img/elementos/tropas/pretoriano.png' class='icono_reporte' title='Pretorianos'>";
+							}
+							else if(Datos::tropa("tropa$i")=='triario'){
+							echo "<img src='img/elementos/tropas/triario.png' class='icono_reporte' title='Triarios'>";
+							}
+							else if(Datos::tropa("tropa$i")=='caballeria_ligera'){
+							echo "<img src='img/elementos/tropas/caballeria_l.png' class='icono_reporte' title='Caballería liger'>";
+							}
+							else if(Datos::tropa("tropa$i")=='caballeria_pesada'){
+							echo "<img src='img/elementos/tropas/caballeria_p.png' class='icono_reporte' title='Caballería pesada'>";
+							}
+					?></td>
 				<?php
 				}
 				?>
 				</tr>
 				<tr>
 				<?php
-				for ($i=1;$i<11;$i++)
+				for ($i=1;$i<6;$i++)
 				{
 				?>
-					<td><?php echo "?";?></td>
+					<td><?php echo "<b>?</b>";?></td>
 				<?php
 				}
 				?>
@@ -129,20 +164,37 @@ class Tropas
 				<tbody>
 				<tr>
 				<?php
-				for ($i=1;$i<11;$i++)
+				for ($i=1;$i<6;$i++)
 				{
 				?>
-					<td><?php echo Datos::tropa('tropa'.$i);?></td>
+					<td><?php
+
+							if(Datos::tropa("tropa$i")=='legionario'){
+							echo "<img src='img/elementos/tropas/legionario.png' class='icono_reporte' title='Legionarios'>";
+							}
+							else if(Datos::tropa("tropa$i")=='pretoriano'){
+							echo "<img src='img/elementos/tropas/pretoriano.png' class='icono_reporte' title='Pretorianos'>";
+							}
+							else if(Datos::tropa("tropa$i")=='triario'){
+							echo "<img src='img/elementos/tropas/triario.png' class='icono_reporte' title='Triarios'>";
+							}
+							else if(Datos::tropa("tropa$i")=='caballeria_ligera'){
+							echo "<img src='img/elementos/tropas/caballeria_l.png' class='icono_reporte' title='Caballería liger'>";
+							}
+							else if(Datos::tropa("tropa$i")=='caballeria_pesada'){
+							echo "<img src='img/elementos/tropas/caballeria_p.png' class='icono_reporte' title='Caballería pesada'>";
+							}
+					?></td>
 				<?php
 				}
 				?>
 				</tr>
 				<tr>
 				<?php
-				for ($i=1;$i<11;$i++)
+				for ($i=1;$i<6;$i++)
 				{
 				?>
-					<td><?php echo $reg['tropa'.$i];?></td>
+					<td><?php echo "<b>".$reg['tropa'.$i]."</b>";?></td>
 				<?php
 				}
 				?>
@@ -166,7 +218,7 @@ class Tropas
 				<thead>
 				<tr>
 					<td colspan="100%"><b>
-						<?php echo "<i>".Datos::ciudad($reg['id_ciudad_atacante'])."</i> ataca a <i>".Datos::ciudad($reg['id_ciudad_atacada'])."</i>"; ?>
+						<?php echo "<i>".Datos::ciudad($reg['id_ciudad_atacante'])."</i> refuerza a <i>".Datos::ciudad($reg['id_ciudad_atacada'])."</i>"; ?>
 					</b></td>
 				</tr>
 				</thead>
@@ -174,20 +226,37 @@ class Tropas
 				<tbody>
 				<tr>
 				<?php
-				for ($i=1;$i<11;$i++)
+				for ($i=1;$i<6;$i++)
 				{
 				?>
-					<td><?php echo Datos::tropa('tropa'.$i);?></td>
+					<td><?php
+
+							if(Datos::tropa("tropa$i")=='legionario'){
+							echo "<img src='img/elementos/tropas/legionario.png' class='icono_reporte' title='Legionarios'>";
+							}
+							else if(Datos::tropa("tropa$i")=='pretoriano'){
+							echo "<img src='img/elementos/tropas/pretoriano.png' class='icono_reporte' title='Pretorianos'>";
+							}
+							else if(Datos::tropa("tropa$i")=='triario'){
+							echo "<img src='img/elementos/tropas/triario.png' class='icono_reporte' title='Triarios'>";
+							}
+							else if(Datos::tropa("tropa$i")=='caballeria_ligera'){
+							echo "<img src='img/elementos/tropas/caballeria_l.png' class='icono_reporte' title='Caballería liger'>";
+							}
+							else if(Datos::tropa("tropa$i")=='caballeria_pesada'){
+							echo "<img src='img/elementos/tropas/caballeria_p.png' class='icono_reporte' title='Caballería pesada'>";
+							}
+					?></td>
 				<?php
 				}
 				?>
 				</tr>
 				<tr>
 				<?php
-				for ($i=1;$i<11;$i++)
+				for ($i=1;$i<6;$i++)
 				{
 				?>
-					<td><?php echo "?";?></td>
+					<td><?php echo "<b>?</b>";?></td>
 				<?php
 				}
 				?>

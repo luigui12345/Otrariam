@@ -1,6 +1,6 @@
 <?php
-require_once("class/class.php");
-require_once("class/ranking.php");
+include("class/class.php");
+include("class/ranking.php");
 $ald=new Aldea();
 $ran=new Ranking();
 $ald->comprobar_recursos('no');

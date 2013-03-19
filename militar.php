@@ -1,5 +1,5 @@
 <?php
-require_once("class/class.php");
+include("class/class.php");
 $ald=new Aldea();
 $ald->comprobar_recursos('no');
 $tro=new Tropas();
@@ -60,18 +60,39 @@ $ciudad=$_SESSION['ju_ciudad'];
         
         <div id="wrap_ejercito">
 
+            <div id="seccion_cuartel">
+                <div class="seccion_edificio" id="a_cuartel1">Reclutar</div>
+                <div class="seccion_edificio" id="a_cuartel2">Ataques</div>
+                <div class="seccion_edificio" id="a_cuartel3">Tropas</div>
+            </div>
+
+            <br/><br/>
+            
+            <div id="cuartel1">
+            <h3>Reclutar tropas</h3>
+            
+            <?php
+            $ald->muestra_cuartel();
+            ?>
+            </div>
+
+
+            <div id="cuartel2">
             <h3>Movimientos del ejército</h3>
             <br/>
 
             <?php
             $tro->mostrar_movimientos_tropas();
             ?>
+            </div>
 
-            <br/><br/>
-            <h3>Reclutar tropas</h3>
-            <?php
-            $ald->muestra_cuartel();
-            ?>
+
+            <div id="cuartel3">
+            <h3>Tropas</h3>
+            <br/>
+
+            </div>
+
 
         </div><!--/#wrap_ejercito-->
 

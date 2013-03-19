@@ -1,5 +1,5 @@
 <?php
-require_once("class/class.php");
+include("class/class.php");
 $tro=new Tropas();
 if (isset($_POST['accion']) && ($_POST['accion']=='reforzar' || $_POST['accion']=='atacar' || $_POST['accion']=='atracar'))
 {

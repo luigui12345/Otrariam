@@ -26,7 +26,7 @@ class Mercado
 		$y_ciudad=safen($_POST['y_ciudad']);
 		$recursos = safen($_POST['madera'])."-".safen($_POST['barro'])."-".safen($_POST['hierro'])."-".safen($_POST['cereal']);
 
-		$sql="select * from mapa where id_casilla = $this->id_ciudad limit 1";
+		$sql="select madera,barro,hierro,cereal from mapa where id_casilla = $this->id_ciudad limit 1";
 		$res=$this->mysqli->query($sql);
 		$reg=$res->fetch_array();
 		if ($reg['madera']<$_POST['madera'])
@@ -51,7 +51,7 @@ class Mercado
 		}
 
 		//Datos de la ciudad a la que se envia
-		$sql="select * from mapa where x = $x_ciudad and y = $y_ciudad limit 1";
+		$sql="select id_casilla from mapa where x = $x_ciudad and y = $y_ciudad limit 1";
 		$res=$this->mysqli->query($sql);
 
 		if ($res->num_rows>0) //Si existe la ciudad
@@ -84,7 +84,7 @@ class Mercado
 		$busco=safen($_POST['busco']);
 
 		//Datos de mi aldea
-		$sql="select * from mapa where id_casilla = $this->id_ciudad limit 1";
+		$sql="select madera,barro,hierro,cereal from mapa where id_casilla = $this->id_ciudad limit 1";
 		$res=$this->mysqli->query($sql);
 		$reg=$res->fetch_array();
 		
@@ -121,9 +121,45 @@ class Mercado
 		{
 			$n_ciudad=Datos::ciudad($reg['id_ciudad']); //Muestra el nombre de la ciudad
 			?>
-			Ciudad: <?php echo $n_ciudad;?> | 
-			Ofrece: <?php echo $reg['cantidad_ofrece'];?> de <?php echo $reg['recurso_ofrece'];?> | 
-			Busca: <?php echo $reg['cantidad_busca'];?> de <?php echo $reg['recurso_busca'];
+			Ciudad: <?php echo $n_ciudad." | ";?>
+
+			Ofrece:
+
+			<?php
+				if($reg['recurso_ofrece']=='madera'){
+				echo "<img src='img/elementos/recursos/madera.png' class='recurso_reporte' title='Madera'>";
+				}
+				if($reg['recurso_ofrece']=='barro'){
+				echo "<img src='img/elementos/recursos/ladrillo.png' class='recurso_reporte' title='Ladrillo'>";
+				}
+				if($reg['recurso_ofrece']=='hierro'){
+				echo "<img src='img/elementos/recursos/hierro.png' class='recurso_reporte' title='Hierro'>";
+				}
+				if($reg['recurso_ofrece']=='cereal'){
+				echo "<img src='img/elementos/recursos/cereal.png' class='recurso_reporte' title='Cereal'>";
+				}
+			?>
+			<?php echo "<b>".$reg['cantidad_ofrece']."</b>";?> 
+
+			|
+
+			Busca:
+
+			<?php
+				if($reg['recurso_busca']=='madera'){
+				echo "<img src='img/elementos/recursos/madera.png' class='recurso_reporte' title='Madera'>";
+				}
+				if($reg['recurso_busca']=='barro'){
+				echo "<img src='img/elementos/recursos/ladrillo.png' class='recurso_reporte' title='Ladrillo'>";
+				}
+				if($reg['recurso_busca']=='hierro'){
+				echo "<img src='img/elementos/recursos/hierro.png' class='recurso_reporte' title='Hierro'>";
+				}
+				if($reg['recurso_busca']=='cereal'){
+				echo "<img src='img/elementos/recursos/cereal.png' class='recurso_reporte' title='Cereal'>";
+				}
+			echo "<b>".$reg['cantidad_busca']."</b>"; 
+
 
 			if ($reg['cantidad_busca'] > $ret[$reg['recurso_busca']] || $reg['cantidad_busca']/500 > $this->comerciantes_disponibles) //Si no puedes pagar la oferta
 			{
@@ -132,7 +168,7 @@ class Mercado
 			else //Si puedes pagarla
 			{
 				?>
-				<a href='comerciar.php?id_oferta=<?php echo $reg['id_oferta'];?>'>Aceptar</a>
+				 <a href='comerciar.php?id_oferta=<?php echo $reg['id_oferta'];?>'class="boton">Aceptar</a>
 				<?php
 			}
 			?>
@@ -144,7 +180,7 @@ class Mercado
 	public function aceptar_oferta() //Aceptar la oferta
 	{
 		//Datos de mi ciudad
-		$sql="select * from mapa where id_casilla = $this->id_ciudad limit 1";
+		$sql="select madera,barro,hierro,cereal from mapa where id_casilla = $this->id_ciudad limit 1";
 		$res=$this->mysqli->query($sql);
 		$ret=$res->fetch_array();
 
@@ -152,10 +188,6 @@ class Mercado
 		$sql="select * from ofertas where id_oferta = ".$_GET['id_oferta']." limit 1";
 		$res=$this->mysqli->query($sql);
 		$reg=$res->fetch_array();
-
-		$sql="select * from edificios_aldea where edificio = 'mercado' and id_ciudad=$this->id_ciudad";
-		$res=$this->mysqli->query($sql);
-		$rem=$res->fetch_array();
 
 		if ($reg['cantidad_busca'] > $ret[$reg['recurso_busca']] || $reg['cantidad_busca']/500 > $this->comerciantes_disponibles) //Si no puedes pagar la oferta
 		{
@@ -194,10 +226,10 @@ class Mercado
 				if ($reg['id_ciudad_ofrece']==$this->id_ciudad) //Si nosotroso somos la ciudad que ofrecemos
 				{
 					//Cogemos los datos de mi ciudad y la que me compra
-					$sql="select * from mapa where id_casilla = $this->id_ciudad";
+					$sql="select x,y from mapa where id_casilla = $this->id_ciudad";
 					$res=$this->mysqli->query($sql);
 					$red=$res->fetch_array();
-					$sql="select * from mapa where id_casilla =".$reg['id_ciudad_busca']."";
+					$sql="select x,y from mapa where id_casilla =".$reg['id_ciudad_busca']."";
 					$res=$this->mysqli->query($sql);
 					$rel=$res->fetch_array();
 
@@ -323,10 +355,10 @@ class Mercado
 				if ($reg['id_ciudad_ofrece']!=$this->id_ciudad) //Si yo soy quien compra
 				{
 					//Cogemos los datos de mi ciudad y la que me compra
-					$sql="select * from mapa where id_casilla = $this->id_ciudad";
+					$sql="select x,y from mapa where id_casilla = $this->id_ciudad";
 					$res=$this->mysqli->query($sql);
 					$red=$res->fetch_array();
-					$sql="select * from mapa where id_casilla =".$reg['id_ciudad_ofrece']."";
+					$sql="select x,y from mapa where id_casilla =".$reg['id_ciudad_ofrece']."";
 					$res=$this->mysqli->query($sql);
 					$rel=$res->fetch_array();
 
@@ -447,7 +479,6 @@ class Mercado
 					}
 				}
 				$i++;
-
 			}
 		}
 	}
@@ -458,7 +489,7 @@ class Mercado
 		$comerciantes_por_recurso=0;
 
 		//Buscamos nuestras ofertas
-		$sql="select * from ofertas where id_ciudad = $this->id_ciudad";
+		$sql="select cantidad_ofrece from ofertas where id_ciudad = $this->id_ciudad";
 		$res=$this->mysqli->query($sql);
 
 		while ($reg=$res->fetch_array()) //Recorremos nuestras ofertas

@@ -1,5 +1,5 @@
 <?php
-require_once("class/login.php");
+include("class/login.php");
 $log = new Login();
 $log->registro();
 

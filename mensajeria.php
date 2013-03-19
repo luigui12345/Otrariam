@@ -1,12 +1,10 @@
 <?php
-require_once("class/class.php");
+include("class/class.php");
+include("class/mensajeria.php");
 $ald=new Aldea();
 $ald->comprobar_recursos('no');
-require_once("class/mensajeria.php");
 $men=new Mensajeria();
 ?>
-
-
 
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -83,3 +81,5 @@ $men=new Mensajeria();
 </body>
 
 </html>
+<?php
+?>

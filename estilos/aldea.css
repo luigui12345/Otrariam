@@ -305,7 +305,7 @@ margin: 0px 0px 0px 10px;
 		.menu4{
 		background-color: #FDC673;
 		}
-		
+
 		.circulo img{
 		width: 80px;
 		height: 80px;
@@ -632,6 +632,7 @@ position: relative;
 }
 
 .tabla_reportes{
+float: left;
 width: 90%;
 margin: 30px auto;
 color: #333;
@@ -889,6 +890,17 @@ float: left;
 padding: 0px 10px;
 }
 
+
+#cuartel1, #cuartel2, #cuartel3{
+width: 100%;
+float: left;
+}
+
+#cuartel2, #cuartel3{
+display: none;
+}
+
+
 .input_mercado{
 width: 60px;
 margin: 0px 10px;
@@ -954,4 +966,3 @@ margin-top: 10px;
 #a_mercado1, #a_mercado2, #a_mercado3, #a_mercado4{
 cursor: pointer;
 }
-

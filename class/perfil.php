@@ -1,10 +1,4 @@
 <?php
-require_once('FirePHPCore/FirePHP.class.php');
-require_once("init.php");
-require_once('seguridad.php');
-require_once('datos_auxiliares.php');
-require_once('mysqli.php');
-
 class Perfil
 {
 	private $mysqli;
@@ -32,7 +26,7 @@ class Perfil
 			$id_usuario=$this->id_usuario;
 		}
 
-		$sql="select * from usuarios where id_usuario=$id_usuario";
+		$sql="select * from usuarios where id_usuario=$id_usuario limit 1";
 		$res=$this->mysqli->query($sql);
 		$reg=$res->fetch_array();
 		?>

@@ -1,6 +1,6 @@
 <?php
 ob_start();
-require_once('./FirePHPCore/FirePHP.class.php'); //FirePHP para poder debuguear
+include ('./FirePHPCore/FirePHP.class.php'); //FirePHP para poder debuguear
 include ('init.php');				//Constantes y la session
 include ('seguridad.php');			//Funciones de seguridad
 include ('datos_auxiliares.php');	//Funciones para obtener datos concretos
@@ -46,12 +46,12 @@ class Aldea
 			$this->id_usuario=Datos::id($this->usuario);
 			$this->id_ciudad=$_SESSION['ju_ciudad'];
 			$this->t_actual=strtotime(date('Y-m-d H:i:s'));
-			$sql="select * from edificios_aldea where id_ciudad=$this->id_ciudad and edificio = 'Almacen'";
+			$sql="select produccion from edificios_aldea where id_ciudad=$this->id_ciudad and edificio = 'Almacen' limit 1";
 			$res=$this->mysqli->query($sql);
 			$reg=$res->fetch_array();
 			$this->capacidad=$reg['produccion'];
 			$this->ciudad=Datos::ciudad($this->id_ciudad);
-			$sql="select * from mapa where id_casilla = $this->id_ciudad";
+			$sql="select x,y from mapa where id_casilla = $this->id_ciudad";
 			$res=$this->mysqli->query($sql);
 			$reg=$res->fetch_array();
 			$this->x=$reg['x'];
@@ -66,7 +66,7 @@ class Aldea
 	public function produccion_hora($edificio)	//Muestra la produccion por hora del edificio seleccionado
 	{
 		$edificio=utf8_encode($edificio);
-		$sql="select * from edificios_aldea where id_ciudad = $this->id_ciudad and edificio = '$edificio' limit 1";
+		$sql="select produccion from edificios_aldea where id_ciudad = $this->id_ciudad and edificio = '$edificio' limit 1";
 		$res=$this->mysqli->query($sql);
 		$reg=$res->fetch_array();
 		if ($edificio == 'granja') //Si el edificio es la granja le restamos el consumo de cereal
@@ -82,7 +82,7 @@ class Aldea
 	
 	public function slot()
 	{
-		$sql="select * from edificios_aldea where id_ciudad=$this->id_ciudad and nivel=0";
+		$sql="select edificio from edificios_aldea where id_ciudad=$this->id_ciudad and nivel=0";
 		$res=$this->mysqli->query($sql);
 		while($reg=$res->fetch_array())
 		{
@@ -96,16 +96,18 @@ class Aldea
 		$j=1;
 		$slot=0;
 		$edificiosSlot=array();
-		$sql="select * from edificios_aldea where id_ciudad = $this->id_ciudad order by slot";
+		$sql="select edificio,slot from edificios_aldea where id_ciudad = $this->id_ciudad order by slot";
 		$res=$this->mysqli->query($sql);
 		while($reg=$res->fetch_array())
 		{
 			$edificioSlot[]=array($reg['edificio'],$reg['slot']);
 		}
 
-		for ($i=0;$i<count($edificioSlot);$i++)
+		$nEdificioSlot=count($edificioSlot);
+
+		for ($i=0;$i<$nEdificioSlot;$i++)
 		{
-			for ($j=0;$j<count($edificioSlot);$j++)
+			for ($j=0;$j<$nEdificioSlot;$j++)
 			{
 
 				if ($edificioSlot[$j][1]==$i+1)
@@ -167,7 +169,7 @@ class Aldea
 		?>
 		<div id="mostrar_embajada">
 		<?php
-		$sql="select * from miembros_alianzas where id_usuario=$this->id_usuario order by estado desc limit 1";
+		$sql="select id_alianza,estado from miembros_alianzas where id_usuario=$this->id_usuario order by estado desc limit 1";
 		$res=$this->mysqli->query($sql);
 		if ($res->num_rows > 0)
 		{
@@ -185,10 +187,10 @@ class Aldea
 					?>
 					<p>Actualmente no perteneces a ninguna alianza.</p><br/>
 					<p><b>Fundar una alianza</b></p>
-					<img src="img/elementos/recursos/madera.png" class="recurso_coste" title="Madera"> 1000 |
-					<img src="img/elementos/recursos/ladrillo.png" class="recurso_coste" title="Ladrillo"> 1000 |
-					<img src="img/elementos/recursos/hierro.png" class="recurso_coste" title="Hierro"> 1000 |
-					<img src="img/elementos/recursos/cereal.png" class="recurso_coste" title="Cereal"> 1000
+					<img src="img/elementos/recursos/madera.png" class="recurso_coste" title="Madera"> 500 |
+					<img src="img/elementos/recursos/ladrillo.png" class="recurso_coste" title="Ladrillo"> 500 |
+					<img src="img/elementos/recursos/hierro.png" class="recurso_coste" title="Hierro"> 500 |
+					<img src="img/elementos/recursos/cereal.png" class="recurso_coste" title="Cereal"> 500
 					
 					<form name="form_fundar" method="post" action="procesa_alianza.php?a=4">
 						<input type="text" name="nombre" class="input_enviar" required/>
@@ -235,7 +237,7 @@ class Aldea
 		?>
 		
 		<div id="info_mercado">
-		<p>Comerciantes disponibles:<strong> <?php echo $this->comerciantes_disponibles; ?></strong></p>
+		<p>Comerciantes disponibles:<strong> <?php echo $this->comerciantes_disponibles;?></strong></p>
 		<p>Recursos que puede transportar cada comerciante:<strong> 500 </strong></p>
 		</div>
 
@@ -287,15 +289,6 @@ class Aldea
 				if (isset($_GET['x']) and isset($_GET['y']) and is_numeric($_GET['x']) and is_numeric($_GET['y'])) //Si hemos seleccionado una ciudad para enviarle recursos
 				{
 					?>
-					<script type="text/javascript" language="javascript">
-					$(document).ready(function()
-					{
-						/*$("#mercado1").css("display", "none");
-						$("#mercado2").css("display", "none");
-						$("#mercado3").css("display", "none");
-						$("#mercado4").css("display", "none");*/
-					});
-					</script>
 					Coordenadas de la ciudad: X <input type="text" name="x_ciudad" value="<?php echo $_GET['x'];?>" class="input_mercado" required />
 					 Y <input type="text" name="y_ciudad" value="<?php echo $_GET['y'];?>" class="input_mercado" required/>
 					<?php
@@ -335,9 +328,6 @@ class Aldea
 
 		$j=0; //Contador para mostrar el numero de la tropa
 		$tropa_no_disponible=0;
-		$sql="select * from edificios_aldea where id_ciudad = $this->id_ciudad and edificio = 'cuartel' limit 1";
-		$res=$this->mysqli->query($sql);
-		$red=$res->fetch_array();
 
 		$sql="select * from datos_tropas where parte_ejercito='infanteria'";
 		$res=$this->mysqli->query($sql);
@@ -348,7 +338,7 @@ class Aldea
 			for($i=0;$i<count($requisitos);$i++)
 			{
 				$requisitos2=explode('_',$requisitos[$i]);
-				$sql="select * from edificios_aldea where edificio = '$requisitos2[0]' and nivel >= $requisitos2[1] and id_ciudad = $this->id_ciudad";
+				$sql="select * from edificios_aldea where edificio = '$requisitos2[0]' and nivel >= $requisitos2[1] and id_ciudad = $this->id_ciudad limit 1";
 				
 				$resp=$this->mysqli->query($sql);
 				
@@ -380,6 +370,7 @@ class Aldea
 
 		}
 		?>		
+
 			<div id="mostrar_reclutamiento" style="float:left;">
 			<?php $this->tropas->mostar_reclutamiento(); ?>
 			</div>
@@ -387,31 +378,19 @@ class Aldea
 
 		</form>
 
-		<div id="cuartel2">
-		<?php
-		$this->tropas->mostrar_movimientos_tropas();
-		?>
-		</div>
-		<div id="cuartel3">
-			Aqui iran los datos de las tropas
-		</div>
-		<script type="text/javascript" language="javascript">
-		$("#cuartel1").css("display", "block");
-		$("#cuartel2").css("display", "none");
-		$("#cuartel3").css("display", "none");
-		</script>
+
 		<?php
 	}
-
+	
 	public function muestra_edificio($edificio,$cuentaNivel=null) //Para mostrar los datos del edificio que se esta viendo
 	{
 		if (is_numeric($edificio))
 		{
-			$sql="select * from edificios_aldea where id_ciudad = $this->id_ciudad and slot = $edificio limit 1";
+			$sql="select edificio,nivel,produccion from edificios_aldea where id_ciudad = $this->id_ciudad and slot = $edificio limit 1";
 		}
 		else
 		{
-			$sql="select * from edificios_aldea where id_ciudad = $this->id_ciudad and edificio = '$edificio' limit 1";
+			$sql="select edificio,nivel,produccion from edificios_aldea where id_ciudad = $this->id_ciudad and edificio = '$edificio' limit 1";
 		}
 		$res=$this->mysqli->query($sql);
 		$reg=$res->fetch_array(); 
@@ -422,7 +401,9 @@ class Aldea
 		}
 		if ($reg['edificio'] == "cuartel")
 		{
-				?>
+			?>
+
+
 				<div class="nombre_edificio"><strong>Cuartel</strong> - Nivel <?php echo $reg["nivel"];?></div>
 
 				<div class="edificio_descripcion">
@@ -434,12 +415,24 @@ class Aldea
 				<img src="img/elementos/edificios/cuartel.png" class="img_recurso" title="Cuartel">
 
 				<div class="edificio_costes">
-					<p>Subir a nivel <?php echo $reg["nivel"]+1; ?></p>
-					<div class="subir_nivel"><?php $this->coste_ampliacion($reg["edificio"],$reg["nivel"]); ?></div>
+				<p>Subir a nivel <?php echo $reg["nivel"]+1; ?></p>
+				<div class="subir_nivel"><?php $this->coste_ampliacion($reg["edificio"],$reg["nivel"]); ?></div>
 				</div>
 
 				</div>
+
+
 				<?php
+				if ($reg['nivel']>0) //Si se ha construido el Cuartel
+				{
+					$this->muestra_cuartel();
+				}
+				else
+				{
+					?>
+					</div>
+					<?php
+				}
 
 		}
 
@@ -553,10 +546,8 @@ class Aldea
 				<div class="subir_nivel"><?php $this->coste_ampliacion($reg["edificio"],$reg["nivel"]); ?></div>
 				</div>
 
-
 				<?php
 				break;
-
 
 				case "mina":    
 				?>
@@ -582,7 +573,6 @@ class Aldea
 				case "granja":    
 				?>
 
-
 				<div class="nombre_edificio"><strong>Granja</strong> - Nivel <?php echo $reg["nivel"];?></div>
 
 				<div class="edificio_descripcion">
@@ -596,13 +586,11 @@ class Aldea
 				<div class="subir_nivel"><?php $this->coste_ampliacion($reg["edificio"],$reg["nivel"]); ?></div>
 				</div>
 
-
 				<?php
 				break;
 
 				case "almacen":    
 				?>
-
 				<div class="nombre_edificio"><strong>Almacén</strong> - Nivel <?php echo $reg["nivel"];?></div>
 
 				<div class="edificio_descripcion">
@@ -617,7 +605,6 @@ class Aldea
 				</div>
 
 				<?php
-
 				break;
 
 				case "ayuntamiento":    
@@ -644,11 +631,8 @@ class Aldea
 				header("Location:index.php"); //Si no existe el edificio volvemos al index
 
 				break;
-
 			}
-
 		}
-
 	}
 //********************************************************************************************************************
 //***********************FUNCIONES AMPLIAR****************************************************************************
@@ -657,7 +641,7 @@ class Aldea
 	{
 		$edificio=safe_edificio($edificio);
 
-		$sql="select * from costes_construcciones where edificio = '$edificio' and nivel = $nivel+1 limit 1";
+		$sql="select madera,barro,hierro,cereal,tiempo from costes_construcciones where edificio = '$edificio' and nivel = $nivel+1 limit 1";
 		$res=$this->mysqli->query($sql);
 
 		if($reg=$res->fetch_array()) //Muestra los recursos necesarios
@@ -707,9 +691,10 @@ class Aldea
 	{
 		$edificio=safe_edificio($edificio);
 
-		$sql="select * from eventos where id_ciudad = $this->id_ciudad";
+		$sql="select COUNT(*) from eventos where id_ciudad = $this->id_ciudad";
 		$res=$this->mysqli->query($sql);
-		if ($res->num_rows>0) //Comprueba que no hay construcciones en curso
+		$reg=$res->fetch_array();
+		if ($reg[0]>0) //Comprueba que no hay construcciones en curso
 		{
 			header("Location:index.php");
 			exit;
@@ -718,17 +703,17 @@ class Aldea
 		$slot=$_GET['s'];
 
 		//Cogemos los datos del ayuntamiento
-		$sql="select * from edificios_aldea where edificio='Ayuntamiento' and id_ciudad=$this->id_ciudad limit 1";
+		$sql="select produccion from edificios_aldea where edificio='Ayuntamiento' and id_ciudad=$this->id_ciudad limit 1";
 		$res=$this->mysqli->query($sql);
 		$red=$res->fetch_array();
 
 		//Cogemos los datos del edificio a ampliar
-		$sql="select * from edificios_aldea where edificio = '$edificio' and id_ciudad = $this->id_ciudad limit 1";
+		$sql="select edificio,nivel from edificios_aldea where edificio = '$edificio' and id_ciudad = $this->id_ciudad limit 1";
 		$res=$this->mysqli->query($sql);
 		$reg=$res->fetch_array();
 
 		//Buscamos sus costes_construcciones de ampliacon
-		$sql="select * from costes_construcciones where edificio = '".$reg['edificio']."' and nivel = ".$reg['nivel']."+1 limit 1";
+		$sql="select barro,madera,hierro,cereal,tiempo from costes_construcciones where edificio = '".$reg['edificio']."' and nivel = ".$reg['nivel']."+1 limit 1";
 		$res=$this->mysqli->query($sql);
 		$ret=$res->fetch_array();
 
@@ -748,19 +733,19 @@ class Aldea
 	{
 		$edificio=safe_edificio($edificio);
 
-		$sql="select * from eventos where edificio='$edificio' and id_ciudad=$this->id_ciudad";
+		$sql="select slot from eventos where edificio='$edificio' and id_ciudad=$this->id_ciudad limit 1";
 		$res=$this->mysqli->query($sql);
 		$rem=$res->fetch_array();
 
 		$slot=$rem['slot'];
 
 		//Cogemos los datos del edificio a amplair
-		$sql="select * from edificios_aldea where edificio = '$edificio' and id_ciudad = $this->id_ciudad limit 1";
+		$sql="select edificio,nivel,habitantes from edificios_aldea where edificio = '$edificio' and id_ciudad = $this->id_ciudad limit 1";
 		$res=$this->mysqli->query($sql);
 		$reg=$res->fetch_array();
 
 		//Miramos los costes_construcciones de su ampliacon
-		$sql="select * from costes_construcciones where edificio = '".$reg['edificio']."' and nivel = ".$reg['nivel']."+1 limit 1";
+		$sql="select produccion,habitantes from costes_construcciones where edificio = '".$reg['edificio']."' and nivel = ".$reg['nivel']."+1 limit 1";
 		$res=$this->mysqli->query($sql);
 		$ret=$res->fetch_array();
 
@@ -784,7 +769,7 @@ class Aldea
 	public function almacen() //Da valor a las variables del almacen
 	{
 		//Cogemos los datos de nuestro almacen
-		$sql="select * from edificios_aldea where id_ciudad = $this->id_ciudad and edificio = 'almacen' limit 1";
+		$sql="select nivel from edificios_aldea where id_ciudad = $this->id_ciudad and edificio = 'almacen' limit 1";
 		$res=$this->mysqli->query($sql);
 		$reg=$res->fetch_array();
 
@@ -823,12 +808,15 @@ class Aldea
 			while($reg=$resp->fetch_array())
 			{
 				$tropas_restantes=$reg['n_tropas']-$reg['n_tropas_reclutadas']; //Tropas que quedan por reclutar
-				$sql="select * from datos_tropas where tropa = '".$reg['tropa']."'";
+
+				$sql="select tiempo from datos_tropas where tropa = '".$reg['tropa']."' limit 2";
 				$res=$this->mysqli->query($sql);
 				$red=$res->fetch_array();
+
 				$tp_tropa=$red['tiempo']; 				//Tiempo que tarda en producirse una tropa
 				$tt_tropa=$tp_tropa*$reg['n_tropas']; 	//Tiempo que tardan en producirse todas
 				$t_terminara=$tt_tropa+$reg['fecha'];	 //Hora a la que terminara de reclutarse todo
+
 				//Tiempo pasado desde que ordene reclutar hasta ahora
 				$t_transcurrido=$this->t_actual-($tp_tropa*$reg['n_tropas_reclutadas']+$reg['fecha']);
 				$tropas_reclutan=floor($t_transcurrido/$tp_tropa); //Para no reclutar de mas redondeamos hacia abajo
@@ -854,12 +842,12 @@ class Aldea
 	{
 		//*****************************************************************************************
 		//Cogemos los datos del edificio seleccionado
-		$sql="select * FROM edificios_aldea WHERE id_ciudad = $this->id_ciudad AND edificio='$edificio' limit 1";
+		$sql="select produccion,recurso,edificio,nivel FROM edificios_aldea WHERE id_ciudad = $this->id_ciudad AND edificio='$edificio' limit 1";
 		$res=$this->mysqli->query($sql);
 		$reg=$res->fetch_array();
 		
 		//Miramos si este se esta construyendo
-		$sql="select * from eventos where id_ciudad = $this->id_ciudad and edificio = '$edificio'";
+		$sql="select tiempo from eventos where id_ciudad = $this->id_ciudad and edificio = '$edificio' limit 1";
 		$res=$this->mysqli->query($sql);
 
 		if ($res->num_rows>0) //Si hay una construccion
@@ -867,7 +855,7 @@ class Aldea
 			$ret=$res->fetch_array();
 
 			//Miramos los costes_construcciones del edificio
-			$sql="select * from costes_construcciones where edificio = '".$reg["edificio"]."' and nivel = ".$reg["nivel"]."+1 limit 1";
+			$sql="select tiempo from costes_construcciones where edificio = '".$reg["edificio"]."' and nivel = ".$reg["nivel"]."+1 limit 1";
 			$res=$this->mysqli->query($sql);
 			$rel=$res->fetch_array();
 
@@ -877,7 +865,7 @@ class Aldea
 			$t_cuando = $t_construira+$t_orden; //Hora la que se construira
 
 			//Miramos los costes_construcciones del edificio a construir
-			$sql="select * from costes_construcciones where edificio = '".$reg["edificio"]."' and nivel = ".$reg["nivel"]."+1 limit 1";
+			$sql="select tiempo from costes_construcciones where edificio = '".$reg["edificio"]."' and nivel = ".$reg["nivel"]."+1 limit 1";
 			$res=$this->mysqli->query($sql);
 			$rug=$res->fetch_array();
 		
@@ -894,9 +882,8 @@ class Aldea
 					$p_edificio1=$reg['produccion']/3600*$t1; 	//Lo que ha producido el edificio antes de la construccion
 				}
 				$this->ampliar($edificio); 					//Ampliamos el edificio
-
 				//Comprobamos los datos del edificio ampliado
-				$sql="select * FROM edificios_aldea WHERE id_ciudad = $this->id_ciudad AND edificio='$edificio' limit 1";
+				$sql="select produccion FROM edificios_aldea WHERE id_ciudad = $this->id_ciudad AND edificio='$edificio' limit 1";
 				$res=$this->mysqli->query($sql);
 				$reg=$res->fetch_array();
 
@@ -946,7 +933,6 @@ class Aldea
 					<script type="text/javascript" language="javascript">
 					var tiempos = <?php echo $tiempos?>;
 
-
 					function tiempo() //Para mostrar el tiempo
 					{
 						if (tiempos==0) //Si ha pasado el tiempo actualizamos
@@ -983,14 +969,13 @@ class Aldea
 				{
 					$p_1=$reg['produccion']/3600*$this->tiempo_almacen; //Lo que se produce antes de que se contruya el almacen
 				}
-				
-
-				$sql="select * from mapa where id_casilla = $this->id_ciudad limit 1";
-				$res=$this->mysqli->query($sql);
-				$rez=$res->fetch_array();
 
 				if ($edificio == 'Leñador' || $edificio == 'Mina' || $edificio == 'Barrera' || $edificio == 'Granja') //Si es un edificio de produccion el seleccionado
 				{
+					$sql="select madera,barro,hierro,cereal from mapa where id_casilla = $this->id_ciudad limit 1";
+					$res=$this->mysqli->query($sql);
+					$rez=$res->fetch_array();
+
 					if ($p_1+$rez[$reg['recurso']]>$this->capacidad) //Si al sumar la produccion se supera la capacidad
 					{
 						$p_1=$this->capacidad-$rez[$reg['recurso']];	//Producimos lo que hace falta para llenar el almacen
@@ -1017,7 +1002,7 @@ class Aldea
 			}
 			else //Sino se esta construyendo el almacen
 			{
-				$sql = "select * FROM edificios_aldea WHERE id_ciudad = $this->id_ciudad AND edificio='$edificio' limit 1";
+				$sql = "select produccion FROM edificios_aldea WHERE id_ciudad = $this->id_ciudad AND edificio='$edificio' limit 1";
 				$res=$this->mysqli->query($sql);
 				$reg=$res->fetch_array();
 				
@@ -1037,8 +1022,6 @@ class Aldea
 		
 	}
 
-
-
 	public function comprobar_recursos($mostrar,$procesar_tropas=null,$id_ciudad=null,$time=null) //Es el motor del juego
 	{
 		if (isset($id_ciudad)) //Si queremos que se calcule otra ciudad
@@ -1056,9 +1039,8 @@ class Aldea
 		$res=$this->mysqli->query($sql);
 		$reg=$res->fetch_array();
 
-		$last_update = $reg["last_update"]; //La ultima vez que actualizamos
-		$this->last_update=$last_update;
-		$this->t_transcurrido = $this->t_actual-$last_update; //Tiempo que ha pasado desde la ultima vez que actualizamos
+		$this->last_update=$reg["last_update"];
+		$this->t_transcurrido=$this->t_actual-$this->last_update; //Tiempo que ha pasado desde la ultima vez que actualizamos
 
 		//Calculamos los recursos de cada edificio
 		//*****************************************************************************************
@@ -1103,11 +1085,6 @@ class Aldea
 		{
 			$this->mTropas->procesar_movimiento_tropas($this->id_ciudad,'si',$this->t_actual);
 		}
-		//Comprobamos de nuevo los datos de la ciudad
-		$sql="select * from mapa where id_casilla = $this->id_ciudad limit 1";
-		$res=$this->mysqli->query($sql);
-		$re1=$res->fetch_array();
-
 		//Actualizamos los recursos
 		$sql="update mapa set last_update = $this->t_actual, cereal = cereal+$p_granja, madera = madera+$p_leñador, barro = barro+$p_barrera, hierro = hierro+$p_mina where id_casilla = '$this->id_ciudad'";
 		$res=$this->mysqli->query($sql);
@@ -1122,7 +1099,7 @@ class Aldea
 		$this->construira_almacen=0;
 
 		//Datos del almacen
-		$sql="select * from edificios_aldea where id_ciudad=$this->id_ciudad and edificio = 'Almacen' limit 1";
+		$sql="select produccion from edificios_aldea where id_ciudad=$this->id_ciudad and edificio = 'Almacen' limit 1";
 		$res=$this->mysqli->query($sql);
 		$rem=$res->fetch_array();
 
@@ -1151,7 +1128,7 @@ class Aldea
 		}
 
 		//Comprobamos de nuevo los datos de la ciudad
-		$sql="select * from mapa where id_casilla = $this->id_ciudad";
+		$sql="select * from mapa where id_casilla = $this->id_ciudad limit 1";
 		$res=$this->mysqli->query($sql);
 		$reg=$res->fetch_array();
 

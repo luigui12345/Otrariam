@@ -1,6 +1,6 @@
 <?php
-require_once('./FirePHPCore/FirePHP.class.php');
 ob_start();
+include('./FirePHPCore/FirePHP.class.php');
 include ('init.php');
 include ('seguridad.php');
 include ('datos_auxiliares.php');

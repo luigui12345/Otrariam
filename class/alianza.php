@@ -22,7 +22,7 @@ Class Alianza
 		}
 		else
 		{
-			$sql="select * from miembros_alianzas where id_usuario=$this->id_usuario and estado=1";
+			$sql="select id_alianza from miembros_alianzas where id_usuario=$this->id_usuario and estado=1";
 			$res=$this->mysqli->query($sql);
 			if ($res->num_rows > 0)
 			{
@@ -39,7 +39,7 @@ Class Alianza
 	public function mostrarAlianza()
 	{
 		$misCargos=array();
-		$sql="select * from cargos_alianzas where id_alianza=$this->id_alianza and id_usuario=$this->id_usuario";
+		$sql="select * from cargos_alianzas where id_alianza=$this->id_alianza and id_usuario=$this->id_usuario limit 1";
 		$res=$this->mysqli->query($sql);
 		$reg=$res->fetch_array();
 		for ($i=1;$i<11;$i++)
@@ -49,34 +49,34 @@ Class Alianza
 
 		if (!isset($_GET['a']))
 		{
-			$accion='index';
+			//$accion='index';
 			$this->mostrarIndexAlianza();
 		}
 		else
 		{
 			if ($_GET['a']==0)
 			{
-				$accion='index';
+				//$accion='index';
 				$this->mostrarIndexAlianza();
 			}
 			else if ($_GET['a']==1 && $misCargos[0]==1)
 			{
-				$accion='invitar';
+				//$accion='invitar';
 				$this->mostrarInvitarAlianza();
 			}
 			else if ($_GET['a']==2 && $misCargos[1]==1)
 			{
-				$accion='expulsar';
+				//$accion='expulsar';
 				$this->mostrarExpulsarAlianza();
 			}
 			else if ($_GET['a']==3 && $misCargos[2]==1)
 			{
-				$accion='cargos';
+				//$accion='cargos';
 				$this->mostrarCargosAlianza();
 			}
 			else if ($_GET['a']==4 && $misCargos[3]==1)
 			{
-				$accion='diplomacia';
+				//$accion='diplomacia';
 				$this->mostrarDiplomaciaAlianza();
 				
 			}
@@ -97,7 +97,7 @@ Class Alianza
 
 	public function mostrarIndexAlianza()
 	{
-		$sql="select * from alianzas where id_alianza=$this->id_alianza";
+		$sql="select nombre,fecha from alianzas where id_alianza=$this->id_alianza limit 1";
 		$res=$this->mysqli->query($sql);
 		$reg=$res->fetch_array();
 
@@ -107,7 +107,7 @@ Class Alianza
 		<p>Fecha de la fundación: <b><?php echo $reg['fecha']; ?></b></p>
 
 		<?php
-		$sql="select * from miembros_alianzas where id_alianza=$this->id_alianza and estado=1";
+		$sql="select id_usuario from miembros_alianzas where id_alianza=$this->id_alianza and estado=1";
 		$res=$this->mysqli->query($sql);
 		?>
 		<h3>Usuarios</h3>
@@ -148,7 +148,7 @@ Class Alianza
 		</form>
 		<br />
 		<?php
-		$sql="select * from miembros_alianzas where id_alianza=$this->id_alianza and estado=0";
+		$sql="select id_usuario from miembros_alianzas where id_alianza=$this->id_alianza and estado=0";
 		$res=$this->mysqli->query($sql);
 		while($reg=$res->fetch_array())
 		{
@@ -160,7 +160,7 @@ Class Alianza
 	public function mostrarExpulsarAlianza()
 	{
 
-		$sql="select * from miembros_alianzas where id_alianza=$this->id_alianza and estado=1 and id_usuario!=$this->id_usuario";
+		$sql="select id_usuario from miembros_alianzas where id_alianza=$this->id_alianza and estado=1 and id_usuario!=$this->id_usuario";
 		$res=$this->mysqli->query($sql);
 
 		?>
@@ -311,7 +311,7 @@ Class Alianza
 			<input type="hidden" name="accion" value="alianza" />
 			</form>
 			<?php
-			$sql="select * from diplomacia_alianzas where tipo='alianza' and (id_alianza_declara=$this->id_alianza or id_alianza_acepta=$this->id_alianza) and estado=1";
+			$sql="select id_alianza_declara,id_alianza_acepta from diplomacia_alianzas where tipo='alianza' and (id_alianza_declara=$this->id_alianza or id_alianza_acepta=$this->id_alianza) and estado=1";
 			$res=$this->mysqli->query($sql);
 			if ($res->num_rows>0)
 			{
@@ -335,7 +335,7 @@ Class Alianza
 				<i>Esta Alianza no tiene otras alianzas.</i>
 				<?php
 			}
-			$sql="select * from diplomacia_alianzas where tipo='alianza' and id_alianza_acepta=$this->id_alianza and estado=0";
+			$sql="select id_alianza_declara,id_alianza_acepta from diplomacia_alianzas where tipo='alianza' and id_alianza_acepta=$this->id_alianza and estado=0";
 			$res=$this->mysqli->query($sql);
 			if ($res->num_rows>0)
 			{
@@ -347,7 +347,7 @@ Class Alianza
 					echo " <a href='procesa_alianza.php?a=8&i=".$reg['id_alianza_declara']."&oi=".$reg['id_alianza_acepta']."&t=alianza&r=0'>Rechazar</a>";
 				}
 			}
-			$sql="select * from diplomacia_alianzas where tipo='alianza' and id_alianza_declara=$this->id_alianza and estado=0";
+			$sql="select id_alianza_declara,id_alianza_acepta from diplomacia_alianzas where tipo='alianza' and id_alianza_declara=$this->id_alianza and estado=0";
 			$res=$this->mysqli->query($sql);
 			if ($res->num_rows>0)
 			{
@@ -370,7 +370,7 @@ Class Alianza
 			<input type="hidden" name="accion" value="pna" />
 			</form>
 			<?php
-			$sql="select * from diplomacia_alianzas where tipo='pna' and (id_alianza_declara=$this->id_alianza or id_alianza_acepta=$this->id_alianza) and estado=1";
+			$sql="select id_alianza_declara,id_alianza_acepta from diplomacia_alianzas where tipo='pna' and (id_alianza_declara=$this->id_alianza or id_alianza_acepta=$this->id_alianza) and estado=1";
 			$res=$this->mysqli->query($sql);
 			if ($res->num_rows>0)
 			{
@@ -394,7 +394,7 @@ Class Alianza
 				<i>Esta Alianza no tiene Pactos de No Agresión.</i>
 				<?php
 			}
-			$sql="select * from diplomacia_alianzas where tipo='pna' and id_alianza_acepta=$this->id_alianza and estado=0";
+			$sql="select id_alianza_declara,id_alianza_acepta from diplomacia_alianzas where tipo='pna' and id_alianza_acepta=$this->id_alianza and estado=0";
 			$res=$this->mysqli->query($sql);
 			if ($res->num_rows>0)
 			{
@@ -406,7 +406,7 @@ Class Alianza
 					echo " <a href='procesa_alianza.php?a=8&i=".$reg['id_alianza_declara']."&oi=".$reg['id_alianza_acepta']."&t=pna&r=0'>Rechazar</a>";
 				}
 			}
-			$sql="select * from diplomacia_alianzas where tipo='pna' and id_alianza_declara=$this->id_alianza and estado=0";
+			$sql="select id_alianza_declara,id_alianza_acepta from diplomacia_alianzas where tipo='pna' and id_alianza_declara=$this->id_alianza and estado=0";
 			$res=$this->mysqli->query($sql);
 			if ($res->num_rows>0)
 			{
@@ -429,7 +429,7 @@ Class Alianza
 			<input type="hidden" name="accion" value="guerra" />
 			</form>
 			<?php
-			$sql="select * from diplomacia_alianzas where tipo='guerra' and (id_alianza_declara=$this->id_alianza or id_alianza_acepta=$this->id_alianza) and estado=1";
+			$sql="select id_alianza_declara,id_alianza_acepta from diplomacia_alianzas where tipo='guerra' and (id_alianza_declara=$this->id_alianza or id_alianza_acepta=$this->id_alianza) and estado=1";
 			$res=$this->mysqli->query($sql);
 			if ($res->num_rows>0)
 			{
@@ -511,11 +511,12 @@ Class Alianza
 		}
 		if ($_POST['accion']=='alianza')
 		{
-			$sql="select * from diplomacia_alianzas where (id_alianza_declara=$this->id_alianza or 
+			$sql="select COUNT(*) from diplomacia_alianzas where (id_alianza_declara=$this->id_alianza or 
 			id_alianza_acepta=$this->id_alianza) and (id_alianza_declara=".Datos::idAlianza($_POST['alianza'])." or
-			id_alianza_acepta=".Datos::idAlianza($_POST['alianza']).") and tipo='alianza'";
+			id_alianza_acepta=".Datos::idAlianza($_POST['alianza']).") and tipo='alianza' limit 1";
 			$res=$this->mysqli->query($sql);
-			if ($res->num_rows > 0)
+			$reg=$res->fetch_array();
+			if ($reg[0]>0)
 			{
 				header("location:alianza.php?i=$this->id_alianza&a=4&m=1");
 				exit;
@@ -526,11 +527,11 @@ Class Alianza
 		}
 		if ($_POST['accion']=='pna')
 		{
-			$sql="select * from diplomacia_alianzas where (id_alianza_declara=$this->id_alianza or 
+			$sql="select COUNT(*) from diplomacia_alianzas where (id_alianza_declara=$this->id_alianza or 
 			id_alianza_acepta=$this->id_alianza) and (id_alianza_declara=".Datos::idAlianza($_POST['alianza'])." or
-			id_alianza_acepta=".Datos::idAlianza($_POST['alianza']).") and tipo='pna'";
-			$res=$this->mysqli->query($sql);
-			if ($res->num_rows > 0)
+			id_alianza_acepta=".Datos::idAlianza($_POST['alianza']).") and tipo='pna' limit 1";
+			$reg=$res->fetch_array();
+			if ($reg[0]>0)
 			{
 				header("location:alianza.php?i=$this->id_alianza&a=4&m=1");
 				exit;
@@ -576,9 +577,10 @@ Class Alianza
 	public function invitar()
 	{
 		$id_usuario=Datos::id($_POST['usuario']);
-		$sql="select * from miembros_alianzas where id_usuario=$id_usuario and estado=1";
+		$sql="select COUNT(*) from miembros_alianzas where id_usuario=$id_usuario and estado=1 limit 1";
 		$res=$this->mysqli->query($sql);
-		if ($res->num_rows == 0)
+		$reg=$res->fetch_array();
+		if ($reg[0]==0)
 		{
 			$sql="insert into miembros_alianzas values (null,$id_usuario,$this->id_alianza,0,0)";
 			$res=$this->mysqli->query($sql);
@@ -600,9 +602,6 @@ Class Alianza
 
 	public function aceptarInvitacion()
 	{
-		$sql="select * from alianzas where id_alianza=$this->id_alianza";
-		$res=$this->mysqli->query($sql);
-		$reg=$res->fetch_array();
 		$nMiembrosDisponibles=Datos::produccionEdificio('embajada',$this->id_ciudad);
 		$sql="select * from miembros_alianzas where id_alianza=$this->id_alianza and estado=1";
 		$res=$this->mysqli->query($sql);
@@ -639,7 +638,7 @@ Class Alianza
 			$res=$this->mysqli->query($sql);
 			$sql="insert into alianzas values (null,'$nombre','En progreso...',now(),$this->id_ciudad)";
 			$res=$this->mysqli->query($sql);
-			$sql="select * from alianzas where id_ciudad=$this->id_ciudad";
+			$sql="select id_alianza from alianzas where id_ciudad=$this->id_ciudad";
 			$res=$this->mysqli->query($sql);
 			$reg=$res->fetch_array();
 			$sql="insert into miembros_alianzas values (null,$this->id_usuario,".$reg['id_alianza'].",now(),1)";
