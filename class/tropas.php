@@ -272,6 +272,97 @@ class Tropas
 		<?php
 	}
 
+	public function mostrar_refuerzos($option)
+	{
+		if ($option=='aqui')
+		{
+			$sql="select * from tropas_refuerzos where id_ciudad_reforzada=$this->id_ciudad";
+		}
+		else if ($option=='alli')
+		{
+			$sql="select * from tropas_refuerzos where id_ciudad_refuerza=$this->id_ciudad";
+		}
+		$res=$this->mysqli->query($sql);
+		while($reg=$res->fetch_array())
+		{
+			?>
+			<table  border="0" cellspacing="0" cellpadding="0" class="tabla_reportes">
+			<?php
+			if ($option=='aqui')
+			{
+				?>
+				<tr>
+				<thead><tr><td colspan="100%">Refuerzos de <?php echo Datos::ciudad($reg['id_ciudad_refuerza']);?></td></tr></thead>
+				</tr>
+				<tbody>
+				<?php
+			}
+			else if ($option=='alli')
+			{
+				?>
+				<tr>
+				<thead><tr><td colspan="100%">Refuerzos enviados a <?php echo Datos::ciudad($reg['id_ciudad_reforzada']);?></td></tr></thead>
+				</tr>
+				<tbody>
+				<?php
+			}
+			?>
+			<tr>
+			<?php
+			for ($i=1;$i<6;$i++)
+			{
+			?>
+				<td><?php
+				if(Datos::tropa("tropa$i")=='legionario'){
+				echo "<img src='img/elementos/tropas/legionario.png' class='icono_reporte' title='Legionarios'>";
+				}
+				else if(Datos::tropa("tropa$i")=='pretoriano'){
+				echo "<img src='img/elementos/tropas/pretoriano.png' class='icono_reporte' title='Pretorianos'>";
+				}
+				else if(Datos::tropa("tropa$i")=='triario'){
+				echo "<img src='img/elementos/tropas/triario.png' class='icono_reporte' title='Triarios'>";
+				}
+				else if(Datos::tropa("tropa$i")=='caballeria_ligera'){
+				echo "<img src='img/elementos/tropas/caballeria_l.png' class='icono_reporte' title='Caballería liger'>";
+				}
+				else if(Datos::tropa("tropa$i")=='caballeria_pesada'){
+				echo "<img src='img/elementos/tropas/caballeria_p.png' class='icono_reporte' title='Caballería pesada'>";
+				}
+				?></td>
+			<?php
+			}
+			?>
+			</tr>
+			<tr>
+			<?php
+			for ($i=1;$i<6;$i++)
+			{
+				?><td><?php echo $reg["tropa$i"];?></td><?php
+			}
+			?>
+			<td><a title="¿Retirar?" href="devolver_refuerzos.php?i=<?php echo $reg['id_refuerzos'];?>"><img src="img/elementos/acciones/eliminar.png" width="25"></a></td>
+			</tr>
+			</tbody>
+		</table>
+		<?php
+		}
+	}
+
+	public function volver_refuerzos()
+	{
+		$sql="select * from tropas_refuerzos where id_refuerzos=".$_GET['i'];
+		$res=$this->mysqli->query($sql);
+		$reg=$res->fetch_array();
+		$sql="insert into vuelta_ataques values (null,'reforzar','0-0-0-0',".$reg['id_ciudad_refuerza'].",
+		".$reg['id_ciudad_reforzada'].",".$reg['tropa1'].",".$reg['tropa2'].",".$reg['tropa3'].",
+		".$reg['tropa4'].",".$reg['tropa5'].",".$reg['tropa6'].",".$reg['tropa7'].",".$reg['tropa8'].",
+		".$reg['tropa9'].",".$reg['tropa10'].",$this->t_actual)";
+		$res=$this->mysqli->query($sql);
+		$sql="delete from tropas_refuerzos where id_refuerzos=".$_GET['i'];
+		$res=$this->mysqli->query($sql);
+		header("Location:militar.php");
+	}
+
 	public function ordenar_reclutar()
 	{
 		$no_disponible=0;
@@ -611,110 +702,151 @@ class Tropas
 		$res=$this->mysqli->query($sql);
 		if($reg=$res->fetch_array())
 		{
-			$tropas=explode('-',$reg['tropas_atacante']); 		//Tropas que mando el atacante
-			$tropasp=explode('-',$reg['tropasp_atacante']); 	//Tropas que perdio el atacante
-			$tropasd=explode('-',$reg['tropas_atacadas']); 		//Tropas que defendieron
-			$tropasdp=explode('-',$reg['tropasp_atacadas']);	 //Tropas que perdieron los defensores
-			$recursos=explode('-',$reg['botin']); //Botin del ataque
-
-			if ($reg['id_ciudad_atacante']==$this->id_ciudad && $reg['objetivo']=='atacar' || $reg['id_ciudad_atacada']==$this->id_ciudad && $reg['objetivo']=='atacar')
+			if ($reg['objetivo']=='reforzar')
 			{
+				$tropas=explode('-',$reg['tropas_atacante']); 		//Tropas que mando de refuerzo
 				?>
-
 				<table border="0" cellspacing="0" cellpadding="0" class="tabla_reportes">
-					<tr><td colspan="100%">
-						Batalla producida el <b><?php echo date("m/d/Y",$reg['fecha']);?></b> a las <b><?php echo date("h:i:s",$reg['fecha']);?></b>
-					</td></tr>
-				</table>
-
+						<tr><td colspan="100%">
+							Refuerzo enviado el <b><?php echo date("m/d/Y",$reg['fecha']);?></b> a las <b><?php echo date("h:i:s",$reg['fecha']);?></b>
+						</td></tr>
+					</table>
 				<table border="0" cellspacing="0" cellpadding="0" class="tabla_reportes">
-					<tr><td colspan="100%">Botín: 
-						<?php echo "<img src='img/elementos/recursos/madera.png' class='recurso_reporte' title='Madera'>".$recursos[0].""; ?>
-						<?php echo "<img src='img/elementos/recursos/ladrillo.png' class='recurso_reporte' title='Ladrillo'>".$recursos[1].""; ?>
-						<?php echo "<img src='img/elementos/recursos/hierro.png' class='recurso_reporte' title='Hierro'>".$recursos[2].""; ?>
-						<?php echo "<img src='img/elementos/recursos/cereal.png' class='recurso_reporte' title='Cereal'>".$recursos[3].""; ?>
-					</td></tr>
-				</table>
+						<tr><td colspan="100%"><img src='img/elementos/tropas/pretoriano.png' class='icono_reporte' title='Defensa'>
+							Usuario que lo envia <?php echo Datos::usuario(Datos::propietario($reg['id_ciudad_atacante']));?>
+							 de  <?php echo Datos::aldea($reg['id_ciudad_atacante']);?></td></tr>
+						<tr>
+							<td>-</td>
+							<?php
+							for ($i=1;$i<11;$i++)
+							{
+								?>
+								<td><?php echo Datos::tropa("tropa$i");?></td>
+								<?php
+							}
+							?>
+						</tr>
+						<tr>
+							<td><b>Tropas</b></td>
+							<?php
+							for ($i=0;$i<10;$i++)
+							{
+								?>
+								<td><?php echo $tropas[$i];?></td>
+								<?php
+							}
+							?>
+						</tr>
+					</table>
+					<?php
+			}
+			else if ($reg['objetivo']=='atacar')
+			{
+				$tropas=explode('-',$reg['tropas_atacante']); 		//Tropas que mando el atacante
+				$tropasp=explode('-',$reg['tropasp_atacante']); 	//Tropas que perdio el atacante
+				$tropasd=explode('-',$reg['tropas_atacadas']); 		//Tropas que defendieron
+				$tropasdp=explode('-',$reg['tropasp_atacadas']);	 //Tropas que perdieron los defensores
+				$recursos=explode('-',$reg['botin']); //Botin del ataque
 
-				<table border="0" cellspacing="0" cellpadding="0" class="tabla_reportes">
-					<tr><td colspan="100%"><img src='img/elementos/tropas/legionario.png' class='icono_reporte' title='Defensa'>
-						Agresor: <?php echo Datos::usuario(Datos::propietario($reg['id_ciudad_atacante']));?>
-						 de  <?php echo Datos::aldea($reg['id_ciudad_atacante']);?></td></tr>
-					<tr>
-						<td>-</td>
-						<?php
-						for ($i=1;$i<11;$i++)
-						{
-							?>
-							<td><?php echo Datos::tropa("tropa$i");?></td>
-							<?php
-						}
-						?>
-					</tr>
-					<tr>
-						<td><b>Tropas</b></td>
-						<?php
-						for ($i=0;$i<10;$i++)
-						{
-							?>
-							<td><?php echo $tropas[$i];?></td>
-							<?php
-						}
-						?>
-					</tr>
-					<tr>
-						<td><b>Pérdidas</b></td>
-						<?php
-						for ($i=0;$i<10;$i++)
-						{
-							?>
-							<td><?php echo $tropasp[$i];?></td>
-							<?php
-						}
-						?>
-					</tr>
-				</table>
+				if ($reg['id_ciudad_atacante']==$this->id_ciudad && $reg['objetivo']=='atacar' || $reg['id_ciudad_atacada']==$this->id_ciudad && $reg['objetivo']=='atacar')
+				{
+					?>
 
-				<table border="0" cellspacing="0" cellpadding="0" class="tabla_reportes">
-					<tr><td colspan="100%"><img src='img/elementos/tropas/pretoriano.png' class='icono_reporte' title='Defensa'>
-						Defensor: <?php echo Datos::usuario(Datos::propietario($reg['id_ciudad_atacada']));?>
-						 de  <?php echo Datos::aldea($reg['id_ciudad_atacada']);?></td></tr>
-					<tr>
-						<td>-</td>
-						<?php
-						for ($i=1;$i<11;$i++)
-						{
-							?>
-							<td><?php echo Datos::tropa("tropa$i");?></td>
-							<?php
-						}
-						?>
-					</tr>
-					<tr>
-						<td><b>Tropas</b></td>
-						<?php
-						for ($i=0;$i<10;$i++)
-						{
-							?>
-							<td><?php echo $tropasd[$i];?></td>
-							<?php
-						}
-						?>
-					</tr>
-					<tr>
-						<td><b>Pérdidas</b></td>
-						<?php
-						for ($i=0;$i<10;$i++)
-						{
-							?>
-							<td><?php echo $tropasdp[$i];?></td>
-							<?php
-						}
-						?>
-					</tr>
-				</table>
+					<table border="0" cellspacing="0" cellpadding="0" class="tabla_reportes">
+						<tr><td colspan="100%">
+							Batalla producida el <b><?php echo date("m/d/Y",$reg['fecha']);?></b> a las <b><?php echo date("h:i:s",$reg['fecha']);?></b>
+						</td></tr>
+					</table>
 
-				<?php
+					<table border="0" cellspacing="0" cellpadding="0" class="tabla_reportes">
+						<tr><td colspan="100%">Botín: 
+							<?php echo "<img src='img/elementos/recursos/madera.png' class='recurso_reporte' title='Madera'>".$recursos[0].""; ?>
+							<?php echo "<img src='img/elementos/recursos/ladrillo.png' class='recurso_reporte' title='Ladrillo'>".$recursos[1].""; ?>
+							<?php echo "<img src='img/elementos/recursos/hierro.png' class='recurso_reporte' title='Hierro'>".$recursos[2].""; ?>
+							<?php echo "<img src='img/elementos/recursos/cereal.png' class='recurso_reporte' title='Cereal'>".$recursos[3].""; ?>
+						</td></tr>
+					</table>
+
+					<table border="0" cellspacing="0" cellpadding="0" class="tabla_reportes">
+						<tr><td colspan="100%"><img src='img/elementos/tropas/legionario.png' class='icono_reporte' title='Defensa'>
+							Agresor: <?php echo Datos::usuario(Datos::propietario($reg['id_ciudad_atacante']));?>
+							 de  <?php echo Datos::aldea($reg['id_ciudad_atacante']);?></td></tr>
+						<tr>
+							<td>-</td>
+							<?php
+							for ($i=1;$i<11;$i++)
+							{
+								?>
+								<td><?php echo Datos::tropa("tropa$i");?></td>
+								<?php
+							}
+							?>
+						</tr>
+						<tr>
+							<td><b>Tropas</b></td>
+							<?php
+							for ($i=0;$i<10;$i++)
+							{
+								?>
+								<td><?php echo $tropas[$i];?></td>
+								<?php
+							}
+							?>
+						</tr>
+						<tr>
+							<td><b>Pérdidas</b></td>
+							<?php
+							for ($i=0;$i<10;$i++)
+							{
+								?>
+								<td><?php echo $tropasp[$i];?></td>
+								<?php
+							}
+							?>
+						</tr>
+					</table>
+
+					<table border="0" cellspacing="0" cellpadding="0" class="tabla_reportes">
+						<tr><td colspan="100%"><img src='img/elementos/tropas/pretoriano.png' class='icono_reporte' title='Defensa'>
+							Defensor: <?php echo Datos::usuario(Datos::propietario($reg['id_ciudad_atacada']));?>
+							 de  <?php echo Datos::aldea($reg['id_ciudad_atacada']);?></td></tr>
+						<tr>
+							<td>-</td>
+							<?php
+							for ($i=1;$i<11;$i++)
+							{
+								?>
+								<td><?php echo Datos::tropa("tropa$i");?></td>
+								<?php
+							}
+							?>
+						</tr>
+						<tr>
+							<td><b>Tropas</b></td>
+							<?php
+							for ($i=0;$i<10;$i++)
+							{
+								?>
+								<td><?php echo $tropasd[$i];?></td>
+								<?php
+							}
+							?>
+						</tr>
+						<tr>
+							<td><b>Pérdidas</b></td>
+							<?php
+							for ($i=0;$i<10;$i++)
+							{
+								?>
+								<td><?php echo $tropasdp[$i];?></td>
+								<?php
+							}
+							?>
+						</tr>
+					</table>
+
+					<?php
+				}
 			}
 		}
 	}

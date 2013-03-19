@@ -117,6 +117,7 @@ Class Alianza
 			<tr>
 				<td>Usuario</td>
 				<td>Puntuación</td>
+				<td>Cargo</td>
 			</tr>
 			</thead>
 
@@ -129,6 +130,7 @@ Class Alianza
 			<tr>
 				<td><a href='perfil.php?usuario=<?php echo Datos::usuario($red['id_usuario']); ?>'><?php echo Datos::usuario($red['id_usuario']); ?></a></td>
 				<td>-</td>
+				<td><?php echo Datos::cargoUsuario($red['id_usuario']);?></td>
 			</tr>
 			<?php
 		}

@@ -33,6 +33,7 @@ class Perfil
 		Nombre: <strong><?php echo $reg['nombre'];?></strong>
 		<br />
 		<div id="puntos"></div>
+		Alianza: <strong><?php echo Datos::enlaceAlianza(Datos::idAlianzaUsuario($reg['id_usuario']));?></strong>
 		<h3>Perfil</h3>
 		<?php
 		if (!isset($_GET['s'])) //Si lo estamos viendo

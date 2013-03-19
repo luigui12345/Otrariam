@@ -55,18 +55,28 @@ $("#a_cuartel1").click(function(){
 $("#cuartel1").css("display", "block");
 $("#cuartel2").css("display", "none");
 $("#cuartel3").css("display", "none");
+$("#cuartel4").css("display", "none");
 });
 
 $("#a_cuartel2").click(function(){
 $("#cuartel1").css("display", "none");
 $("#cuartel2").css("display", "block");
 $("#cuartel3").css("display", "none");
+$("#cuartel4").css("display", "none");
 });
 
 $("#a_cuartel3").click(function(){
 $("#cuartel1").css("display", "none");
 $("#cuartel2").css("display", "none");
 $("#cuartel3").css("display", "block");
+$("#cuartel4").css("display", "none");
+});
+
+$("#a_cuartel4").click(function(){
+$("#cuartel1").css("display", "none");
+$("#cuartel2").css("display", "none");
+$("#cuartel3").css("display", "none");
+$("#cuartel4").css("display", "block");
 });
 
 });

@@ -633,7 +633,7 @@ position: relative;
 
 .tabla_reportes{
 float: left;
-width: 90%;
+width: 95%;
 margin: 30px auto;
 color: #333;
 font-size: 18px;
@@ -891,12 +891,12 @@ padding: 0px 10px;
 }
 
 
-#cuartel1, #cuartel2, #cuartel3{
+#cuartel1, #cuartel2, #cuartel3,#cuartel4{
 width: 100%;
 float: left;
 }
 
-#cuartel2, #cuartel3{
+#cuartel2, #cuartel3,#cuartel4{
 display: none;
 }
 

@@ -847,7 +847,7 @@ class MotorTropas
 				tropa6=tropa6+".$reg['tropa6'].",tropa7=tropa7+".$reg['tropa7'].",tropa8=tropa8+".$reg['tropa8'].",
 				tropa9=tropa9+".$reg['tropa9'].",tropa10=tropa10+".$reg['tropa10']." where id_ciudad = ".$reg['id_ciudad_atacante'];
 				$res=$this->mysqli->query($sql);
-
+				
 				$recursos_saqueados=explode('-',$reg['botin']);
 
 				$sql="update mapa set madera=madera+$recursos_saqueados[0],barro=barro+$recursos_saqueados[1],

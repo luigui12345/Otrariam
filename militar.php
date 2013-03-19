@@ -63,7 +63,8 @@ $ciudad=$_SESSION['ju_ciudad'];
             <div id="seccion_cuartel">
                 <div class="seccion_edificio" id="a_cuartel1">Reclutar</div>
                 <div class="seccion_edificio" id="a_cuartel2">Ataques</div>
-                <div class="seccion_edificio" id="a_cuartel3">Tropas</div>
+                <div class="seccion_edificio" id="a_cuartel3">Refuerzos</div>
+                <div class="seccion_edificio" id="a_cuartel4">Tropas</div>
             </div>
 
             <br/><br/>
@@ -88,11 +89,23 @@ $ciudad=$_SESSION['ju_ciudad'];
 
 
             <div id="cuartel3">
+            <b>Refuerzos recibidos en esta aldea</b><br />
+            <hr />
+            <?php
+            $tro->mostrar_refuerzos('aqui');
+            ?>
+            <b>Refuerzos enviados a otras aldeas</b><br />
+            <hr />
+            <?php
+            $tro->mostrar_refuerzos('alli');
+            ?>
+            </div>
+
+            <div id="cuartel4">
             <h3>Tropas</h3>
             <br/>
 
             </div>
-
 
         </div><!--/#wrap_ejercito-->
 

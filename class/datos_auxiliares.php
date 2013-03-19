@@ -228,6 +228,48 @@ class Datos
 		$reg=$res->fetch_array();
 		return $reg['slot'];
 	}
+
+	public static function cargoUsuario($id_usuario)
+	{
+		$mysqli=DB::Get();
+		$sql="select nombre from cargos_alianzas where id_usuario=$id_usuario limit 1";
+		$res=$mysqli->query($sql);
+		$reg=$res->fetch_array();
+		return $reg['nombre'];
+	}
+
+	public static function nombreAlianzaUsuario($id_usuario)
+	{
+		$mysqli=DB::Get();
+		$sql="select id_alianza from miembros_alianzas where id_usuario=$id_usuario limit 1";
+		$res=$mysqli->query($sql);
+		$reg=$res->fetch_array();
+		return Datos::nombreAlianza($reg['id_alianza']);
+	}
+
+	public static function idAlianzaUsuario($id_usuario)
+	{
+		$mysqli=DB::Get();
+		$sql="select id_alianza from miembros_alianzas where id_usuario=$id_usuario and estado=1 limit 1";
+		$res=$mysqli->query($sql);
+		if ($res->num_rows>0)
+		{
+			$reg=$res->fetch_array();
+			return $reg['id_alianza'];
+		}
+	}
+
+	public static function enlaceAlianza($id_alianza)
+	{
+		$mysqli=DB::Get();
+		$sql="select id_alianza from alianzas where id_alianza=$id_alianza limit 1";
+		$res=$mysqli->query($sql);
+		if ($res->num_rows>0)
+		{
+			$reg=$res->fetch_array();
+			return '<a href="alianza.php?i='.$reg["id_alianza"].'">'.Datos::nombreAlianza($reg["id_alianza"]).'</a>';
+		}
+	}
 }
 
 ?>
