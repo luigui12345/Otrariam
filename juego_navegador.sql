@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Servidor: localhost
--- Tiempo de generación: 18-02-2013 a las 22:26:16
+-- Tiempo de generación: 01-03-2013 a las 16:08:09
 -- Versión del servidor: 5.5.24-log
 -- Versión de PHP: 5.4.3
 
@@ -33,7 +33,7 @@ CREATE TABLE IF NOT EXISTS `alianzas` (
   `fecha` date NOT NULL,
   `id_ciudad` int(10) unsigned NOT NULL,
   PRIMARY KEY (`id_alianza`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci AUTO_INCREMENT=7 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci AUTO_INCREMENT=2 ;
 
 -- --------------------------------------------------------
 
@@ -58,7 +58,7 @@ CREATE TABLE IF NOT EXISTS `ataques` (
   `tropa10` int(11) unsigned NOT NULL,
   `fecha` int(11) unsigned NOT NULL,
   PRIMARY KEY (`id_ataque`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci AUTO_INCREMENT=6 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci AUTO_INCREMENT=4 ;
 
 -- --------------------------------------------------------
 
@@ -82,7 +82,7 @@ CREATE TABLE IF NOT EXISTS `cargos_alianzas` (
   `id_usuario` int(11) NOT NULL,
   `id_alianza` int(11) NOT NULL,
   PRIMARY KEY (`id_cargo`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci AUTO_INCREMENT=7 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci AUTO_INCREMENT=2 ;
 
 -- --------------------------------------------------------
 
@@ -98,7 +98,7 @@ CREATE TABLE IF NOT EXISTS `cola_produccion` (
   `id_ciudad` int(11) unsigned NOT NULL,
   `fecha` int(11) unsigned NOT NULL,
   PRIMARY KEY (`id_produccion`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci AUTO_INCREMENT=2 ;
 
 -- --------------------------------------------------------
 
@@ -117,15 +117,15 @@ CREATE TABLE IF NOT EXISTS `costes_construcciones` (
   `hierro` int(11) unsigned NOT NULL,
   `cereal` int(11) unsigned NOT NULL,
   `tiempo` int(11) unsigned NOT NULL,
-  `requerimientos` text COLLATE utf8_spanish_ci NOT NULL,
+  `requisitos` text COLLATE utf8_spanish_ci NOT NULL,
   PRIMARY KEY (`id_costo`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci AUTO_INCREMENT=37 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci AUTO_INCREMENT=49 ;
 
 --
 -- Volcado de datos para la tabla `costes_construcciones`
 --
 
-INSERT INTO `costes_construcciones` (`id_costo`, `edificio`, `nivel`, `produccion`, `habitantes`, `madera`, `barro`, `hierro`, `cereal`, `tiempo`, `requerimientos`) VALUES
+INSERT INTO `costes_construcciones` (`id_costo`, `edificio`, `nivel`, `produccion`, `habitantes`, `madera`, `barro`, `hierro`, `cereal`, `tiempo`, `requisitos`) VALUES
 (1, 'Granja', 1, 8, 2, 50, 50, 10, 0, 60, ''),
 (2, 'Barrera', 1, 8, 2, 60, 30, 40, 10, 60, ''),
 (3, 'Mina', 1, 8, 2, 50, 50, 10, 10, 60, ''),
@@ -151,17 +151,29 @@ INSERT INTO `costes_construcciones` (`id_costo`, `edificio`, `nivel`, `produccio
 (23, 'Cuartel', 1, 0, 3, 300, 70, 50, 20, 120, ''),
 (24, 'Cuartel', 2, 0, 5, 200, 140, 150, 50, 200, ''),
 (25, 'Cuartel', 3, 0, 8, 400, 260, 350, 200, 300, ''),
-(26, 'Barrera', 4, 40, 9, 200, 180, 170, 40, 500, ''),
-(27, 'Leñador', 4, 40, 9, 60, 290, 170, 40, 500, ''),
-(28, 'Granja', 4, 40, 9, 250, 230, 200, 0, 500, ''),
-(29, 'Mina', 4, 40, 9, 190, 260, 100, 40, 500, ''),
+(26, 'Barrera', 4, 40, 9, 200, 180, 170, 40, 650, ''),
+(27, 'Leñador', 4, 40, 9, 60, 290, 170, 40, 650, ''),
+(28, 'Granja', 4, 40, 9, 250, 230, 200, 0, 650, ''),
+(29, 'Mina', 4, 40, 9, 190, 260, 100, 40, 650, ''),
 (30, 'Ayuntamiento', 4, 9, 12, 380, 390, 150, 200, 900, ''),
 (31, 'Mercado', 5, 5, 15, 620, 630, 310, 130, 1200, ''),
 (32, 'Almacen', 4, 4500, 10, 630, 620, 510, 200, 1200, ''),
 (33, 'Cuartel', 4, 0, 11, 480, 350, 440, 200, 1200, ''),
 (34, 'embajada', 1, 3, 3, 200, 250, 100, 20, 600, ''),
 (35, 'embajada', 2, 5, 5, 400, 500, 150, 30, 750, ''),
-(36, 'embajada', 3, 8, 8, 600, 750, 350, 100, 1150, '');
+(36, 'embajada', 3, 8, 8, 600, 750, 350, 100, 1150, ''),
+(37, 'Barrera', 5, 62, 16, 310, 250, 260, 50, 1000, ''),
+(38, 'granja', 5, 62, 16, 320, 350, 250, 0, 1000, ''),
+(39, 'leñador', 5, 62, 16, 190, 420, 280, 60, 1000, ''),
+(40, 'mina', 5, 62, 16, 270, 410, 140, 60, 1000, ''),
+(41, 'almacen', 5, 7000, 15, 850, 930, 770, 310, 2000, ''),
+(42, 'mina', 6, 96, 20, 410, 620, 270, 75, 2000, ''),
+(43, 'leñador', 6, 96, 20, 350, 650, 530, 75, 2000, ''),
+(44, 'barrera', 6, 96, 20, 550, 390, 480, 75, 2000, ''),
+(45, 'granja', 6, 96, 20, 540, 590, 480, 0, 2000, ''),
+(46, 'establo', 1, 0, 4, 200, 200, 200, 200, 300, 'cuartel_4|ayuntamiento_3'),
+(47, 'establo', 2, 0, 13, 400, 600, 300, 100, 600, ''),
+(48, 'establo', 3, 0, 18, 750, 930, 510, 190, 1200, '');
 
 -- --------------------------------------------------------
 
@@ -194,11 +206,11 @@ CREATE TABLE IF NOT EXISTS `datos_tropas` (
 --
 
 INSERT INTO `datos_tropas` (`id_tropa`, `tropa`, `nombre`, `ataque`, `defensa`, `defensa_caballeria`, `madera`, `barro`, `hierro`, `cereal`, `consumo`, `velocidad`, `capacidad`, `parte_ejercito`, `tiempo`, `requisitos`) VALUES
-(1, 'tropa1', 'legionario', 20, 45, 30, 50, 20, 70, 10, 1, 15, 70, 'infanteria', 60, 'cuartel_1'),
-(2, 'tropa2', 'pretoriano', 50, 60, 50, 80, 40, 140, 20, 1, 15, 50, 'infanteria', 120, 'cuartel_2'),
-(3, 'tropa3', 'triario', 100, 30, 80, 100, 50, 200, 40, 1, 15, 40, 'infanteria', 180, 'cuartel_3|ayuntamiento_1'),
-(4, 'tropa4', 'caballeria_ligera', 50, 30, 45, 250, 150, 200, 100, 2, 25, 120, 'caballeria', 300, 'cuartel_1'),
-(5, 'tropa5', 'caballeria_pesada', 200, 50, 100, 500, 300, 600, 300, 2, 20, 50, 'caballeria', 750, 'cuartel_1');
+(1, 'tropa1', 'legionario', 20, 40, 30, 50, 20, 70, 10, 1, 12, 70, 'infanteria', 60, 'cuartel_1'),
+(2, 'tropa2', 'pretoriano', 50, 60, 50, 80, 40, 140, 20, 1, 12, 50, 'infanteria', 120, 'cuartel_2'),
+(3, 'tropa3', 'triario', 100, 30, 80, 100, 50, 200, 40, 1, 12, 40, 'infanteria', 180, 'cuartel_3|ayuntamiento_1'),
+(4, 'tropa4', 'caballeria_ligera', 50, 30, 45, 250, 150, 200, 100, 2, 25, 120, 'caballeria', 300, 'establo_1'),
+(5, 'tropa5', 'caballeria_pesada', 200, 50, 100, 500, 300, 600, 300, 2, 20, 50, 'caballeria', 750, 'establo_3');
 
 -- --------------------------------------------------------
 
@@ -232,7 +244,7 @@ CREATE TABLE IF NOT EXISTS `edificios_aldea` (
   `slot` int(10) unsigned NOT NULL,
   `id_ciudad` int(11) unsigned NOT NULL,
   PRIMARY KEY (`id_edificio`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci AUTO_INCREMENT=422 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci AUTO_INCREMENT=495 ;
 
 -- --------------------------------------------------------
 
@@ -247,7 +259,7 @@ CREATE TABLE IF NOT EXISTS `eventos` (
   `slot` int(10) unsigned NOT NULL,
   `id_ciudad` int(11) unsigned NOT NULL,
   PRIMARY KEY (`id_evento`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci AUTO_INCREMENT=14 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci AUTO_INCREMENT=3 ;
 
 -- --------------------------------------------------------
 
@@ -415,7 +427,7 @@ CREATE TABLE IF NOT EXISTS `mensajes` (
   `fecha` date NOT NULL,
   `id_respuesta` int(11) unsigned NOT NULL,
   PRIMARY KEY (`id_mensaje`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci AUTO_INCREMENT=5 ;
 
 -- --------------------------------------------------------
 
@@ -430,7 +442,7 @@ CREATE TABLE IF NOT EXISTS `miembros_alianzas` (
   `fecha` date NOT NULL,
   `estado` tinyint(1) NOT NULL,
   PRIMARY KEY (`id_miembro`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci AUTO_INCREMENT=15 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci AUTO_INCREMENT=2 ;
 
 -- --------------------------------------------------------
 
@@ -466,7 +478,7 @@ CREATE TABLE IF NOT EXISTS `reportes_tropas` (
   `tropasp_atacadas` text COLLATE utf8_spanish_ci NOT NULL,
   `fecha` int(11) unsigned NOT NULL,
   PRIMARY KEY (`id_reporte`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci AUTO_INCREMENT=206 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci AUTO_INCREMENT=19 ;
 
 -- --------------------------------------------------------
 
@@ -488,7 +500,7 @@ CREATE TABLE IF NOT EXISTS `tropas` (
   `tropa10` int(11) unsigned NOT NULL,
   `id_ciudad` int(11) unsigned NOT NULL,
   PRIMARY KEY (`id_tropas`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci AUTO_INCREMENT=40 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci AUTO_INCREMENT=48 ;
 
 -- --------------------------------------------------------
 
@@ -527,7 +539,7 @@ CREATE TABLE IF NOT EXISTS `usuarios` (
   `perfil` text COLLATE utf8_spanish_ci NOT NULL,
   `fecha_ingreso` datetime NOT NULL,
   PRIMARY KEY (`id_usuario`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci AUTO_INCREMENT=56 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci AUTO_INCREMENT=66 ;
 
 -- --------------------------------------------------------
 
@@ -553,7 +565,7 @@ CREATE TABLE IF NOT EXISTS `vuelta_ataques` (
   `tropa10` int(11) unsigned NOT NULL,
   `fecha` int(11) unsigned NOT NULL,
   PRIMARY KEY (`id_vuelta`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci AUTO_INCREMENT=20 ;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

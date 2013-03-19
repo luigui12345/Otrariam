@@ -270,6 +270,104 @@ class Datos
 			return '<a href="alianza.php?i='.$reg["id_alianza"].'">'.Datos::nombreAlianza($reg["id_alianza"]).'</a>';
 		}
 	}
+
+	public static function edificioDisponible($edificio,$id_ciudad)
+	{
+		$mysqli=DB::Get();
+		$j=0; //Contador para mostrar el numero de la tropa
+		$edificio_no_disponible=0;
+
+		$sql="select * from costes_construcciones where edificio='$edificio'";
+		$res=$mysqli->query($sql);
+		$reg=$res->fetch_array();	//Buscamos que unidades podemos reclutar de infanteria
+		$j++;
+		if ($reg['requisitos']=="")
+		{
+			return 1;
+			exit;
+		}
+		$requisitos=explode('|',$reg['requisitos']);
+		for($i=0;$i<count($requisitos);$i++)
+		{
+			$requisitos2=explode('_',$requisitos[$i]);
+			$sql="select * from edificios_aldea where edificio = '$requisitos2[0]' and nivel >= $requisitos2[1] and id_ciudad = $id_ciudad limit 1";
+			
+			$resp=$mysqli->query($sql);
+			
+			if ($resp->num_rows == 0)
+			{
+				$edificio_no_disponible=1;
+			}
+		}
+		if ($edificio_no_disponible==0)
+		{
+			return 1;
+		}
+		else
+		{
+			return 0;
+		}
+	}
+
+	public static function consumoTropas($id_ciudad)
+	{
+		$mysqli=DB::Get();
+		$sql="select * from tropas where id_ciudad = $id_ciudad limit 1";
+		$res=$mysqli->query($sql);
+		$rem=$res->fetch_array();
+		$nTropas=0;
+		for ($i=1;$i<11;$i++)
+		{
+			$sql="select consumo from datos_tropas where tropa='tropa$i'";
+			$res=$mysqli->query($sql);
+			$rel=$res->fetch_array();
+			$cTropa=$rem['tropa'.$i]*$rel['consumo'];
+			$nTropas=$nTropas+$cTropa;
+		}
+		$sql="select * from tropas_refuerzos where id_ciudad_reforzada = $id_ciudad";
+		$res=$mysqli->query($sql);
+		while($rem=$res->fetch_array())
+		{
+			for ($i=1;$i<11;$i++)
+			{
+				$sql="select consumo from datos_tropas where tropa='tropa$i'";
+				$res=$mysqli->query($sql);
+				$rel=$res->fetch_array();
+				$cTropa=$rem['tropa'.$i]*$rel['consumo'];
+				$nTropas=$nTropas+$cTropa;
+			}
+		}
+
+		$sql="select * from ataques where id_ciudad_atacante = $id_ciudad";
+		$res=$mysqli->query($sql);
+		while($rem=$res->fetch_array())
+		{
+			for ($i=1;$i<11;$i++)
+			{
+				$sql="select consumo from datos_tropas where tropa='tropa$i'";
+				$res=$mysqli->query($sql);
+				$rel=$res->fetch_array();
+				$cTropa=$rem['tropa'.$i]*$rel['consumo'];
+				$nTropas=$nTropas+$cTropa;
+			}
+		}
+
+		$sql="select * from vuelta_ataques where id_ciudad_atacante = $id_ciudad";
+		$res=$mysqli->query($sql);
+		while($rem=$res->fetch_array())
+		{
+			for ($i=1;$i<11;$i++)
+			{
+				$sql="select consumo from datos_tropas where tropa='tropa$i'";
+				$res=$mysqli->query($sql);
+				$rel=$res->fetch_array();
+				$cTropa=$rem['tropa'.$i]*$rel['consumo'];
+				$nTropas=$nTropas+$cTropa;
+			}
+		}
+		
+		return $nTropas;
+	}
 }
 
 ?>

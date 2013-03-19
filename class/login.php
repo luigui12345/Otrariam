@@ -107,6 +107,7 @@ class Login
 			(null,'almacen',0,'capacidad',800,2,0,$id_ciudad),
 			(null,'mercado',0,'comercio',0,4,0,$id_ciudad),
 			(null,'cuartel',0,'tropas',0,4,0,$id_ciudad),
+			(null,'establo',0,'tropas',0,4,0,$id_ciudad),
 			(null,'embajada',0,'miembros',0,1,0,$id_ciudad)";
 			$res=$this->mysqli->query($sql);
 

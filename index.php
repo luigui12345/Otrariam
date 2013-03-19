@@ -1,4 +1,8 @@
 <?php
+$mtime = microtime();
+$mtime = explode(" ",$mtime);
+$mtime = $mtime[1] + $mtime[0];
+$tiempoinicial = $mtime; 
 include("class/class.php");
 $ald=new Aldea();
 $ald->comprobar_recursos('no');
@@ -97,5 +101,11 @@ $ciudad=$_SESSION['ju_ciudad'];
 </body>
 </html>
 <?php
-$ald->comprobar_recursos('si');
+//$ald->comprobar_recursos('si');
+$mtime = microtime();
+$mtime = explode(" ",$mtime);
+$mtime = $mtime[1] + $mtime[0];
+$tiempofinal = $mtime;
+$tiempototal = ($tiempofinal - $tiempoinicial);
+echo "<strong>Página creada en ".$tiempototal." segundos</strong>";
 ?>

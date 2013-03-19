@@ -516,16 +516,24 @@ class Tropas
 		$sql="select * from tropas where id_ciudad=$this->id_ciudad";
 		$res=$this->mysqli->query($sql);
 		$reg=$res->fetch_array();
-
+		$ok=0;
 		for ($i=1;$i<11;$i++) //Comprobamos que tenemos las tropas que queremos mandar
 		{
+			if ($_POST["tropa_$i"]>0)
+			{
+				$ok=1;
+			}
 			if ($reg["tropa$i"]<$_POST["tropa_$i"] || $_POST["tropa_$i"] < 0)
 			{
 				header("Location:index.php");
 				exit;
 			}
 		}
-
+		if ($ok==0)
+		{
+			header("Location:index.php");
+			exit;
+		}
 		//Nos quitamos las tropas que mandamos y creamos el ataque
 		$sql="update tropas set tropa1=tropa1-".$_POST['tropa_1']
 		.", tropa2=tropa2-".$_POST['tropa_2']

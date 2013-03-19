@@ -71,7 +71,7 @@ class Aldea
 		$reg=$res->fetch_array();
 		if ($edificio == 'granja') //Si el edificio es la granja le restamos el consumo de cereal
 		{
-			$nTropas=Datos::nTropas($this->id_ciudad);
+			$nTropas=Datos::consumoTropas($this->id_ciudad);
 			echo $reg['produccion']-$nTropas;
 		}
 		else
@@ -278,10 +278,10 @@ class Aldea
 
 			<form name="form_enviar" action="procesa_comercio.php" method="post">
 				<p>Enviar recursos:</p>
-				<img src="img/elementos/recursos/madera.png" class="recurso_coste" title="Madera"><input type="text" name="madera" class="input_mercado" required/> 
-				<img src="img/elementos/recursos/ladrillo.png" class="recurso_coste" title="Ladrillo"> <input type="text" name="barro" class="input_mercado" required/>
-				<img src="img/elementos/recursos/hierro.png" class="recurso_coste" title="Hierro"> <input type="text" name="hierro" class="input_mercado" required/> 
-				<img src="img/elementos/recursos/cereal.png" class="recurso_coste" title="Cereal"> <input type="text" name="cereal" class="input_mercado" required/>
+				<img src="img/elementos/recursos/madera.png" class="recurso_coste" title="Madera"><input type="text" name="madera" value="0" class="input_mercado" required/> 
+				<img src="img/elementos/recursos/ladrillo.png" class="recurso_coste" title="Ladrillo"> <input type="text" name="barro" value="0" class="input_mercado" required/>
+				<img src="img/elementos/recursos/hierro.png" class="recurso_coste" title="Hierro"> <input type="text" name="hierro" value="0" class="input_mercado" required/> 
+				<img src="img/elementos/recursos/cereal.png" class="recurso_coste" title="Cereal"> <input type="text" name="cereal" value="0" class="input_mercado" required/>
 				
 				<br /><br>
 				<?php
@@ -328,7 +328,7 @@ class Aldea
 		$j=0; //Contador para mostrar el numero de la tropa
 		$tropa_no_disponible=0;
 
-		$sql="select * from datos_tropas where parte_ejercito='infanteria'";
+		$sql="select * from datos_tropas";
 		$res=$this->mysqli->query($sql);
 		while($reg=$res->fetch_array())	//Buscamos que unidades podemos reclutar de infanteria
 		{
@@ -351,9 +351,20 @@ class Aldea
 			{
 				?>
 				<form name="form_tropas" action="reclutar.php" method="post" class="form_edificio">
-
-					<p><img src='img/elementos/tropas/legionario.png' class='icono_tropa'><strong><?php echo $reg['nombre']; ?>:</strong>
-
+					<?php
+					if ($reg['parte_ejercito']=='infanteria')
+					{
+						?>
+						<p><img src='img/elementos/tropas/legionario.png' class='icono_tropa'><strong><?php echo str_replace("_", " ",$reg['nombre']);?>:</strong>
+						<?php
+					}
+					else if ($reg['parte_ejercito']=='caballeria')
+					{
+						?>
+						<p><img src='img/elementos/tropas/caballeria_l.png' class='icono_tropa'><strong><?php echo str_replace("_", " ",$reg['nombre']);?>:</strong>
+						<?php
+					}
+					?>
 					<img src='img/elementos/recursos/madera.png' class='recurso_coste' title='Madera'><?php echo $reg['madera']; ?>
 			 		| <img src='img/elementos/recursos/ladrillo.png' class='recurso_coste' title='Ladrillo'><?php echo $reg['barro']; ?>
 			 		| <img src='img/elementos/recursos/hierro.png' class='recurso_coste' title='Hierro'> <?php echo $reg['hierro']; ?>
@@ -398,6 +409,7 @@ class Aldea
 			header("Location:index.php");
 			exit;
 		}
+
 		if ($reg['edificio'] == "cuartel")
 		{
 			?>
@@ -429,7 +441,6 @@ class Aldea
 				else
 				{
 					?>
-					</div>
 					<?php
 				}
 
@@ -626,6 +637,23 @@ class Aldea
 
 				break;
 
+				case "establo":
+				?>
+				<div class="nombre_edificio"><strong>Establo</strong> - Nivel <?php echo $reg["nivel"];?></div>
+
+				<div class="edificio_descripcion">
+				En el Establo se forman tropas de caballeria listas para formar parte de tu ejército. Cuanto más se amplíe, más tipos de tropas podrán formarse.
+				</div>
+
+				<img src="img/elementos/edificios/establo.png" class="img_recurso" title="Establo">
+
+				<div class="edificio_costes">
+				<p>Subir a nivel <?php echo $reg["nivel"]+1; ?></p>
+				<div class="subir_nivel"><?php $this->coste_ampliacion($reg["edificio"],$reg["nivel"]); ?></div>
+				</div>
+				<?php
+				break;
+
 				default:
 				header("Location:index.php"); //Si no existe el edificio volvemos al index
 
@@ -658,30 +686,37 @@ class Aldea
 			 | <img src='img/elementos/recursos/hierro.png' class='recurso_coste' title='Hierro'> ".$reg["hierro"]."
 			 | <img src='img/elementos/recursos/cereal.png' class='recurso_coste' title='Cereal'> ".$reg["cereal"]."
 			 | <img src='img/elementos/recursos/tiempo.png' class='recurso_coste' title='Tiempo'> ".$recurso_tiempo;
-		}
-
-		//Comprueba si tiene los recursos suficientes
-		$sql="select * from mapa where id_usuario = $this->id_usuario and madera >=".$reg["madera"]." and barro >=".$reg["barro"]."
-		and hierro>=".$reg["hierro"]." and cereal>=".$reg["cereal"]." limit 1";
-		$res=$this->mysqli->query($sql);
-		echo "<br />";
-		if ($res->num_rows > 0) //Si tiene recursos sufientes
-		{
-			$sql="select * from eventos where id_ciudad = $this->id_ciudad";
+			//Comprueba si tiene los recursos suficientes
+			$sql="select * from mapa where id_usuario = $this->id_usuario and madera >=".$reg["madera"]." and barro >=".$reg["barro"]."
+			and hierro>=".$reg["hierro"]." and cereal>=".$reg["cereal"]." limit 1";
 			$res=$this->mysqli->query($sql);
-			if ($res->num_rows > 0) //Comprueba que no hay construcciones en curso
+			echo "<br />";
+			if ($res->num_rows > 0) //Si tiene recursos sufientes
 			{
-				echo "</br>Ya se está construyendo.";
+				$sql="select * from eventos where id_ciudad = $this->id_ciudad";
+				$res=$this->mysqli->query($sql);
+				if ($res->num_rows > 0) //Comprueba que no hay construcciones en curso
+				{
+					echo "</br>Ya se está construyendo.";
+				}
+				else if (Datos::edificioDisponible($edificio,$this->id_ciudad)==0)
+				{
+					echo "<br />No cumples los requisitos para construir este edificio";
+				}
+				else if (Datos::edificioDisponible($edificio,$this->id_ciudad)==1)
+				{
+					echo "</br><a href='procesa_construir.php?edificio=$edificio&s=".$_GET['s']."'>Construir</a>";
+				}
+				
 			}
 			else
 			{
-				echo "</br><a href='procesa_construir.php?edificio=$edificio&s=".$_GET['s']."'>Construir</a>";
+				echo "</br>No tienes suficientes recursos.";
 			}
-			
 		}
 		else
 		{
-			echo "</br>No tienes suficientes recursos.";
+			echo "</br>No se pude ampliar mas.";
 		}
 
 	}
@@ -873,7 +908,7 @@ class Aldea
 				$t1=$t_cuando-$this->last_update; 			//Tiempo que ha pasado desde la hora a la que se actualizara y la ultima vez que actualizaste
 				if ($edificio == 'Granja')
 				{
-					$nTropas=Datos::nTropas($this->id_ciudad);
+					$nTropas=Datos::consumoTropas($this->id_ciudad);
 					$p_edificio1=($reg['produccion']-$nTropas)/3600*$t1; 	//Lo que ha producido el edificio antes de la construccion
 				}
 				else
@@ -889,7 +924,7 @@ class Aldea
 				$t2= $this->t_actual-$t_cuando; 			//Tiempo que ha pasado desde ahora hasta que se construyo
 				if ($edificio == 'Granja')
 				{
-					$nTropas=Datos::nTropas($this->id_ciudad);
+					$nTropas=Datos::consumoTropas($this->id_ciudad);
 					$p_edificio2=($reg['produccion']-$nTropas)/3600*$t2; 	//Lo que ha producido el edificio antes de la construccion
 				}
 				else
@@ -900,7 +935,7 @@ class Aldea
 				$this->p_edificio = $p_edificio1+$p_edificio2; 	//Lo que se ha producido en total
 				if ($edificio == 'Granja')
 				{
-					$nTropas=Datos::nTropas($this->id_ciudad);
+					$nTropas=Datos::consumoTropas($this->id_ciudad);
 					$this->ps_edificio=($reg['produccion']-$nTropas)/3600; 	//Lo que producimos por segundo
 				}
 				else
@@ -913,7 +948,7 @@ class Aldea
 			{
 				if ($edificio == 'Granja')
 				{
-					$nTropas=Datos::nTropas($this->id_ciudad);
+					$nTropas=Datos::consumoTropas($this->id_ciudad);
 					$this->p_edificio=($reg['produccion']-$nTropas)/3600*$this->t_transcurrido; //Lo producido
 					$this->ps_edificio=($reg['produccion']-$nTropas)/3600; //Lo que producimos por segundo
 				}
@@ -961,7 +996,7 @@ class Aldea
 			{
 				if ($edificio == 'Granja')
 				{	
-					$nTropas=Datos::nTropas($this->id_ciudad);
+					$nTropas=Datos::consumoTropas($this->id_ciudad);
 					$p_1=($reg['produccion']-$nTropas)/3600*$this->tiempo_almacen; //Lo que se produce antes de que se contruya el almacen
 				}
 				else
@@ -982,7 +1017,7 @@ class Aldea
 					
 					if ($edificio == 'Granja')
 					{
-						$nTropas=Datos::nTropas($this->id_ciudad);
+						$nTropas=Datos::consumoTropas($this->id_ciudad);
 						$t2=$this->t_actual-$this->construira_almacen; //Tiempo que ha pasado desde que se amplio el almacen hasta ahora
 						$p_2=($reg['produccion']-$nTropas)/3600*$t2;	//Produccion desde que se amplio el almacen
 
@@ -1007,7 +1042,7 @@ class Aldea
 				
 				if ($edificio == 'Granja') //Si el edificio es la granja le restamos el consumo de las tropas
 				{
-					$nTropas=Datos::nTropas($this->id_ciudad);
+					$nTropas=Datos::consumoTropas($this->id_ciudad);
 					$this->p_edificio=($reg['produccion']-$nTropas)/3600*$this->t_transcurrido; //Lo producido
 					$this->ps_edificio=($reg['produccion']-$nTropas)/3600; //Lo que producimos por segundo
 				}
@@ -1070,6 +1105,8 @@ class Aldea
 		$this->calcular_recursos("Mercado",$mostrar);
 		//*****************************************************************************************
 		$this->calcular_recursos("Cuartel",$mostrar);
+		//*****************************************************************************************
+		$this->calcular_recursos("establo",$mostrar);
 		//*****************************************************************************************
 		$this->calcular_recursos("embajada",$mostrar);
 		//*****************************************************************************************
