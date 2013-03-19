@@ -58,18 +58,25 @@ $ciudad=$_SESSION['ju_ciudad'];
 
         <div id="wrap_aldea">
         
-        <div id="aldea">
+        <div id="wrap_ejercito">
+
+            <h3>Movimientos del ejército</h3>
+            <br/>
 
             <?php
-            $ald->muestra_cuartel();
-            echo "<br />";
             $tro->mostrar_movimientos_tropas();
             ?>
 
-        </div><!--/#aldea-->
+            <br/><br/>
+            <h3>Reclutar tropas</h3>
+            <?php
+            $ald->muestra_cuartel();
+            ?>
+
+        </div><!--/#wrap_ejercito-->
 
 
-        <div id="info_aldea">
+        <div id="info_tropas">
         <?php
         $tro->mostrar_tropas();
         ?>

@@ -47,6 +47,24 @@ class Datos
 		return $id_ciudad = $reg["nombre"];
 	}
 
+	public static function propietario($id_ciudad)
+	{
+		$mysqli=DB::Get();
+		$sql="select * from mapa where id_casilla = $id_ciudad limit 1";
+		$res=$mysqli->query($sql);
+		$reg=$res->fetch_array();
+		return $reg["id_usuario"];
+	}
+
+	public static function aldea($id_ciudad)
+	{
+		$mysqli=DB::Get();
+		$sql="select * from mapa where id_casilla = $id_ciudad limit 1";
+		$res=$mysqli->query($sql);
+		$reg=$res->fetch_array();
+		return $reg["nombre"];
+	}
+
 
 	public static function tropa($tropa) //Nombre de una tropa segun su numero
 	{
@@ -133,7 +151,6 @@ class Datos
 			$sql="select * from vuelta_ataques where id_vuelta=$id_ejercito";
 			$res=$mysqli->query($sql);
 		}
-		echo $sql;
 		$reg=$res->fetch_array();
 
 		for ($y=1;$y<=10;$y++)

@@ -102,7 +102,7 @@ $ciudad=$_SESSION['ju_ciudad'];
 				<?php
 			}
 
-			$ald->muestra_edificio(Datos::edificioPorSlot($_GET['s']));
+			$ald->muestra_edificio(Datos::edificioPorSlot($_GET['s']),'si');
 			?>
 
 			</div><!--Wrapper_recursos-->

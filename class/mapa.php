@@ -131,7 +131,7 @@ class Mapa
 			<img src="img/elementos/aldea/ciudad.png" class="img_aldea">
 
 			<div id="bottom_perfil_aldea">
-			<a href='edificio.php?edificio=mercado&x=<?php echo $reg['x']; ?>&y=<?php echo $reg['y']; ?>'>Enviar Recursos<i class="icon-double-angle-right"></i></a><br />
+			<a href='edificio.php?s=<?php echo Datos::slotPorEdificio('mercado');?>&x=<?php echo $reg['x']; ?>&y=<?php echo $reg['y']; ?>'>Enviar Recursos<i class="icon-double-angle-right"></i></a><br />
 			<a href='redactar_mensaje.php?usuario=<?php echo $red['nombre']; ?>'>Enviar Mensaje<i class="icon-double-angle-right"></i></a><br />
 			<a href='mover_tropas.php?x=<?php echo $reg['x']; ?>&y=<?php echo $reg['y']; ?>'>Enviar Tropas<i class="icon-double-angle-right"></i></a>
 			</div>

@@ -135,12 +135,24 @@ class Aldea
 		$sql="select * from edificios_aldea where id_ciudad = $this->id_ciudad and edificio = '$edificio' limit 1";
 		$res=$this->mysqli->query($sql);
 		$reg=$res->fetch_array();
-
 			?>
 
 				<div id="solar<?php echo $reg['slot']; ?>" class="solar">
 				<a href="edificio.php?s=<?php echo $reg['slot'];?>">
-					<img src="img/elementos/edificios/<?php echo $edificio;?>.png" title="<?php echo $edificio;?>" class="img_solar">
+					<?php
+					if ($edificio=='leñador')
+					{
+						?>
+						<img src="img/elementos/edificios/lenador.png" title="Leñador" class="img_solar">
+						<?php
+					}
+					else
+					{
+					?>
+						<img src="img/elementos/edificios/<?php echo $edificio;?>.png" title="<?php echo $edificio;?>" class="img_solar">
+					<?php
+					}
+					?>
 					<div class="nivel_edificio"><?php echo $reg['nivel'];?></div>
 
 				</a>
@@ -152,9 +164,9 @@ class Aldea
 
 	public function mostrarEmbajada() //Muestra embajada
 	{
-		echo "<br />";
-		echo "<br />";
-		echo "<br />";
+		?>
+		<div id="mostrar_embajada">
+		<?php
 		$sql="select * from miembros_alianzas where id_usuario=$this->id_usuario order by estado desc limit 1";
 		$res=$this->mysqli->query($sql);
 		if ($res->num_rows > 0)
@@ -163,47 +175,59 @@ class Aldea
 			{
 				if ($reg['estado']==1)
 				{
-					
-					echo "Actualmente perteneces a la alianza <a href='alianza.php?i=".$reg['id_alianza']."'>".Datos::nombreAlianza($reg['id_alianza'])."</a>";
+					?>
+						<b>Perteneces a la alianza:</b> <a href='alianza.php?i=<?php echo $reg['id_alianza']; ?>' class="peticion_alianza"><?php echo Datos::nombreAlianza($reg['id_alianza']) ?></a>
+					<?php
 					break;
 				}
 				else
 				{
 					?>
-					Actualmente no perteneces a ninguna alianza.<br />
-					Puedes fundar tu propia alianza por 1000 de cada recurso: 
+					<p>Actualmente no perteneces a ninguna alianza.</p><br/>
+					<p><b>Fundar una alianza</b></p>
+					<img src="img/elementos/recursos/madera.png" class="recurso_coste" title="Madera"> 1000 |
+					<img src="img/elementos/recursos/ladrillo.png" class="recurso_coste" title="Ladrillo"> 1000 |
+					<img src="img/elementos/recursos/hierro.png" class="recurso_coste" title="Hierro"> 1000 |
+					<img src="img/elementos/recursos/cereal.png" class="recurso_coste" title="Cereal"> 1000
+					
 					<form name="form_fundar" method="post" action="procesa_alianza.php?a=4">
-						<input type="text" name="nombre" required/>
-						<input type="submit" value="Fundar"/>
+						<input type="text" name="nombre" class="input_enviar" required/>
+						<input type="submit" value="Fundar Alianza" class="boton"/>
 					</form>
-					<br />
-					<br />
-					Otras alianzas te pueden pedir que te unas a su causa. Peticiones.
+					<p><b>Peticiones</b></p>
 					<hr />
-					<?php
-					echo Datos::nombreAlianza($reg['id_alianza'])." <a href='procesa_alianza.php?i=".$reg['id_alianza']."&a=1'>Aceptar</a>  
-					<a href='procesa_alianza.php?i=".$reg['id_alianza']."&a=2'>Rechazar</a><br />";
+					
+					<a href="alianza.php?i=<?php echo $reg['id_alianza']; ?>" class="peticion_alianza"><?php echo Datos::nombreAlianza($reg['id_alianza']); ?></a> 
 
+					<a href='procesa_alianza.php?i=<?php echo $reg['id_alianza']; ?>&a=1' class="boton">Aceptar</a>  
+					<a href='procesa_alianza.php?i=<?php echo $reg['id_alianza']; ?>&a=2' class="boton">Rechazar</a><br />
+
+				<?php
 				}
 			}
 		}
 		else
 		{
 			?>
-			Actualmente no perteneces a ninguna alianza.<br />
-			Puedes fundar tu propia alianza por 1000 de cada recurso: 
+			<p>Actualmente no perteneces a ninguna alianza.</p><br/>
+			<p><b>Fundar una alianza</b></p>
+			<img src="img/elementos/recursos/madera.png" class="recurso_coste" title="Madera"> 1000 |
+			<img src="img/elementos/recursos/ladrillo.png" class="recurso_coste" title="Ladrillo"> 1000 |
+			<img src="img/elementos/recursos/hierro.png" class="recurso_coste" title="Hierro"> 1000 |
+			<img src="img/elementos/recursos/cereal.png" class="recurso_coste" title="Cereal"> 1000 
+
 			<form name="form_fundar" method="post" action="procesa_alianza.php?a=4">
-						<input type="text" name="nombre" required/>
-						<input type="submit" value="Fundar"/>
+						<input type="text" name="nombre" class="input_enviar" required/>
+						<input type="submit" value="Fundar Alianza" class="boton"/>
 					</form>
-			<br />
-			<br />
-			Otras alianzas te pueden pedir que te unas a su causa. Peticiones.
-			<br />
+			<p><b>Peticiones</b></p>
 			Actualmente no tienes peticiones.
 			<?php
 		}
 
+		?>
+		</div>
+		<?php
 	}
 
 	public function muestra_mercado() //Muestra el mercado
@@ -334,8 +358,7 @@ class Aldea
 			if ($tropa_no_disponible==0)
 			{
 				?>
-				<div class="form_edificio">
-				<form name="form_tropas" action="reclutar.php" method="post">
+				<form name="form_tropas" action="reclutar.php" method="post" class="form_edificio">
 
 					<p><img src='img/elementos/tropas/legionario.png' class='icono_tropa'><strong><?php echo $reg['nombre']; ?>:</strong>
 
@@ -359,9 +382,7 @@ class Aldea
 			<input type="submit" value="Reclutar" class="boton">
 
 		</form>
-		</div>
 
-		</div>
 		<div id="cuartel2">
 		<?php
 		$this->tropas->mostrar_movimientos_tropas();
@@ -378,7 +399,7 @@ class Aldea
 		<?php
 	}
 
-	public function muestra_edificio($edificio) //Para mostrar los datos del edificio que se esta viendo
+	public function muestra_edificio($edificio,$cuentaNivel=null) //Para mostrar los datos del edificio que se esta viendo
 	{
 		if (is_numeric($edificio))
 		{
@@ -390,7 +411,11 @@ class Aldea
 		}
 		$res=$this->mysqli->query($sql);
 		$reg=$res->fetch_array(); 
-
+		if (isset($cuentaNivel) && $reg['nivel']==0)
+		{
+			header("Location:index.php");
+			exit;
+		}
 		if ($reg['edificio'] == "cuartel")
 		{
 			?>
@@ -433,7 +458,7 @@ class Aldea
 				<div class="nombre_edificio"><strong>Mercado</strong> - Nivel <?php echo $reg["nivel"];?></div>
 
 				<div class="edificio_descripcion">
-				El Mercado sirve para intercambiar recursos con otras aldeas.
+				El Mercado sirve para intercambiar recursos con otras aldeas, pudiendo vender tus excendentes a cambio de aquellos recursos que solicites.
 				</div>
 
 				<div id="mercado1">
@@ -454,26 +479,17 @@ class Aldea
 			else //Sino se ha construido el mercado
 			{
 				?>
-				<div class="nombre_edificio">Mercado</div>
+				<div class="nombre_edificio"><strong>Mercado</strong> - Nivel <?php echo $reg["nivel"];?></div>
 
 				<div class="edificio_descripcion">
-				El Mercado sirve para intercambiar recursos con otras aldeas.
+				El Mercado sirve para intercambiar recursos con otras aldeas, pudiendo vender tus excendentes a cambio de aquellos recursos que solicites.
 				</div>
-
-				<div class="wrap_recurso">
 
 				<img src="img/elementos/edificios/mercado.png" class="img_recurso" title="Mercado">
 				
-				<div class="nivel_recurso">
-				<div class="nivel_actual"><?php echo $reg["nivel"];?></div>
-				</div>
-
-				</div>
-
 				<div class="edificio_costes">
 				<p>Subir a nivel <?php echo $reg["nivel"]+1; ?></p>
 				<div class="subir_nivel"><?php $this->coste_ampliacion($reg["edificio"],$reg["nivel"]); ?></div>
-
 				</div>
 				<?php
 			}
@@ -489,7 +505,7 @@ class Aldea
 				El leñador te permite extraer madera, útil para la construcción de edificios.
 				</div>
 
-				<img src="img/elementos/edificios/leñador.png" class="img_recurso" title="Leñador">
+				<img src="img/elementos/edificios/lenador.png" class="img_recurso" title="Leñador">
 
 				<div class="edificio_costes">
 				<p>Subir a nivel <?php echo $reg["nivel"]+1; ?></p>
@@ -501,28 +517,21 @@ class Aldea
 		else if ($reg['edificio'] == 'embajada')
 		{
 			?>
-				<div class="nombre_edificio">Embajada</div>
+
+
+				<div class="nombre_edificio"><strong>Embajada</strong> - Nivel <?php echo $reg["nivel"];?></div>
 
 				<div class="edificio_descripcion">
-				Es el edificio de la diplomacia. Tener este edificio te permitira fundar una alianza o formar parte de una.
+				La embajada acoge diplomáticos de otras ciudades, con lo que podrás fundar una alianza o unirte a una ya existente.
 				</div>
 
-
-				<div class="wrap_recurso">
-
-				<div class="img_recurso"><img src="img/elementos/edificios/embajada.png" title="Embajada"></div>
-				
-				<div class="nivel_recurso">
-				<div class="nivel_actual"><?php echo $reg["nivel"];?></div>
-				</div>
-
-				</div>
+				<img src="img/elementos/edificios/embajada.png" class="img_recurso" title="Embajada">
 
 				<div class="edificio_costes">
 				<p>Subir a nivel <?php echo $reg["nivel"]+1; ?></p>
 				<div class="subir_nivel"><?php $this->coste_ampliacion($reg["edificio"],$reg["nivel"]); ?></div>
-
 				</div>
+
 				<?php
 				if ($reg['nivel']>0)
 				{
@@ -623,7 +632,7 @@ class Aldea
 				<div class="nombre_edificio"><strong>Foro</strong> - Nivel <?php echo $reg["nivel"];?></div>
 
 				<div class="edificio_descripcion">
-				El Foro es el centro de la ciudad. Al tener el foro a este nivel los edificios tardarán un  <b><?php echo $reg['produccion'];?>%</b> menos en construirse
+				El Foro es el centro de la ciudad, y agiliza los tiempos de construcción. Al tener el foro a este nivel los edificios tardarán un  <b><?php echo $reg['produccion'];?>%</b> menos en construirse.
 				</div>
 
 				<img src="img/elementos/edificios/ayuntamiento.png" class="img_recurso" title="Foro">
@@ -954,7 +963,7 @@ class Aldea
 						{
 							//Restamos un segundo y lo mostramos
 							tiempos--;
-							document.getElementById("tiempo").innerHTML=" <i class='icon-time' title='Tiempo restante'></i> Tiempo restante para la ampliacion "+fecha(tiempos);
+							document.getElementById("tiempo").innerHTML=" <i class='icon-time' title='Tiempo restante'></i> Tiempo restante para la ampliación "+fecha(tiempos);
 						}
 					}
 					tiempo();

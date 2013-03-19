@@ -840,14 +840,12 @@ class MotorTropas
 			$velocidad=Datos::velocidadEjercito($reg['id_vuelta'],'volver');
 			$tiempo_tardara=$casillas_distancia/$velocidad*3600;
 			$tiempo_restante=($reg['fecha']+$tiempo_tardara)-$this->t_actual;
-			echo $this->t_actual;
 			if ($tiempo_restante < 0)
 			{
 				$sql="update tropas set tropa1=tropa1+".$reg['tropa1'].",tropa2=tropa2+".$reg['tropa2'].",
 				tropa3=tropa3+".$reg['tropa3'].",tropa4=tropa4+".$reg['tropa4'].",tropa5=tropa5+".$reg['tropa5'].",
 				tropa6=tropa6+".$reg['tropa6'].",tropa7=tropa7+".$reg['tropa7'].",tropa8=tropa8+".$reg['tropa8'].",
 				tropa9=tropa9+".$reg['tropa9'].",tropa10=tropa10+".$reg['tropa10']." where id_ciudad = ".$reg['id_ciudad_atacante'];
-				echo $sql;
 				$res=$this->mysqli->query($sql);
 
 				$recursos_saqueados=explode('-',$reg['botin']);

@@ -100,15 +100,41 @@ Class Alianza
 		$res=$this->mysqli->query($sql);
 		$reg=$res->fetch_array();
 
-		echo "Alianza: ".$reg['nombre']."<br />
-		se fundo el ".$reg['fecha']."<br />";
+		?>
+
+		<h2 id="nombre_alianza"><?php echo $reg['nombre']; ?></h2>
+		<p>Fecha de la fundación: <b><?php echo $reg['fecha']; ?></b></p>
+
+		<?php
 		$sql="select * from miembros_alianzas where id_alianza=$this->id_alianza and estado=1";
 		$res=$this->mysqli->query($sql);
-		echo "Usuarios:<br /> ";
+		?>
+		<h3>Usuarios</h3>
+
+		<table class="tabla_ranking" border="0" cellspacing="0" cellpadding="0">
+			<thead>
+			<tr>
+				<td>Usuario</td>
+				<td>Puntuación</td>
+			</tr>
+			</thead>
+
+			<tbody>
+
+		<?php
 		while($red=$res->fetch_array())
 		{
-			echo "<a href='perfil.php?usuario=".Datos::usuario($red['id_usuario'])."'>".Datos::usuario($red['id_usuario'])."</a><br />";
+			?>
+			<tr>
+				<td><a href='perfil.php?usuario=<?php echo Datos::usuario($red['id_usuario']); ?>'><?php echo Datos::usuario($red['id_usuario']); ?></a></td>
+				<td>-</td>
+			</tr>
+			<?php
 		}
+		?>
+			</tbody>
+		</table>
+		<?php
 	}
 
 	public function mostrarInvitarAlianza()
@@ -116,8 +142,8 @@ Class Alianza
 		?>
 		<form name="form_invitar" method="post" action="procesa_invitar.php">
 		Invitar al usuario: <input type="text" name="usuario"/>
-		<input type="hidden" name="i" value="<?php echo $this->id_alianza;?>" />
-		<input type="submit" value="Invitar" />
+		<input type="hidden" name="i" value="<?php echo $this->id_alianza;?>" class="input_enviar"/>
+		<input type="submit" value="Invitar" class="boton"/>
 		</form>
 		<br />
 		<?php
@@ -135,10 +161,39 @@ Class Alianza
 
 		$sql="select * from miembros_alianzas where id_alianza=$this->id_alianza and estado=1 and id_usuario!=$this->id_usuario";
 		$res=$this->mysqli->query($sql);
+
+		?>
+
+		<table class="tabla_ranking" border="0" cellspacing="0" cellpadding="0">
+			<thead>
+			<tr>
+				<td>Usuario</td>
+				<td>Puntuación</td>
+				<td>¿Expulsar?</td>
+			</tr>
+			</thead>
+
+			<tbody>
+
+		<?php
 		while($reg=$res->fetch_array())
 		{
-			echo Datos::usuario($reg['id_usuario']). " <a href='procesa_alianza.php?a=5&i=".$this->id_alianza."&usuario=".Datos::usuario($reg['id_usuario'])."'>Expulsar</a><br />";
+			?>
+
+			<tr>
+				<td><a href='perfil.php?usuario=<?php echo Datos::usuario($reg['id_usuario']); ?>'><?php echo Datos::usuario($reg['id_usuario']); ?></a></td>
+				<td>-</td>
+				<td><a href='procesa_alianza.php?a=5&i=<?php echo $this->id_alianza."&usuario=".Datos::usuario($reg['id_usuario']); ?>'>Expulsar</a></td>
+			</tr>
+
+			<br/>
+
+			<?php
 		}
+		?>
+			</tbody>
+		</table>
+		<?php
 	}
 
 	public function mostrarCargosAlianza()
@@ -146,22 +201,23 @@ Class Alianza
 		$sql="select * from cargos_alianzas where id_alianza=$this->id_alianza";
 		$res=$this->mysqli->query($sql);
 		?>
-		<table>
+
+		<table class="tabla_ranking" border="0" cellspacing="0" cellpadding="0">
+			<thead>
 			<tr>
-				<td> Miembros </td>
-				<td> Invitar </td>
-				<td> Expulsar</td>
-				<td> Cargos </td>
-				<td> Diplomacia </td>
-				<td> Permiso 5</td>
-				<td> Permiso 6</td>
-				<td> Permiso 7</td>
-				<td> Permiso 8</td>
-				<td> Permiso 9</td>
-				<td> Permiso 10</td>
-				<td> Titulo </td>
-				<td> </td>
+				<td title="Miembro de la alianza">Miembros</td>
+				<td title="Capacidad para invitar a otros miembros">Invitar</td>
+				<td title="Capacidad para expulsar a otros miembros">Expulsar</td>
+				<td title="Capacidad para dar poderes y cargos">Cargos</td>
+				<td title="Capacidad para declarar guerras, alianzas y PNA´s a otras alianzas">Diplomacia</td>
+				<td title="Título honorífico de cada miembro">Título</td>
+				<td title=""> </td>
+				<td title=""> </td>
 			</tr>
+			</thead>
+
+			<tbody>
+			
 			<?php
 			while($reg=$res->fetch_array())
 			{
@@ -170,7 +226,7 @@ Class Alianza
 					<form name="form_cargos" method="post" action="procesa_alianza.php?a=6">
 					<td><?php echo Datos::usuario($reg['id_usuario']);?></td>
 					<?php
-					for ($i=1;$i<11;$i++)
+					for ($i=1;$i<6;$i++)
 					{
 						?>
 						<td>
@@ -208,14 +264,15 @@ Class Alianza
 						<?php
 					}
 					?>
-					<td><input type="text" name="cargo" value="<?php echo $reg['nombre'];?>"/></td>
-					<input type="hidden" name="usuario" value="<?php echo $reg['id_usuario'];?>" />
-					<td><input type="submit" value="cambiar" /></td>
+					<td><input type="text" name="cargo" value="<?php echo $reg['nombre'];?>" class="input_enviar auto"/></td>
+					<input type="hidden" name="usuario" value="<?php echo $reg['id_usuario'];?>" class="input_enviar auto" />
+					<td><input type="submit" value="Modificar" class="boton"/></td>
 					</form>
 				</tr>
 				<?php
 			}
 		?>
+			</tbody>
 		</table>
 		<?php
 	}
@@ -228,18 +285,19 @@ Class Alianza
 			$this->mostrarDeclararGuerra();
 			?>
 		</div>
-		<hr />
+		<hr /><br/><br/>
 		<div>
 			<?php
 			$this->mostrarDeclararAlianza();
 			?>
 		</div>
-		<hr />
+		<hr /><br/><br/>
 		<div>
 			<?php
 			$this->mostrarDeclararPNA();
 			?>
 		</div>
+		<hr /><br/>
 		<?php
 	}
 
@@ -247,8 +305,8 @@ Class Alianza
 	{
 		?>
 		<form name="form_guerra" method="post" action="procesa_alianza.php?a=7">
-			Pedir una Alianza a<br /> <input type="text" name="alianza" required />
-			<input type="submit" value="Declarar" />
+			<b>Pedir una Alianza</b><br /> <input type="text" name="alianza" class="input_enviar" required />
+			<input type="submit" value="Pedir Alianza" class="boton" />
 			<input type="hidden" name="accion" value="alianza" />
 			</form>
 			<?php
@@ -273,14 +331,14 @@ Class Alianza
 			else
 			{
 				?>
-				Esta Alianza no esta aliada con nadie.
+				<i>Esta Alianza no tiene otras alianzas.</i>
 				<?php
 			}
 			$sql="select * from diplomacia_alianzas where tipo='alianza' and id_alianza_acepta=$this->id_alianza and estado=0";
 			$res=$this->mysqli->query($sql);
 			if ($res->num_rows>0)
 			{
-				echo "<br />Estas alianzas quieren Aliarse contigo:<br />";
+				echo "<br />Estas alianzas quieren aliarse contigo:<br />";
 				while ($reg=$res->fetch_array())
 				{
 					echo Datos::nombreAlianza($reg['id_alianza_declara']);
@@ -294,8 +352,9 @@ Class Alianza
 	{
 		?>
 		<form name="form_guerra" method="post" action="procesa_alianza.php?a=7">
-			Pedir un pacto de no agresion (PNA)<br /> <input type="text" name="alianza" required />
-			<input type="submit" value="Declarar" />
+			<b><b>Pedir un pacto de</b>o agresion (PNA)</b><br /> 
+			<input type="text" name="alianza" class="input_enviar" required />
+			<input type="submit" value="Pedir PNA"  class="boton"/>
 			<input type="hidden" name="accion" value="pna" />
 			</form>
 			<?php
@@ -320,7 +379,7 @@ Class Alianza
 			else
 			{
 				?>
-				Esta Alianza no ha declarado un PNA con nadie.
+				<i>Esta Alianza no tiene Pactos de No Agresión.</i>
 				<?php
 			}
 			$sql="select * from diplomacia_alianzas where tipo='pna' and id_alianza_acepta=$this->id_alianza and estado=0";
@@ -341,8 +400,9 @@ Class Alianza
 	{
 		?>
 		<form name="form_guerra" method="post" action="procesa_alianza.php?a=7">
-			Declara la guerra una Alianza<br /> <input type="text" name="alianza" required />
-			<input type="submit" value="Declarar" />
+			<b>Declara la guerra una Alianza</b><br /> 
+			<input type="text" name="alianza" class="input_enviar" required />
+			<input type="submit" value="Declarar Guerra" class="boton" />
 			<input type="hidden" name="accion" value="guerra" />
 			</form>
 			<?php
@@ -367,7 +427,7 @@ Class Alianza
 			else
 			{
 				?>
-				Esta Alianza no esta en guerra con nadie.
+				<i>Esta Alianza no está en guerra.</i>
 				<?php
 			}	
 	}	
