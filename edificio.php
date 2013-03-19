@@ -93,9 +93,8 @@ $ciudad=$_SESSION['ju_ciudad'];
 			else if (Datos::edificioPorSlot($_GET['s'])=='cuartel')
 			{
 			?>	<div id="seccion_cuartel">
-				<div class="seccion_edificio" id="a_cuartel1">Reclutar</div>
-				<div class="seccion_edificio" id="a_cuartel2">Ataques</div>
-				<div class="seccion_edificio" id="a_cuartel3">Tropas</div>
+				<div class="seccion_edificio" id="a_cuartel1">Cuartel</div>
+				<div class="seccion_edificio" id="a_cuartel2">Tropas</div>
 				</div>
 				<br />
 				<br />

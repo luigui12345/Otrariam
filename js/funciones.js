@@ -103,7 +103,7 @@ $('#aldea').ready(function(){
 
 //**************************************************************************//
 //Aldea//
-
+var reclutamiento=new Array(0,0,0,0,0,0,0,0,0,0);
 var variables = 0;
 
 function sleep(millisegundos) {

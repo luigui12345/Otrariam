@@ -78,6 +78,7 @@ Class Alianza
 			{
 				$accion='diplomacia';
 				$this->mostrarDiplomaciaAlianza();
+				
 			}
 			else
 			{
@@ -342,8 +343,19 @@ Class Alianza
 				while ($reg=$res->fetch_array())
 				{
 					echo Datos::nombreAlianza($reg['id_alianza_declara']);
-					echo " <a href='procesa_alianza.php?a=8&oi=".$reg['id_alianza_declara']."&i=".$this->id_alianza."&t=alianza&r=1'>Aceptar</a>";
-					echo " <a href='procesa_alianza.php?a=8&oi=".$reg['id_alianza_declara']."&i=".$this->id_alianza."&t=alianza&r=0'>Rechazar</a>";
+					echo " <a href='procesa_alianza.php?a=8&i=".$reg['id_alianza_declara']."&oi=".$reg['id_alianza_acepta']."&t=alianza&r=1'>Aceptar</a>";
+					echo " <a href='procesa_alianza.php?a=8&i=".$reg['id_alianza_declara']."&oi=".$reg['id_alianza_acepta']."&t=alianza&r=0'>Rechazar</a>";
+				}
+			}
+			$sql="select * from diplomacia_alianzas where tipo='alianza' and id_alianza_declara=$this->id_alianza and estado=0";
+			$res=$this->mysqli->query($sql);
+			if ($res->num_rows>0)
+			{
+				echo "<br />Has pedido una Alianza a estas alianzas:<br />";
+				while ($reg=$res->fetch_array())
+				{
+					echo Datos::nombreAlianza($reg['id_alianza_acepta']);
+					echo " <a href='procesa_alianza.php?a=8&oi=".$reg['id_alianza_acepta']."&i=".$reg['id_alianza_declara']."&t=alianza&r=0'>Cancelar</a>";
 				}
 			}
 	}	
@@ -352,7 +364,7 @@ Class Alianza
 	{
 		?>
 		<form name="form_guerra" method="post" action="procesa_alianza.php?a=7">
-			<b><b>Pedir un pacto de</b>o agresion (PNA)</b><br /> 
+			<b><b>Pedir un pacto de</b> no agresion (PNA)</b><br /> 
 			<input type="text" name="alianza" class="input_enviar" required />
 			<input type="submit" value="Pedir PNA"  class="boton"/>
 			<input type="hidden" name="accion" value="pna" />
@@ -390,8 +402,19 @@ Class Alianza
 				while ($reg=$res->fetch_array())
 				{
 					echo Datos::nombreAlianza($reg['id_alianza_declara']);
-					echo " <a href='procesa_alianza.php?a=8&oi=".$reg['id_alianza_declara']."&i=".$this->id_alianza."&t=pna&r=1'>Aceptar</a>";
-					echo " <a href='procesa_alianza.php?a=8&oi=".$reg['id_alianza_declara']."&i=".$this->id_alianza."&t=pna&r=0'>Rechazar</a>";
+					echo " <a href='procesa_alianza.php?a=8&i=".$reg['id_alianza_declara']."&oi=".$reg['id_alianza_acepta']."&t=pna&r=1'>Aceptar</a>";
+					echo " <a href='procesa_alianza.php?a=8&i=".$reg['id_alianza_declara']."&oi=".$reg['id_alianza_acepta']."&t=pna&r=0'>Rechazar</a>";
+				}
+			}
+			$sql="select * from diplomacia_alianzas where tipo='pna' and id_alianza_declara=$this->id_alianza and estado=0";
+			$res=$this->mysqli->query($sql);
+			if ($res->num_rows>0)
+			{
+				echo "<br />Has pedido una PNA a estas alianzas:<br />";
+				while ($reg=$res->fetch_array())
+				{
+					echo Datos::nombreAlianza($reg['id_alianza_acepta']);
+					echo " <a href='procesa_alianza.php?a=8&oi=".$reg['id_alianza_acepta']."&i=".$reg['id_alianza_declara']."&t=pna&r=0'>Cancelar</a>";
 				}
 			}
 	}	
@@ -438,30 +461,38 @@ Class Alianza
 		{
 			if ($_GET['r']==1)
 			{
-				$sql="update diplomacia_alianzas set estado=1 where id_alianza_declara=".$_GET['oi']." and id_alianza_acepta=$this->id_alianza and tipo='pna'";
+				$sql="update diplomacia_alianzas set estado=1 where id_alianza_declara=".$_GET['i']." and id_alianza_acepta=".$_GET['oi']." and tipo='pna'";
 				$res=$this->mysqli->query($sql);
-				header("location:alianza.php?i=$this->id_alianza&a=4");
+				$sql="delete from diplomacia_alianzas where tipo='guerra' and (id_alianza_declara=".$_GET['i']." or 
+				id_alianza_acepta=".$_GET['i'].") and (id_alianza_declara=".$_GET['oi']." or
+				id_alianza_acepta=".$_GET['oi'].")";
+				$res=$this->mysqli->query($sql);
+				header("location:alianza.php?a=4");
 			}
 			else
 			{
-				$sql="delete from diplomacia_alianzas where estado=0 and id_alianza_declara=".$_GET['oi']." and id_alianza_acepta=$this->id_alianza and tipo='pna'";
+				$sql="delete from diplomacia_alianzas where estado=0 and id_alianza_declara=".$_GET['i']." and id_alianza_acepta=".$_GET['oi']." and tipo='pna'";
 				$res=$this->mysqli->query($sql);
-				header("location:alianza.php?i=$this->id_alianza&a=4");
+				header("location:alianza.php?a=4");
 			}
 		}
 		else if ($_GET['t']=='alianza')
 		{
 			if ($_GET['r']==1)
 			{
-				$sql="update diplomacia_alianzas set estado=1 where id_alianza_declara=".$_GET['oi']." and id_alianza_acepta=$this->id_alianza and tipo='alianza'";
+				$sql="update diplomacia_alianzas set estado=1 where id_alianza_declara=".$_GET['i']." and id_alianza_acepta=".$_GET['oi']." and tipo='alianza'";
 				$res=$this->mysqli->query($sql);
-				header("location:alianza.php?i=$this->id_alianza&a=4");
+				$sql="delete from diplomacia_alianzas where tipo='guerra' and (id_alianza_declara=".$_GET['i']." or 
+				id_alianza_acepta=".$_GET['i'].") and (id_alianza_declara=".$_GET['oi']." or
+				id_alianza_acepta=".$_GET['oi'].")";
+				$res=$this->mysqli->query($sql);
+				header("location:alianza.php?a=4");
 			}
 			else
 			{
-				$sql="delete from diplomacia_alianzas where estado=0 and id_alianza_declara=".$_GET['oi']." and id_alianza_acepta=$this->id_alianza and tipo='alianza'";
+				$sql="delete from diplomacia_alianzas where estado=0 and id_alianza_declara=".$_GET['i']." and id_alianza_acepta=".$_GET['oi']." and tipo='alianza'";
 				$res=$this->mysqli->query($sql);
-				header("location:alianza.php?i=$this->id_alianza&a=4");
+				header("location:alianza.php?a=4");
 			}
 		}
 	}
@@ -472,21 +503,39 @@ Class Alianza
 		{
 			$sql="insert into diplomacia_alianzas values (null,'guerra',$this->id_alianza,".Datos::idAlianza($_POST['alianza']).",now(),1)";
 			$res=$this->mysqli->query($sql);
+			$sql="delete from diplomacia_alianzas where (tipo='pna' or tipo='alianza') and (id_alianza_declara=$this->id_alianza or 
+			id_alianza_acepta=$this->id_alianza) and (id_alianza_declara=".Datos::idAlianza($_POST['alianza'])." or
+			id_alianza_acepta=".Datos::idAlianza($_POST['alianza']).")";
+			$res=$this->mysqli->query($sql);
 			header("location:alianza.php?i=$this->id_alianza&a=4");
 		}
 		if ($_POST['accion']=='alianza')
 		{
-			$sql="insert into diplomacia_alianzas values (null,'alianza',$this->id_alianza,".Datos::idAlianza($_POST['alianza']).",now(),0)";
+			$sql="select * from diplomacia_alianzas where (id_alianza_declara=$this->id_alianza or 
+			id_alianza_acepta=$this->id_alianza) and (id_alianza_declara=".Datos::idAlianza($_POST['alianza'])." or
+			id_alianza_acepta=".Datos::idAlianza($_POST['alianza']).") and tipo='alianza'";
 			$res=$this->mysqli->query($sql);
-			$sql="delete from diplomacia_alianzas where tipo='guerra' and id_alianza_declara=$this->id_alianza and id_alianza_acepta=".Datos::idAlianza($_POST['alianza']);
+			if ($res->num_rows > 0)
+			{
+				header("location:alianza.php?i=$this->id_alianza&a=4&m=1");
+				exit;
+			}
+			$sql="insert into diplomacia_alianzas values (null,'alianza',$this->id_alianza,".Datos::idAlianza($_POST['alianza']).",now(),0)";
 			$res=$this->mysqli->query($sql);
 			header("location:alianza.php?i=$this->id_alianza&a=4");
 		}
 		if ($_POST['accion']=='pna')
 		{
-			$sql="insert into diplomacia_alianzas values (null,'pna',$this->id_alianza,".Datos::idAlianza($_POST['alianza']).",now(),0)";
+			$sql="select * from diplomacia_alianzas where (id_alianza_declara=$this->id_alianza or 
+			id_alianza_acepta=$this->id_alianza) and (id_alianza_declara=".Datos::idAlianza($_POST['alianza'])." or
+			id_alianza_acepta=".Datos::idAlianza($_POST['alianza']).") and tipo='pna'";
 			$res=$this->mysqli->query($sql);
-			$sql="select * from diplomacia_alianzas where tipo='guerra' and id_alianza_declara=$this->id_alianza or id_alianza_acepta=".Datos::idAlianza($_POST['alianza']);
+			if ($res->num_rows > 0)
+			{
+				header("location:alianza.php?i=$this->id_alianza&a=4&m=1");
+				exit;
+			}
+			$sql="insert into diplomacia_alianzas values (null,'pna',$this->id_alianza,".Datos::idAlianza($_POST['alianza']).",now(),0)";
 			$res=$this->mysqli->query($sql);
 			header("location:alianza.php?i=$this->id_alianza&a=4");
 		}
@@ -583,9 +632,9 @@ Class Alianza
 	public function fundarAlianza()
 	{
 		$nombre=$_POST['nombre'];
-		if (Datos::recursosSuficientes($this->id_ciudad,'1000-1000-1000-1000')==1)
+		if (Datos::recursosSuficientes($this->id_ciudad,'500-500-500-500')==1)
 		{
-			$sql="update mapa set madera=madera-1000,barro=barro-1000,hierro=hierro-1000,cereal=cereal-1000
+			$sql="update mapa set madera=madera-500,barro=barro-500,hierro=hierro-500,cereal=cereal-500
 			where id_casilla=$this->id_ciudad";
 			$res=$this->mysqli->query($sql);
 			$sql="insert into alianzas values (null,'$nombre','En progreso...',now(),$this->id_ciudad)";

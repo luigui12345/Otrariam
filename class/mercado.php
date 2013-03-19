@@ -31,22 +31,22 @@ class Mercado
 		$reg=$res->fetch_array();
 		if ($reg['madera']<$_POST['madera'])
 		{
-			header("Location:mercado.php?m=5");
+			header("location:edificio.php?s=".Datos::slotPorEdificio('mercado')."&m=5");
 			exit;
 		}
 		if ($reg['barro']<$_POST['barro'])
 		{
-			header("Location:mercado.php?m=5");
+			header("location:edificio.php?s=".Datos::slotPorEdificio('mercado')."&m=5");
 			exit;
 		}
 		if ($reg['hierro']<$_POST['hierro'])
 		{
-			header("Location:mercado.php?m=5");
+			header("location:edificio.php?s=".Datos::slotPorEdificio('mercado')."&m=5");
 			exit;
 		}
 		if ($reg['cereal']<$_POST['cereal'])
 		{
-			header("Location:mercado.php?m=5");
+			header("location:edificio.php?s=".Datos::slotPorEdificio('mercado')."&m=5");
 			exit;
 		}
 
@@ -66,11 +66,11 @@ class Mercado
 			$sql="insert into intercambios values (null,$this->id_ciudad,'todo','$recursos','".$reg['id_casilla']."','enviar',0,$this->t_actual)";
 			$res=$this->mysqli->query($sql);
 			
-			header("Location:edificio.php?edificio=mercado&m=3");
+			header("location:edificio.php?s=".Datos::slotPorEdificio('mercado')."&m=3");
 		}
 		else
 		{
-			header("Location:edificio.php?edificio=mercado&m=4");
+			header("location:edificio.php?s=".Datos::slotPorEdificio('mercado')."&m=4");
 		}
 
 	}
@@ -90,7 +90,7 @@ class Mercado
 		
 		if ($reg[$r_ofrezco] < $ofrezco) //Si no tengo los recursos que oferto
 		{
-			header("Location:edificio.php?edificio=mercado&m=2");
+			header("location:edificio.php?s=".Datos::slotPorEdificio('mercado')."&m=2");
 		}
 
 		else //Si los tengo
@@ -102,8 +102,7 @@ class Mercado
 			//Creo la oferta
 			$sql="insert into ofertas values (null,'$r_ofrezco',$ofrezco,'$r_busco',$busco,$this->id_ciudad)";
 			$res=$this->mysqli->query($sql);
-
-			header("Location:edificio.php?edificio=mercado&m=1");
+			header("location:edificio.php?s=".Datos::slotPorEdificio('mercado')."&m=1");
 		}
 	}
 
@@ -177,7 +176,7 @@ class Mercado
 		$sql="DELETE FROM ofertas WHERE id_oferta = ".$_GET['id_oferta'];
 		$res=$this->mysqli->query($sql);
 
-		header("Location:edificio.php?edificio=mercado&m=3");
+		header("location:edificio.php?s=".Datos::slotPorEdificio('mercado')."&m=3");
 	}
 
 	public function procesar_comercio()

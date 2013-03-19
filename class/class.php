@@ -265,8 +265,8 @@ class Aldea
 				<option value="cereal">Cereal</option>
 			</select>
 			<br /><br>
-			
-			<input type="submit" value="Ofertar" name="accion" class="boton">
+			<input type="hidden" value="ofertar" name="accion" />
+			<input type="submit" value="Ofertar" class="boton">
 			</form>
 
 			</div><!--Mercado2-->
@@ -288,10 +288,13 @@ class Aldea
 				{
 					?>
 					<script type="text/javascript" language="javascript">
-					$("#mercado2").css("display", "none");
-					$("#mercado3").css("display", "block");
-					$("#mercado4").css("display", "none");
-					$("#mercado1").css("display", "none");
+					$(document).ready(function()
+					{
+						/*$("#mercado1").css("display", "none");
+						$("#mercado2").css("display", "none");
+						$("#mercado3").css("display", "none");
+						$("#mercado4").css("display", "none");*/
+					});
 					</script>
 					Coordenadas de la ciudad: X <input type="text" name="x_ciudad" value="<?php echo $_GET['x'];?>" class="input_mercado" required />
 					 Y <input type="text" name="y_ciudad" value="<?php echo $_GET['y'];?>" class="input_mercado" required/>
@@ -307,8 +310,8 @@ class Aldea
 				?>
 				
 				<br /><br>
-				<input type="hidden" name="accion" value="Enviar" />
-				<input type="submit" value="Enviar recursos" name="accion" class="boton">
+				<input type="hidden" name="accion" value="enviar" />
+				<input type="submit" value="Enviar recursos" class="boton">
 			</form>
 
 			</div>
@@ -377,8 +380,9 @@ class Aldea
 
 		}
 		?>		
-
+			<div id="mostrar_reclutamiento" style="float:left;">
 			<?php $this->tropas->mostar_reclutamiento(); ?>
+			</div>
 			<input type="submit" value="Reclutar" class="boton">
 
 		</form>
@@ -418,8 +422,7 @@ class Aldea
 		}
 		if ($reg['edificio'] == "cuartel")
 		{
-			?>
-
+				?>
 				<div class="nombre_edificio"><strong>Cuartel</strong> - Nivel <?php echo $reg["nivel"];?></div>
 
 				<div class="edificio_descripcion">
@@ -431,21 +434,12 @@ class Aldea
 				<img src="img/elementos/edificios/cuartel.png" class="img_recurso" title="Cuartel">
 
 				<div class="edificio_costes">
-				<p>Subir a nivel <?php echo $reg["nivel"]+1; ?></p>
-				<div class="subir_nivel"><?php $this->coste_ampliacion($reg["edificio"],$reg["nivel"]); ?></div>
+					<p>Subir a nivel <?php echo $reg["nivel"]+1; ?></p>
+					<div class="subir_nivel"><?php $this->coste_ampliacion($reg["edificio"],$reg["nivel"]); ?></div>
 				</div>
 
+				</div>
 				<?php
-				if ($reg['nivel']>0) //Si se ha construido el Cuartel
-				{
-					$this->muestra_cuartel();
-				}
-				else
-				{
-					?>
-					</div>
-					<?php
-				}
 
 		}
 

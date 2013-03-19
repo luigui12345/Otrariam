@@ -250,22 +250,34 @@ class Tropas
 					if ($costes[0]>$red['madera'] || $costes[1]>$red['barro'] || $costes[2]>$red['hierro'] || $costes[3]>$red['cereal'])
 					{
 						header("Location:militar.php?m=1");
+						exit;
 					}
 					else //Si se puede reclutar
 					{
 						$sql="update mapa set madera = madera-$costes[0], barro=barro-$costes[1],hierro=hierro-$costes[2],cereal=cereal-$costes[3] where id_casilla = $this->id_ciudad";
 						$res=$this->mysqli->query($sql);
-						$sql="insert into cola_produccion values(null,'tropa".($i+1)."',$n_tropa[$i],0,$this->id_ciudad,$this->t_actual)";
+						$sql="select * from cola_produccion where id_ciudad = $this->id_ciudad and tropa='tropa".($i+1)."'";
 						$res=$this->mysqli->query($sql);
-						header("Location:militar.php?m=2");
+
+						if ($res->num_rows > 0)
+						{
+							$ref=$res->fetch_array();
+							$sql="update cola_produccion set n_tropas=n_tropas+$n_tropa[$i] where id_produccion=".$ref['id_produccion'];
+						}
+						else
+						{
+							$sql="insert into cola_produccion values(null,'tropa".($i+1)."',$n_tropa[$i],0,$this->id_ciudad,$this->t_actual)";
+						}
+						$res=$this->mysqli->query($sql);
 					}
 		
 				}
 
-					
 			}
 			$no_disponible=0;//Lo ponemos a cero de nuevo para la proxima comprobacion
 		}
+		header("Location:militar.php");
+		exit;
 	}
 
 	public function mostar_reclutamiento() //Muestra las tropas que se estan reclutando
@@ -276,11 +288,37 @@ class Tropas
 		{
 			while($reg=$resp->fetch_array())
 			{
+				$i=0;
 				$sql="select * from datos_tropas where tropa = '".$reg['tropa']."'";
 				$res=$this->mysqli->query($sql);
 				$red=$res->fetch_array();
-				echo "Reclutando ".($reg['n_tropas']-$reg['n_tropas_reclutadas'])." ".Datos::tropa($reg['tropa'])."(s) acabara en ".-($this->t_actual-$red['tiempo']*$reg['n_tropas']-$reg['fecha'])."s";
+				?>
+				<script type="text/javascript">
+				reclutamiento[<?php echo $i;?>]=1;
+				$('#mostrar_reclutamiento').append("<?php echo "Reclutando ".($reg['n_tropas']-$reg['n_tropas_reclutadas'])." ".Datos::tropa($reg['tropa'])."(s) acabara en <span id='reclutamiento_".$i."'>".-($this->t_actual-$red['tiempo']*$reg['n_tropas']-$reg['fecha'])."</span>s<br />";?>");
+				</script>
+				<?php
+				$i++;
 			}
+			?>
+			<script type="text/javascript">
+			function actualiza_reclutar()
+			{
+				for (var i=0;i<10;i++)
+				{
+					if (reclutamiento[i]==1)
+					{
+						$("#reclutamiento_"+i).html($("#reclutamiento_"+i).html()-1);
+						if (parseInt($("#reclutamiento_"+i).html())<=0)
+						{
+							location.reload();
+						}
+					}
+				}
+			}
+			setInterval('actualiza_reclutar()',1000);
+			</script>
+			<?php
 		}
 
 	}
