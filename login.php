@@ -1,3 +1,7 @@
+<?php
+include("class/login.php");
+$log=new Login();
+?>
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -171,6 +175,10 @@
             <input type="text" name="correo" placeholder="Correo electrónico" maxlength="50" class="input">
                     <i class="icon-envelope icon-large"></i>
                 </p>
+            </div>
+
+            <div class="seccion_input" style="color:red;">
+                <p><?php $log->interpretaError();?></p>
             </div>
 
             <input type="submit" value="Registrarse" class="input_login">

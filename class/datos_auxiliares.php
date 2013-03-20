@@ -11,13 +11,37 @@ class Datos
 		return $mysqli;
 	}
 
+	public static function getIp()
+	{
+       if (!empty($_SERVER['HTTP_CLIENT_IP']))
+       {
+       $ip=$_SERVER['HTTP_CLIENT_IP'];
+       }
+       elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR']))
+       {
+       $ip=$_SERVER['HTTP_X_FORWARDED_FOR'];
+       }
+       else
+       {
+       $ip=$_SERVER['REMOTE_ADDR'];
+       }
+	return $ip;
+	}
+
 	public static function id($usuario) //Para obtener el id de un usuario
 	{
 		$mysqli=DB::Get();
-		$sql="select id_usuario from usuarios where nombre = '$usuario' limit 1";
+		$usuarioS=safe($usuario);
+		$sql="select * from usuarios where nombre = '$usuarioS' limit 1";
 		$res=$mysqli->query($sql);
-		$reg=$res->fetch_array();
-		return $reg["id_usuario"];
+		if ($reg=$res->fetch_array())
+		{
+			return $reg["id_usuario"];
+		}
+		else
+		{
+			return 0;
+		}
 	}
 
 	public static function usuario($id_usuario) //Para obtener el nombre de un usuario por su id

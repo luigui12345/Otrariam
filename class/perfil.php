@@ -19,6 +19,11 @@ class Perfil
 		{
 			$usuario=$_GET['usuario'];
 			$id_usuario=Datos::id($usuario);
+			if ($id_usuario==0)
+			{
+				$usuario=$this->usuario;
+				$id_usuario=$this->id_usuario;
+			}
 		}
 		else
 		{

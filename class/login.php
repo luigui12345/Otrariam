@@ -1,9 +1,9 @@
 <?php
-include('./FirePHPCore/FirePHP.class.php');
-include("init.php");
-include('seguridad.php');
-include('datos_auxiliares.php');
-include('mysqli.php');
+require_once('./FirePHPCore/FirePHP.class.php');
+require_once("init.php");
+require_once('seguridad.php');
+require_once('datos_auxiliares.php');
+require_once('mysqli.php');
 
 class Login
 {
@@ -24,7 +24,7 @@ class Login
 			$nombre = safe($_POST["nombre"]);
 			$password = safe($_POST["password"]);
 
-			$sql="select nombre from usuarios where nombre = '$nombre' and password = '$password' limit 1"; //Comprobamos el usuario y la contraseña
+			$sql="select * from usuarios where nombre = '$nombre' and password = '$password'"; //Comprobamos el usuario y la contraseña
 			$res=$this->mysqli->query($sql);
 
 			if ($res->num_rows >0)
@@ -33,7 +33,7 @@ class Login
 				$_SESSION["ju_nom"] = $reg["nombre"];	//Creamos la sesion
 				$id_usuario=Datos::id($nombre);
 
-				$sql="select id_casilla from mapa where id_usuario = $id_usuario and capital = 'si' limit 1";
+				$sql="select * from mapa where id_usuario = $id_usuario and capital = 'si'";
 				$res=$this->mysqli->query($sql);
 				$reg=$res->fetch_array();
 
@@ -61,20 +61,39 @@ class Login
 			$password = safe($_POST["password"]);
 			$correo = safe($_POST["correo"]);
 			$tiempo = strtotime(date('Y-m-d H:i:s'));
+			$ip=Datos::getIp();
 
 			//Comprobamos que esta disponible el nombre y el correo
-			$sql="select COUNT(*) from usuarios where nombre = '$nombre' or correo = '$correo' limit 1";
+			$sql="select * from usuarios where nombre = '$nombre'";
 			$res=$this->mysqli->query($sql);
-			$reg=$res->fetch_array();
-			if ($reg[0] >0)
+			if ($res->num_rows >0)
+			{
+				header("Location:login.php?m=3");
+				exit;
+			}
+
+			$sql="select * from usuarios where correo = '$correo'";
+			$res=$this->mysqli->query($sql);
+			if ($res->num_rows >0)
 			{
 				header("Location:login.php?m=4");
 				exit;
 			}
-
+			$sql="select * from usuarios where ip = '$ip'";
+			$res=$this->mysqli->query($sql);
+			if ($res->num_rows >0)
+			{
+				header("Location:login.php?m=5");
+				exit;
+			}
+			if (strlen($nombre)>25||strlen($correo)>100||strlen($password)>105)
+			{
+				header("Location:login.php?m=6");
+				exit;
+			}
 			//*******************************************************/
 
-			$sql="insert into usuarios values (null,'$nombre','$password','$correo','',now())";
+			$sql="insert into usuarios values (null,'$nombre','$password','$correo','',now(),'$ip')";
 			$res=$this->mysqli->query($sql);
 			$id_usuario=Datos::id($nombre);
 			//********************
@@ -92,32 +111,68 @@ class Login
 			}
 
 			//Creamos la ciudad
-			$sql="update mapa set nombre = 'Pueblo de $nombre',tipo = 'Pueblo', id_usuario = $id_usuario, habitantes = 6, madera = 400,barro=400,hierro=400,cereal=400,capital = 'si', last_update = $tiempo  where x = $x and y = $y";
+			$sql="update mapa set nombre = 'Pueblo de $nombre',tipo = 'Pueblo', id_usuario = $id_usuario, habitantes = 6, madera = 500,barro=500,hierro=500,cereal=500,capital = 'si', last_update = $tiempo  where x = $x and y = $y";
 			$res=$this->mysqli->query($sql);
 			//************************
 			$id_ciudad = Datos::id_ciudad($id_usuario);
 			
 			//Le ponemos los edificios básicos
-			$sql="insert into edificios_aldea values 
-			(null,'ayuntamiento',0,'ninguno',0,2,0,$id_ciudad),
-			(null,'granja',0,'cereal',3,1,0,$id_ciudad),
-			(null,'leñador',0,'madera',3,1,0,$id_ciudad),
-			(null,'barrera',0,'barro',3,1,0,$id_ciudad),
-			(null,'mina',0,'hierro',3,1,0,$id_ciudad),
-			(null,'almacen',0,'capacidad',800,2,0,$id_ciudad),
-			(null,'mercado',0,'comercio',0,4,0,$id_ciudad),
-			(null,'cuartel',0,'tropas',0,4,0,$id_ciudad),
-			(null,'establo',0,'tropas',0,4,0,$id_ciudad),
-			(null,'embajada',0,'miembros',0,1,0,$id_ciudad)";
+			$sql="insert into edificios_aldea values (null,'ayuntamiento',0,'ninguno',0,2,0,$id_ciudad)";
+			$res=$this->mysqli->query($sql);
+			$sql="insert into edificios_aldea values (null,'granja',0,'cereal',5,1,0,$id_ciudad)";
+			$res=$this->mysqli->query($sql);
+			$sql="insert into edificios_aldea values (null,'leñador',0,'madera',5,1,0,$id_ciudad)";
+			$res=$this->mysqli->query($sql);
+			$sql="insert into edificios_aldea values (null,'barrera',0,'barro',5,1,0,$id_ciudad)";
+			$res=$this->mysqli->query($sql);
+			$sql="insert into edificios_aldea values (null,'mina',0,'hierro',5,1,0,$id_ciudad)";
+			$res=$this->mysqli->query($sql);
+			$sql="insert into edificios_aldea values (null,'almacen',0,'capacidad',800,2,0,$id_ciudad)";
+			$res=$this->mysqli->query($sql);
+			$sql="insert into edificios_aldea values (null,'mercado',0,'comercio',0,4,0,$id_ciudad)";
+			$res=$this->mysqli->query($sql);
+			$sql="insert into edificios_aldea values (null,'cuartel',0,'tropas',0,4,0,$id_ciudad)";
+			$res=$this->mysqli->query($sql);
+			$sql="insert into edificios_aldea values (null,'embajada',0,'miembros',0,1,0,$id_ciudad)";
 			$res=$this->mysqli->query($sql);
 
 			$sql="insert into tropas values (null,0,0,0,0,0,0,0,0,0,0,$id_ciudad)";
 			$res=$this->mysqli->query($sql);
-
 			header("Location:login.php?m=2");
 			exit;
 		}
 		header("Location:registro.php?m=1");
+	}
+
+	public function interpretaError()
+	{
+		if (isset($_GET['m']))
+		{
+			if ($_GET['m']==1)
+			{
+				echo "Ha ocurrido un error";
+			}
+			elseif ($_GET['m']==2)
+			{
+				echo "Te has registrado con exito";
+			}
+			elseif ($_GET['m']==3)
+			{
+				echo "El nombre de usuario esta en uso";
+			}
+			elseif ($_GET['m']==4)
+			{
+				echo "La direccion de correo esta en uso";
+			}
+			elseif ($_GET['m']==5)
+			{
+				echo "Ya tienes una cuenta activa";
+			}
+			elseif ($_GET['m']==6)
+			{
+				echo "Tu nombre, contrase&ntilde;a, o correo es muy largo";
+			}
+		}
 	}
 }
 ?>
