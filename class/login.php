@@ -115,27 +115,20 @@ class Login
 			$res=$this->mysqli->query($sql);
 			//************************
 			$id_ciudad = Datos::id_ciudad($id_usuario);
-			
-			//Le ponemos los edificios básicos
-			$sql="insert into edificios_aldea values (null,'ayuntamiento',0,'ninguno',0,2,0,$id_ciudad)";
-			$res=$this->mysqli->query($sql);
-			$sql="insert into edificios_aldea values (null,'granja',0,'cereal',5,1,0,$id_ciudad)";
-			$res=$this->mysqli->query($sql);
-			$sql="insert into edificios_aldea values (null,'leñador',0,'madera',5,1,0,$id_ciudad)";
-			$res=$this->mysqli->query($sql);
-			$sql="insert into edificios_aldea values (null,'barrera',0,'barro',5,1,0,$id_ciudad)";
-			$res=$this->mysqli->query($sql);
-			$sql="insert into edificios_aldea values (null,'mina',0,'hierro',5,1,0,$id_ciudad)";
-			$res=$this->mysqli->query($sql);
-			$sql="insert into edificios_aldea values (null,'almacen',0,'capacidad',800,0,0,$id_ciudad)";
-			$res=$this->mysqli->query($sql);
-			$sql="insert into edificios_aldea values (null,'mercado',0,'comercio',0,0,0,$id_ciudad)";
-			$res=$this->mysqli->query($sql);
-			$sql="insert into edificios_aldea values (null,'cuartel',0,'tropas',0,0,0,$id_ciudad)";
-			$res=$this->mysqli->query($sql);
-			$sql="insert into edificios_aldea values (null,'embajada',0,'miembros',0,0,0,$id_ciudad)";
-			$res=$this->mysqli->query($sql);
-			$sql="insert into edificios_aldea values (null,'escondite',0,'escondidos',0,0,0,$id_ciudad)";
+
+			$sql="insert into edificios_aldea values 
+			(null,'ayuntamiento',0,'ninguno',0,2,0,$id_ciudad),
+			(null,'granja',0,'cereal',3,1,0,$id_ciudad),
+			(null,'leñador',0,'madera',3,1,0,$id_ciudad),
+			(null,'barrera',0,'barro',3,1,0,$id_ciudad),
+			(null,'mina',0,'hierro',3,1,0,$id_ciudad),
+			(null,'almacen',0,'capacidad',800,0,0,$id_ciudad),
+			(null,'mercado',0,'comercio',0,0,0,$id_ciudad),
+			(null,'cuartel',0,'tropas',0,0,0,$id_ciudad),
+			(null,'establo',0,'tropas',0,0,0,$id_ciudad),
+			(null,'taller',0,'tropas',0,0,0,$id_ciudad),
+			(null,'embajada',0,'miembros',0,0,0,$id_ciudad),
+			(null,'escondite',0,'escondidos',0,0,0,$id_ciudad)";
 			$res=$this->mysqli->query($sql);
 
 			$sql="insert into tropas values (null,0,0,0,0,0,0,0,0,0,0,$id_ciudad)";

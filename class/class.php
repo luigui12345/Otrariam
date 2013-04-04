@@ -339,7 +339,6 @@ class Aldea
 			{
 				$requisitos2=explode('_',$requisitos[$i]);
 				$sql="select * from edificios_aldea where edificio = '$requisitos2[0]' and nivel >= $requisitos2[1] and id_ciudad = $this->id_ciudad limit 1";
-				
 				$resp=$this->mysqli->query($sql);
 				
 				if ($resp->num_rows == 0)
@@ -667,6 +666,23 @@ class Aldea
 				</div>
 
 				<img src="img/elementos/edificios/establo.png" class="img_recurso" title="Establo">
+
+				<div class="edificio_costes">
+				<p>Subir a nivel <?php echo $reg["nivel"]+1; ?></p>
+				<div class="subir_nivel"><?php $this->coste_ampliacion($reg["edificio"],$reg["nivel"]); ?></div>
+				</div>
+				<?php
+				break;
+
+				case "taller":
+				?>
+				<div class="nombre_edificio"><strong>Taller</strong> - Nivel <?php echo $reg["nivel"];?></div>
+
+				<div class="edificio_descripcion">
+				En el Taller se crean las maquinas de asedio. Cuanto más se amplíe, más tipos de maquinas podran crearse.
+				</div>
+
+				<img src="img/elementos/edificios/taller.png" class="img_recurso" title="Taller">
 
 				<div class="edificio_costes">
 				<p>Subir a nivel <?php echo $reg["nivel"]+1; ?></p>
@@ -1161,6 +1177,8 @@ class Aldea
 		$this->calcular_recursos("embajada",$mostrar);
 		//*****************************************************************************************
 		$this->calcular_recursos("escondite",$mostrar);
+		//*****************************************************************************************
+		$this->calcular_recursos("taller",$mostrar);
 		//*****************************************************************************************
 		$this->calcular_reclutamiento(); //Reclutamos las tropas
 

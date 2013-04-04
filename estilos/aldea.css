@@ -186,14 +186,25 @@ left: 350px;
 }
 
 #solar9{
-top: 195px;
-left: 74px;
+top: 245px;
+left: 94px;
 }
 
 #solar10{
 top: 80px;
 left: 120px;
 }
+
+#solar11{
+top: 50px;
+left: 415px;
+}
+
+#solar12{
+top: 170px;
+left: 70px;
+}
+
 
 #boton_level{
 position: absolute;

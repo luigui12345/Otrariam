@@ -60,7 +60,7 @@ class Admin
 
 	public function addTropas()
 	{
-		$id_ciudad=Datos::id_ciudad_nombre(Datos::safe($_POST['ciudad']));
+		$id_ciudad=Datos::id_ciudad_nombre(safe($_POST['ciudad']));
 		$sql="update tropas set tropa1=tropa1+".$_POST['tropa1']."
 		,tropa2=tropa2+".$_POST['tropa2']."
 		,tropa3=tropa3+".$_POST['tropa3']."
@@ -71,6 +71,31 @@ class Admin
 		,tropa8=tropa8+".$_POST['tropa8']."
 		,tropa9=tropa9+".$_POST['tropa9']."
 		,tropa10=tropa10+".$_POST['tropa10']." where id_ciudad=$id_ciudad";
+		$res=$this->mysqli->query($sql);
+		echo "Realizado con exito";
+	}
+
+	public function llenarAlmacen()
+	{
+		$id_ciudad=Datos::id_ciudad_nombre(safe($_POST['ciudad']));
+		$sql="select * from edificios_aldea where id_ciudad=$id_ciudad and edificio='almacen'";
+		$res=$this->mysqli->query($sql);
+		$reg=$res->fetch_array();
+		$limite=$reg['produccion'];
+		$sql="update mapa set madera=".$limite.",barro=".$limite.",hierro=".$limite.",
+		cereal=".$limite." where id_casilla=$id_ciudad";
+		$res=$this->mysqli->query($sql);
+		echo "Realizado con exito";
+	}
+
+	public function darRecursos()
+	{
+		$id_ciudad=Datos::id_ciudad_nombre(safe($_POST['ciudad']));
+		$sql="update mapa set madera=madera+".$_POST['madera'].",
+		barro=barro+".$_POST['barro'].",
+		hierro=hierro+".$_POST['hierro'].",
+		cereal=cereal+".$_POST['cereal']."
+		 where id_casilla=$id_ciudad";
 		$res=$this->mysqli->query($sql);
 		echo "Realizado con exito";
 	}

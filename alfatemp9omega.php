@@ -12,7 +12,6 @@ include("class/admin.php");
 		<input type="submit" value="Eliminar" />
 	</form>
 	<br />
-	<br />
 	<h2>Add Tropas</h2>
 	<form name="form_add_tropas" method="post" action="procesa_alfatemp9omega.php?a=2">
 		<table border="0" cellspacing="0" cellpadding="0" >
@@ -73,6 +72,22 @@ include("class/admin.php");
 		Ciudad <input type="text" name="ciudad" />
 		<br />
 		<input type="submit" value="Add" />
+	</form>
+	<br />
+	<h2>Llenar almacen</h2>
+	<form name="form_llenar_almacen" method="post" action="procesa_alfatemp9omega.php?a=3">
+		Ciudad <input type="text" name="ciudad" />
+		<input type="submit" value="Llenar" />
+	</form>
+	<br />
+	<h2>Dar Recursos</h2>
+	<form name="form_dar_recursos" method="post" action="procesa_alfatemp9omega.php?a=4">
+		Madera <input type="text" name="madera" /><br />
+		Barro <input type="text" name="barro" /><br />
+		Hierro <input type="text" name="hierro" /><br />
+		Cereal <input type="text" name="cereal" /><br />
+		Ciudad <input type="text" name="ciudad" />
+		<input type="submit" value="Dar" />
 	</form>
 </body>
 </html>
