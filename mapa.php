@@ -64,35 +64,78 @@ $ciudad=$_SESSION['ju_ciudad'];
     return xmlhttp;
     }
 
-    function mover(lado)
-    {
-        divLoad = document.getElementById('mapa');
+    /*$(document).ready(function()
+        {
+            $("#derecha").click(function()
+            {
+                if (x < 8)
+                {
+                    x++;
+                    for(i=-2;i<3;i++)
+                    {
+                        //alert((x-3)+"|"+(y+i));
+                        string="#"+(x-3)+"|"+(y+i)+"";
+                         string2="#"+(x+2)+"|"+(y+i)+"";
+                         //alert(string);
+                        $(string).css("display","none");
+                        $(string2).css("display","none");
+                        //$("#z").css("display","none");
+                    }
+                }
+            });
+            $("#izquierda").click(function()
+            {
+                
+            });
+            $("#mapa_up").click(function()
+            {
+                
+            });
+            $("#mapa_bottom").click(function()
+            {
+                
+            });
+        });*/
 
-        //divLoad.style.display="none";
-        ajax=objetoAjax(); 
-        //alert(x);
+   function mover(lado)
+    {
+        div = document.getElementById('mapa');
         if (lado == "derecha")
         {
             if (x < 8)
             {
                 x++;
-                ajax.open("GET", "mapa.php?ciudad=<?php echo $ciudad;?>&ajax=1&x="+x+"&y="+y+"");
+                for(i=-2;i<3;i++)
+                {
+                    document.getElementById((x-3)+"|"+(y+i)).style.display="none";
+                    document.getElementById((x+2)+"|"+(y+i)).style.display="block";
+                }
             }
         }
+
         if (lado == "izquierda")
         {
             if (x > 3)
             {
                 x--;
-                ajax.open("GET", "mapa.php?ciudad=<?php echo $ciudad; ?>&ajax=1&x="+x+"&y="+y+"");
+                for(i=-2;i<3;i++)
+                {
+                    document.getElementById((x-2)+"|"+(y+i)).style.display="block";
+                    document.getElementById((x+3)+"|"+(y+i)).style.display="none";
+                }
             }
         }
-        if (lado == "arriba")
+
+         if (lado == "arriba")
         {
             if (y > 3)
             {
                 y--;
-                ajax.open("GET", "mapa.php?ciudad=<?php echo $ciudad; ?>&ajax=1&x="+x+"&y="+y+"");
+                for(i=-2;i<3;i++)
+                {
+                    document.getElementById((x+i)+"|"+(y-2)).style.display="block";
+                    document.getElementById((x+i)+"|"+(y+3)).style.display="none";
+                }
             }
         }
         if (lado == "abajo")
@@ -100,33 +143,19 @@ $ciudad=$_SESSION['ju_ciudad'];
             if (y < 8)
             {
                 y++;
-                ajax.open("GET", "mapa.php?ciudad=<?php echo $ciudad; ?>&ajax=1&x="+x+"&y="+y+"");
+                for(i=-2;i<3;i++)
+                {
+                    document.getElementById((x+i)+"|"+(y-3)).style.display="none";
+                    document.getElementById((x+i)+"|"+(y+2)).style.display="block";
+                }
             }
         }
-
-        ajax.onreadystatechange=function()
-        {
-                 
-            if (ajax.readyState==4)                     //Cuando la peticion ajax termine
-            {
-                divLoad.innerHTML = ajax.responseText   //Mostrar resultados en este div
-                //divLoad.style.display="block";
-            }
-        }
-        //Como hacemos uso del metodo GET
-        //Colocamos null ya que enviamos el valor por la url ?id=ide
-        ajax.send(null);
-
     }
+
 </script>
 
 </head>
 <body id="body">
-<?php
-if(!isset($_GET['ajax']))
-{
-
-?>
 
 
 
@@ -179,18 +208,6 @@ if(!isset($_GET['ajax']))
 
 </div>
 </div><!--/#wrap-->
-
-
-
-<?php
-}
-else
-{
-    $map->mapa();
-    $map->botones_mapa();
-}
-?>
-
 
 </body>
 <?php

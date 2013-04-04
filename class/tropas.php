@@ -715,7 +715,7 @@ class Tropas
 			<tbody>
 
 		<?php
-		$sql="select * from reportes_tropas where id_ciudad_atacada=$this->id_ciudad or id_ciudad_atacante=$this->id_ciudad";
+		$sql="select * from reportes_tropas where id_ciudad_atacada=$this->id_ciudad or id_ciudad_atacante=$this->id_ciudad order by fecha desc";
 		$res=$this->mysqli->query($sql);
 		while($reg=$res->fetch_array())
 		{
@@ -724,9 +724,9 @@ class Tropas
 
 				<td>
 					<?php
-					if($reg['objetivo']=='atacar'){
+					if($reg['id_ciudad_atacante']==$this->id_ciudad){
 						?><img src='img/elementos/tropas/legionario.png' class='icono_reporte' title='Ataque'><?php
-					}else if($reg['objetivo']=='reforzar'){
+					}else{
 						?><img src='img/elementos/tropas/pretoriano.png' class='icono_reporte' title='Defensa'><?php
 					}
 					?>
@@ -734,19 +734,83 @@ class Tropas
 
 				<?php
 					if($reg['objetivo']=='atacar'){
-
-						?>
-						<td><a href="reportes.php?s=1&r=<?php echo $reg['id_reporte'];?>">
-						<?php echo Datos::ciudad($reg['id_ciudad_atacante'])." ataca a ".Datos::ciudad($reg['id_ciudad_atacada'])."</a>"; ?>
-						</td>
-						<?php
-
+						if ($reg['id_ciudad_atacante']==$this->id_ciudad)
+						{
+							if ($reg['leido_atacante']==0)
+							{
+								?>
+								<td><a href="reportes.php?s=1&r=<?php echo $reg['id_reporte'];?>">
+								<?php echo "<b>".Datos::ciudad($reg['id_ciudad_atacante'])." ataca a ".Datos::ciudad($reg['id_ciudad_atacada'])."</a></b>"; ?>
+								</td>
+								<?php
+							}
+							else
+							{
+								?>
+								<td><a href="reportes.php?s=1&r=<?php echo $reg['id_reporte'];?>">
+								<?php echo Datos::ciudad($reg['id_ciudad_atacante'])." ataca a ".Datos::ciudad($reg['id_ciudad_atacada'])."</a>"; ?>
+								</td>
+								<?php
+							}
+						}
+						else
+						{
+							if ($reg['leido_atacada']==0)
+							{
+								?>
+								<td><a href="reportes.php?s=1&r=<?php echo $reg['id_reporte'];?>">
+								<?php echo "<b>".Datos::ciudad($reg['id_ciudad_atacante'])." ataca a ".Datos::ciudad($reg['id_ciudad_atacada'])."</a></b>"; ?>
+								</td>
+								<?php
+							}
+							else
+							{
+								?>
+								<td><a href="reportes.php?s=1&r=<?php echo $reg['id_reporte'];?>">
+								<?php echo Datos::ciudad($reg['id_ciudad_atacante'])." ataca a ".Datos::ciudad($reg['id_ciudad_atacada'])."</a>"; ?>
+								</td>
+								<?php
+							}
+						}
 					}else if($reg['objetivo']=='reforzar'){
-						?>
-						<td><a href="reportes.php?s=1&r=<?php echo $reg['id_reporte'];?>">
-						<?php echo Datos::ciudad($reg['id_ciudad_atacante'])." refuerza a ".Datos::ciudad($reg['id_ciudad_atacada'])."</a>"; ?>
-						</td>
-						<?php					
+						if ($reg['id_ciudad_atacante']==$this->id_ciudad)
+						{
+							if ($reg['leido_atacante']==0)
+							{
+								?>
+								<td><a href="reportes.php?s=1&r=<?php echo $reg['id_reporte'];?>">
+								<?php echo "<b>".Datos::ciudad($reg['id_ciudad_atacante'])." refuerza a ".Datos::ciudad($reg['id_ciudad_atacada'])."</a></b>"; ?>
+								</td>
+								<?php
+							}
+							else
+							{
+								?>
+								<td><a href="reportes.php?s=1&r=<?php echo $reg['id_reporte'];?>">
+								<?php echo Datos::ciudad($reg['id_ciudad_atacante'])." refuerza a ".Datos::ciudad($reg['id_ciudad_atacada'])."</a>"; ?>
+								</td>
+								<?php
+							}
+						}
+						else
+						{
+							if ($reg['leido_atacada']==0)
+							{
+								?>
+								<td><a href="reportes.php?s=1&r=<?php echo $reg['id_reporte'];?>">
+								<?php echo "<b>".Datos::ciudad($reg['id_ciudad_atacante'])." refuerza a ".Datos::ciudad($reg['id_ciudad_atacada'])."</a></b>"; ?>
+								</td>
+								<?php
+							}
+							else
+							{
+								?>
+								<td><a href="reportes.php?s=1&r=<?php echo $reg['id_reporte'];?>">
+								<?php echo Datos::ciudad($reg['id_ciudad_atacante'])." refuerza a ".Datos::ciudad($reg['id_ciudad_atacada'])."</a>"; ?>
+								</td>
+								<?php
+							}
+						}				
 					}
 					?>
 
@@ -770,6 +834,17 @@ class Tropas
 		$res=$this->mysqli->query($sql);
 		if($reg=$res->fetch_array())
 		{
+			//Lo marcamos como leido
+			if ($reg['id_ciudad_atacante']==$this->id_ciudad)
+			{
+				$sql="update reportes_tropas set leido_atacante=1 where id_reporte=".$_GET['r'];
+				$res=$this->mysqli->query($sql);
+			}
+			else
+			{
+				$sql="update reportes_tropas set leido_atacada=1 where id_reporte=".$_GET['r'];
+				$res=$this->mysqli->query($sql);
+			}
 			if ($reg['objetivo']=='reforzar')
 			{
 				$tropas=explode('-',$reg['tropas_atacante']); 		//Tropas que mando de refuerzo

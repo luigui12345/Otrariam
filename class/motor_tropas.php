@@ -402,7 +402,7 @@ class MotorTropas
 			$reg['tropa5']."-".$reg['tropa6']."-".$reg['tropa7']."-".$reg['tropa8']."-".
 			$reg['tropa9']."-".$reg['tropa10'];
 
-			$sql="insert into reportes_tropas values (null,'reforzar','0-0-0-0',".$reg['id_ciudad_atacante'].",".$reg['id_ciudad_atacada'].",'$tropas','0','0','0',".($reg['fecha']+$tiempo_tardara).")";
+			$sql="insert into reportes_tropas values (null,'reforzar','0-0-0-0',".$reg['id_ciudad_atacante'].",".$reg['id_ciudad_atacada'].",'$tropas','0','0','0',0,0,".($reg['fecha']+$tiempo_tardara).")";
 			$res=$this->mysqli->query($sql);
 			$sql="delete from ataques where id_ataque = $id";
 			$res=$this->mysqli->query($sql);
@@ -650,7 +650,7 @@ class MotorTropas
 				$res=$this->mysqli->query($sql);
 				//**************************************************************/
 
-				$sql="insert into reportes_tropas values (null,'atacar','$botin',".$reg['id_ciudad_atacante'].",".$reg['id_ciudad_atacada'].",'$tropas','$tropas_eliminadas','$tropasd','$tropasd',".($reg['fecha']+$tiempo_tardara).")";
+				$sql="insert into reportes_tropas values (null,'atacar','$botin',".$reg['id_ciudad_atacante'].",".$reg['id_ciudad_atacada'].",'$tropas','$tropas_eliminadas','$tropasd','$tropasd',0,0,".($reg['fecha']+$tiempo_tardara).")";
 				$res=$this->mysqli->query($sql);
 
 				$sql="insert into vuelta_ataques values (null,'atacar','$botin',".$reg['id_ciudad_atacante'].",".$reg['id_ciudad_atacada'].",".$tropas_restantes[0]."
@@ -759,7 +759,7 @@ class MotorTropas
 
 				$sql="delete from ataques where id_ataque=$id";
 				$res=$this->mysqli->query($sql);
-				$sql="insert into reportes_tropas values (null,'atacar','0-0-0-0',".$reg['id_ciudad_atacante'].",".$reg['id_ciudad_atacada'].",'$tropas','$tropas','$tropasd','$tropasd_eliminadas',".($reg['fecha']+$tiempo_tardara).")";
+				$sql="insert into reportes_tropas values (null,'atacar','0-0-0-0',".$reg['id_ciudad_atacante'].",".$reg['id_ciudad_atacada'].",'$tropas','$tropas','$tropasd','$tropasd_eliminadas',0,0,".($reg['fecha']+$tiempo_tardara).")";
 				$res=$this->mysqli->query($sql);
 				$this->firephp->log($sql,'consulta reportes');
 				$relacion=$this->tropas->relacionTropasRefuerzos($reg['id_ciudad_atacada']);

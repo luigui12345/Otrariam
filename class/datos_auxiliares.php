@@ -314,7 +314,8 @@ class Datos
 			exit;
 		}
 		$requisitos=explode('|',$reg['requisitos']);
-		for($i=0;$i<count($requisitos);$i++)
+		$temp=count($requisitos);
+		for($i=0;$i<$temp;$i++)
 		{
 			$requisitos2=explode('_',$requisitos[$i]);
 			$sql="select * from edificios_aldea where edificio = '$requisitos2[0]' and nivel >= $requisitos2[1] and id_ciudad = $id_ciudad limit 1";
@@ -326,6 +327,7 @@ class Datos
 				$edificio_no_disponible=1;
 			}
 		}
+		unset($temp);
 		if ($edificio_no_disponible==0)
 		{
 			return 1;
@@ -394,6 +396,24 @@ class Datos
 		}
 		
 		return $nTropas;
+	}
+
+	public static function mensajesNoLeidos($id)
+	{
+		$mysqli=DB::Get();
+		$sql="select COUNT(*) from mensajes where id_destinatario=$id and leido_destinatario=0";
+		$res=$mysqli->query($sql);
+		$reg=$res->fetch_array();
+		return $reg[0];
+	}
+
+	public static function reportesNoLeidos($id)
+	{
+		$mysqli=DB::Get();
+		$sql="select COUNT(*) from reportes_tropas where (id_ciudad_atacante=$id and leido_atacante=0) or (id_ciudad_atacada=$id and leido_atacada=0)";
+		$res=$mysqli->query($sql);
+		$reg=$res->fetch_array();
+		return $reg[0];
 	}
 
 }

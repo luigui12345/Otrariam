@@ -20,6 +20,9 @@ class Mapa
 
 	public function variables_mapa() //Configura las coordenadas para que no se salgan del mapa
 	{
+		//
+
+		//
 		if (is_numeric($_GET['x']) && is_numeric($_GET['y']))
 		{
 			$this->x = safe($_GET['x']);
@@ -50,31 +53,53 @@ class Mapa
 		}
 	}
 
-	public function mapa() //Crea el mapa
+
+	public function mapa()
 	{
 		$this->variables_mapa(); //Inicia las coordenadas
 
-		for ($i=-2;$i<3;$i++) //Hacemos que se muestren 5 filas
+		for ($i=1;$i<11;$i++) //Hacemos que se muestren 5 filas
 		{
-			for ($j=-2;$j<3;$j++) //Hacemos que se muestren 5 cuadros por fila
+			for ($j=1;$j<11;$j++) //Hacemos que se muestren 5 cuadros por fila
 			{	
-				$sql="select nombre,x,y from mapa where x = $this->x + $j and y = $this->y + $i"; //Comprueba si el terreno esta ocupado
+				$sql="select nombre,x,y from mapa where x =$j and y =$i"; //Comprueba si el terreno esta ocupado
 				$res=$this->mysqli->query($sql);
 				$reg=$res->fetch_array();
 				if ($reg["nombre"]!="Terreno Libre") //Sino esta ocupado se pone verde
 				{
+					if ($reg['x']>$this->x+2||$reg['x']<$this->x-2||$reg['y']>$this->y+2||$reg['y']<$this->y-2)
+					{
+						//echo "a";
 					?>
-					<a href="aldea.php?x=<?php echo $reg['x'];?>&y=<?php echo $reg['y'];?>"><div class="casilla1" title="<?php echo $reg["nombre"]; ?>"><p><?php echo $reg['x']."-".$reg['y']; ?></p><?php		
+					<span class="casilla"  style="display:none" id="<?php echo $reg['x']."|".$reg['y'];?>"><a href="aldea.php?x=<?php echo $reg['x'];?>&y=<?php echo $reg['y'];?>"><div class="casilla1" title="<?php echo $reg["nombre"]; ?>"><p><?php echo $reg['x']."-".$reg['y']; ?></p><?php		
+					}
+					else
+					{
+						//echo "b";
+					?>
+					<span class="casilla"  id="<?php echo $reg['x']."|".$reg['y'];?>" ><a href="aldea.php?x=<?php echo $reg['x'];?>&y=<?php echo $reg['y'];?>"><div class="casilla1" title="<?php echo $reg["nombre"]; ?>"><p><?php echo $reg['x']."-".$reg['y']; ?></p><?php		
+					}
 				}
 				else //Si esta ocupado se pone rojo
 				{
+					if ($reg['x']>$this->x+2||$reg['x']<$this->x-2||$reg['y']>$this->y+2||$reg['y']<$this->y-2)
+					{
+						//echo "c";
 					?>
-					<a href="#"><div class="casilla2" title="<?php echo $reg["nombre"]; ?>"><p><?php echo $reg['x']."-".$reg['y']; ?></p><?php	
+					<span class="casilla"  id="<?php echo $reg['x']."|".$reg['y'];?>" style="display:none"><a href="#"><div class="casilla2" title="<?php echo $reg["nombre"]; ?>"><p><?php echo $reg['x']."-".$reg['y']; ?></p><?php		
+					}
+					else
+					{
+						//echo "d";
+					?>
+					<span class="casilla" id="<?php echo $reg['x']."|".$reg['y'];?>"><a href="#"><div class="casilla2" title="<?php echo $reg["nombre"]; ?>"><p><?php echo $reg['x']."-".$reg['y']; ?></p><?php	
+					}
 				}
 				
 				?>
 				</div>
 				</a>
+				</span>
 				<?php
 			}
 		}
@@ -82,23 +107,21 @@ class Mapa
 
 	public function botones_mapa() //Muestra los botones para navegar por el mapa
 	{
-		if (!isset($_GET['ajax'])) //Sino estamos moviendo el mapa por ajax
-		{
-			?>
-			<div id="tabla_mapa">
+		?>
+		<div id="tabla_mapa">
 
-				<div id="mapa_up" onclick='mover("arriba")'></div>
+			<div id="mapa_up" onclick='mover("arriba")'></div>
 
-				<div id="izquierda"><div id="mapa_left" onclick='mover("izquierda")'></div></div>
-				
-				<div id="derecha"><div id="mapa_right" onclick='mover("derecha")'></div></div>
-				
-				<div id="mapa_bottom" onclick='mover("abajo")'></div>
+			<div id="izquierda"><div id="mapa_left" onclick='mover("izquierda")'></div></div>
+			
+			<div id="derecha"><div id="mapa_right" onclick='mover("derecha")'></div></div>
+			
+			<div id="mapa_bottom" onclick='mover("abajo")'></div>
 
-			</div>
-			<?php
-		}
+		</div>
+		<?php
 	}
+
 
 	public function detalles_aldea()//Datos de la aldea al hacer click en ella en el mapa
 	{

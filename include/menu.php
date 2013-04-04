@@ -13,5 +13,13 @@
 
 <div class="circulo"><div class="circulo2 menu4" title="Reportes">
 	<a href="reportes.php"><img src="img/elementos/menu/vigia.png"></a>
+	<?php
+	$reportesNoLeidos=Datos::reportesNoLeidos($_SESSION['ju_ciudad']);
+	if ($reportesNoLeidos>0)
+	{
+		?><div id="detalle_menu" style="border-radius:2px;color:blue;font-weight:bold;margin-top:-30px;float:left;margin-left:70px;height:20px;background:grey;opacity:0.8;padding:0px 5px 0px 5px;">
+		<?php echo $reportesNoLeidos;?></div><?php
+	}
+	?>
 </div></div>
 

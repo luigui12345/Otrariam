@@ -14,7 +14,7 @@ class Mensajeria
 	public function mostrar_mensajes() //Muestra los mensajes
 	{
 		//Muestra los mensajes que no hayamos eliminado
-		$sql="select * from mensajes where id_destinatario=$this->id_usuario and eliminado_destinatario='no'";
+		$sql="select * from mensajes where id_destinatario=$this->id_usuario and eliminado_destinatario=0";
 		$res=$this->mysqli->query($sql);
 
 		?>
@@ -33,15 +33,26 @@ class Mensajeria
 		<?php
 		while($reg=$res->fetch_array()) //Los muestra todos 
 		{
-			?>
-
-			<tr>
-			<td><a href='mensaje.php?mensaje=<?php echo $reg['id_mensaje']; ?>'><?php echo $reg['asunto']; ?></a></td>
-			<td><a href='perfil.php?usuario=<?php echo Datos::usuario($reg['id_emisor']); ?>'><?php echo Datos::usuario($reg['id_emisor']); ?></a></td>
-			<td><a href='eliminar_mensaje.php?mensaje=<?php echo $reg['id_mensaje']; ?>' title="¿Borrar?"><i class='icon-trash'></i></a></td>
-			</tr>
-
-			<?php
+			if ($reg['leido_destinatario']==0)
+			{
+				?>
+				<tr>
+				<td><a href='mensaje.php?mensaje=<?php echo $reg['id_mensaje']; ?>'><?php echo "<b>".$reg['asunto']."</b>"; ?></a></td>
+				<td><a href='perfil.php?usuario=<?php echo Datos::usuario($reg['id_emisor']); ?>'><?php echo "<b>".Datos::usuario($reg['id_emisor'])."</b>";?></a></td>
+				<td><a href='eliminar_mensaje.php?mensaje=<?php echo $reg['id_mensaje']; ?>' title="¿Borrar?"><i class='icon-trash'></i></a></td>
+				</tr>
+				<?php
+			}
+			else
+			{
+				?>
+				<tr>
+				<td><a href='mensaje.php?mensaje=<?php echo $reg['id_mensaje']; ?>'><?php echo $reg['asunto']; ?></a></td>
+				<td><a href='perfil.php?usuario=<?php echo Datos::usuario($reg['id_emisor']); ?>'><?php echo Datos::usuario($reg['id_emisor']); ?></a></td>
+				<td><a href='eliminar_mensaje.php?mensaje=<?php echo $reg['id_mensaje']; ?>' title="¿Borrar?"><i class='icon-trash'></i></a></td>
+				</tr>
+				<?php
+			}
 		}
 		?>
 
@@ -58,8 +69,12 @@ class Mensajeria
 	public function mostrar_mensaje()
 	{
 		$id_mensaje=safen($_GET['mensaje']);
+		//Lo marcamos como leido
+		$sql="update mensajes set leido_destinatario=1 where id_mensaje=$id_mensaje";
+		$res=$this->mysqli->query($sql);
+
 		//Muestra los mensajes que no hayamos eliminado
-		$sql="select * from mensajes where id_mensaje=$id_mensaje and eliminado_destinatario='no'";
+		$sql="select * from mensajes where id_mensaje=$id_mensaje and eliminado_destinatario=0";
 		$res=$this->mysqli->query($sql);
 		if ($res->num_rows ==0)
 		{
@@ -123,7 +138,7 @@ class Mensajeria
 		$mensaje="$this->usuario escribi&oacute;:<br />".safeh($_POST['mensaje']); //Contenido del mensaje
 
 		//Enviamos el mensaje
-		$sql="insert into mensajes values (null,$this->id_usuario,$id_destinatario,'$asunto','$mensaje','no','no','no','no',now(),0)";
+		$sql="insert into mensajes values (null,$this->id_usuario,$id_destinatario,'$asunto','$mensaje',0,0,0,0,now(),0)";
 		$res=$this->mysqli->query($sql);
 
 		header("Location:mensajeria.php?m=1");
@@ -146,7 +161,7 @@ class Mensajeria
 		$mensaje="$this->usuario escribi&oacute;:<br/>".safeh($_POST['mensaje'])."<br/><hr />".safeh($reg['mensaje']); //El contenido de la respuesta mas el mensaje anterior
 
 		//Lo respondemos
-		$sql="insert into mensajes values (null,$this->id_usuario,".$reg['id_emisor'].",'$asunto','$mensaje','no','no','no','no',now(),$id_mensaje)";
+		$sql="insert into mensajes values (null,$this->id_usuario,".$reg['id_emisor'].",'$asunto','$mensaje',0,0,0,0,now(),$id_mensaje)";
 		$res=$this->mysqli->query($sql);
 		//echo $sql;
 		header("Location:mensajeria.php?m=2");
@@ -165,17 +180,17 @@ class Mensajeria
 			exit;
 		}
 
-		$sql="update mensajes set eliminado_destinatario ='si' where id_mensaje=$id_mensaje"; //Hacemos que el usuario deje de verlo
+		$sql="update mensajes set eliminado_destinatario=1,leido_destinatario=1 where id_mensaje=$id_mensaje"; //Hacemos que el usuario deje de verlo
 		$res=$this->mysqli->query($sql);
 
 		//Si los dos usuarios los han eliminado
-		$sql="select * from mensajes where id_mensaje=$id_mensaje and eliminado_destinatario='si' and eliminado_emisor='si' limit 1";
+		$sql="select * from mensajes where id_mensaje=$id_mensaje and eliminado_destinatario=1 and eliminado_emisor=1 limit 1";
 		$res=$this->mysqli->query($sql);
 		
 		if($res->num_rows>0) //Si es asi
 		{	
 			//Eliminamos el mensaje
-			$sql="delete from mensajes where id_mensaje=$id_mensaje and eliminado_destinatario='si' and eliminado_emisor='si'";
+			$sql="delete from mensajes where id_mensaje=$id_mensaje and eliminado_destinatario=1 and eliminado_emisor=1";
 			$res=$this->mysqli->query($sql);
 		}
 

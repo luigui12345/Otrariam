@@ -334,7 +334,8 @@ class Aldea
 		{
 			$j++;
 			$requisitos=explode('|',$reg['requisitos']);
-			for($i=0;$i<count($requisitos);$i++)
+			$temp=count($requisitos);
+			for($i=0;$i<$temp;$i++)
 			{
 				$requisitos2=explode('_',$requisitos[$i]);
 				$sql="select * from edificios_aldea where edificio = '$requisitos2[0]' and nivel >= $requisitos2[1] and id_ciudad = $this->id_ciudad limit 1";
@@ -346,6 +347,7 @@ class Aldea
 					$tropa_no_disponible=1;
 				}
 			}
+			unset($temp);
 
 			if ($tropa_no_disponible==0)
 			{
