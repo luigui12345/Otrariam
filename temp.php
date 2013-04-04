@@ -1,6 +1,4 @@
 <?php
-for ($i=0;$i<10;$i++)
-{
-	echo $i;
-}
+include("class/class.php");
+echo Datos::produccionEdificio('escondite',$_SESSION['ju_ciudad']);
 ?>

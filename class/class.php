@@ -675,6 +675,23 @@ class Aldea
 				<?php
 				break;
 
+				case "escondite":
+				?>
+				<div class="nombre_edificio"><strong>Escondite</strong> - Nivel <?php echo $reg["nivel"];?></div>
+
+				<div class="edificio_descripcion">
+				El escondite te permite proteger tus recursos de los atracos. Como mas grande sea más recursos podra proteger.
+				</div>
+
+				<img src="img/elementos/edificios/escondite.png" class="img_recurso" title="Escondite">
+
+				<div class="edificio_costes">
+				<p>Subir a nivel <?php echo $reg["nivel"]+1; ?></p>
+				<div class="subir_nivel"><?php $this->coste_ampliacion($reg["edificio"],$reg["nivel"]); ?></div>
+				</div>
+				<?php
+				break;
+
 				default:
 				header("Location:index.php"); //Si no existe el edificio volvemos al index
 
@@ -1131,17 +1148,19 @@ class Aldea
 		$ps_mina=$this->ps_edificio;
 
 		//*****************************************************************************************
-		$this->calcular_recursos("Ayuntamiento",$mostrar);
+		$this->calcular_recursos("ayuntamiento",$mostrar);
 		//*****************************************************************************************
-		$this->calcular_recursos("Almacen",$mostrar);
+		$this->calcular_recursos("almacen",$mostrar);
 		//*****************************************************************************************
-		$this->calcular_recursos("Mercado",$mostrar);
+		$this->calcular_recursos("mercado",$mostrar);
 		//*****************************************************************************************
-		$this->calcular_recursos("Cuartel",$mostrar);
+		$this->calcular_recursos("cuartel",$mostrar);
 		//*****************************************************************************************
 		$this->calcular_recursos("establo",$mostrar);
 		//*****************************************************************************************
 		$this->calcular_recursos("embajada",$mostrar);
+		//*****************************************************************************************
+		$this->calcular_recursos("escondite",$mostrar);
 		//*****************************************************************************************
 		$this->calcular_reclutamiento(); //Reclutamos las tropas
 

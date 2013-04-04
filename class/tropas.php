@@ -857,7 +857,7 @@ class Tropas
 				<table border="0" cellspacing="0" cellpadding="0" class="tabla_reportes">
 						<tr><td colspan="100%"><img src='img/elementos/tropas/pretoriano.png' class='icono_reporte' title='Defensa'>
 							Tropas enviadas por <?php echo Datos::usuario(Datos::propietario($reg['id_ciudad_atacante']));?>
-							 de  <?php echo Datos::aldea($reg['id_ciudad_atacante']);?></td></tr>
+							 de  <?php echo Datos::ciudad($reg['id_ciudad_atacante']);?></td></tr>
 						<tr>
 							<td>-</td>
 							<?php
@@ -929,7 +929,7 @@ class Tropas
 					<table border="0" cellspacing="0" cellpadding="0" class="tabla_reportes">
 						<tr><td colspan="100%"><img src='img/elementos/tropas/legionario.png' class='icono_reporte' title='Defensa'>
 							Atacante: <?php echo Datos::usuario(Datos::propietario($reg['id_ciudad_atacante']));?>
-							 de  <?php echo Datos::aldea($reg['id_ciudad_atacante']);?></td></tr>
+							 de  <?php echo Datos::ciudad($reg['id_ciudad_atacante']);?></td></tr>
 						<tr>
 							<td>-</td>
 							<?php
@@ -984,7 +984,7 @@ class Tropas
 					<table border="0" cellspacing="0" cellpadding="0" class="tabla_reportes">
 						<tr><td colspan="100%"><img src='img/elementos/tropas/pretoriano.png' class='icono_reporte' title='Defensa'>
 							Defensor: <?php echo Datos::usuario(Datos::propietario($reg['id_ciudad_atacada']));?>
-							 de  <?php echo Datos::aldea($reg['id_ciudad_atacada']);?></td></tr>
+							 de  <?php echo Datos::ciudad($reg['id_ciudad_atacada']);?></td></tr>
 						<tr>
 							<td>-</td>
 							<?php

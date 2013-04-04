@@ -636,15 +636,20 @@ class MotorTropas
 				{
 					$capacidad_saqueo=$recursos_totales;
 				}
+				$bonoEscondite=Datos::produccionEdificio('escondite',$reg['id_ciudad_atacada']);
 
 				$relacion_capacidad=$recursos_totales/$capacidad_saqueo;
-				$madera_saquea=floor($red['madera']/$relacion_capacidad);
-				$barro_saquea=floor($red['barro']/$relacion_capacidad);
-				$hierro_saquea=floor($red['hierro']/$relacion_capacidad);
-				$cereal_saquea=floor($red['cereal']/$relacion_capacidad);
+				$madera_saquea=floor(($red['madera']-$bonoEscondite)/$relacion_capacidad);
+				$barro_saquea=floor(($red['barro']-$bonoEscondite)/$relacion_capacidad);
+				$hierro_saquea=floor(($red['hierro']-$bonoEscondite)/$relacion_capacidad);
+				$cereal_saquea=floor(($red['cereal']-$bonoEscondite)/$relacion_capacidad);
 
+				if ($madera_saquea<0) $madera_saquea=0;
+				if ($barro_saquea<0) $barro_saquea=0;
+				if ($hierro_saquea<0) $hierro_saquea=0;
+				if ($cereal_saquea<0) $cereal_saquea=0;
+				
 				$botin=$madera_saquea."-".$barro_saquea."-".$hierro_saquea."-".$cereal_saquea;
-
 				$sql="update mapa set madera=madera-$madera_saquea, barro=barro-$barro_saquea,
 				hierro = hierro-$hierro_saquea, cereal = cereal-$cereal_saquea where id_casilla =".$reg['id_ciudad_atacada'];
 				$res=$this->mysqli->query($sql);

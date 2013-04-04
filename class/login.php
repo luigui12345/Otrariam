@@ -127,13 +127,15 @@ class Login
 			$res=$this->mysqli->query($sql);
 			$sql="insert into edificios_aldea values (null,'mina',0,'hierro',5,1,0,$id_ciudad)";
 			$res=$this->mysqli->query($sql);
-			$sql="insert into edificios_aldea values (null,'almacen',0,'capacidad',800,2,0,$id_ciudad)";
+			$sql="insert into edificios_aldea values (null,'almacen',0,'capacidad',800,0,0,$id_ciudad)";
 			$res=$this->mysqli->query($sql);
-			$sql="insert into edificios_aldea values (null,'mercado',0,'comercio',0,4,0,$id_ciudad)";
+			$sql="insert into edificios_aldea values (null,'mercado',0,'comercio',0,0,0,$id_ciudad)";
 			$res=$this->mysqli->query($sql);
-			$sql="insert into edificios_aldea values (null,'cuartel',0,'tropas',0,4,0,$id_ciudad)";
+			$sql="insert into edificios_aldea values (null,'cuartel',0,'tropas',0,0,0,$id_ciudad)";
 			$res=$this->mysqli->query($sql);
-			$sql="insert into edificios_aldea values (null,'embajada',0,'miembros',0,1,0,$id_ciudad)";
+			$sql="insert into edificios_aldea values (null,'embajada',0,'miembros',0,0,0,$id_ciudad)";
+			$res=$this->mysqli->query($sql);
+			$sql="insert into edificios_aldea values (null,'escondite',0,'escondidos',0,0,0,$id_ciudad)";
 			$res=$this->mysqli->query($sql);
 
 			$sql="insert into tropas values (null,0,0,0,0,0,0,0,0,0,0,$id_ciudad)";
