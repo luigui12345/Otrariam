@@ -62,6 +62,16 @@ class Datos
 		return $reg["id_casilla"];
 	}
 
+	public static function id_ciudad_nombre($nombre) //Para obtener el id de la ciudad de un usuario
+	{
+		$mysqli=DB::Get();
+		$sql="select id_casilla from mapa where nombre = '$nombre' limit 1";
+		$res=$mysqli->query($sql);
+		$reg=$res->fetch_array();
+		return $reg["id_casilla"];
+	}
+
+
 	public static function ciudad($id_ciudad) //Para obtener el nombre de una ciudad por su id
 	{
 		$mysqli=DB::Get();
@@ -414,6 +424,21 @@ class Datos
 		$res=$mysqli->query($sql);
 		$reg=$res->fetch_array();
 		return $reg[0];
+	}
+
+	public static function existeUsuario($id)
+	{
+		$mysqli=DB::Get();
+		$sql="select * from usuarios where id_usuario=$id ";
+		$res=$mysqli->query($sql);
+		if ($res->num_rows>0)
+		{
+			return 1;
+		}
+		else
+		{
+			return 0;
+		}
 	}
 
 }
