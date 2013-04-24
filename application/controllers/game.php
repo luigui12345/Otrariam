@@ -33,10 +33,10 @@ class Game extends CI_Controller {
 		//carico il model
 		$this->load->model('Village_Model');
 		
-		$production['wood']  = $this->Village_Model->production('woodcutter');
-		$production['clay']  = $this->Village_Model->production('clay_pit');
-		$production['iron']  = $this->Village_Model->production('iron_mine');
-		$production['crop']  = $this->Village_Model->production('farm');
+		$production[lang('wood')]  = $this->Village_Model->production('woodcutter');
+		$production[lang('clay')]  = $this->Village_Model->production('clay_pit');
+		$production[lang('iron')]  = $this->Village_Model->production('iron_mine');
+		$production[lang('crop')]  = $this->Village_Model->production('farm');
 				
 		$map = "<a href='map/".$this->Village_Model->x."/".$this->Village_Model->y."'><img src='".base_url('design/skin/menu/map.png')."'></a>";
 
@@ -78,13 +78,15 @@ class Game extends CI_Controller {
 			exit;
 		}
 		$next_level = $reg['level'] + 1;
-	    $html = '<div class="building_name"><strong>Foro</strong> - Nivel '.$reg["level"].'</div>
+		echo $reg['production'];
+		$text = sprintf(lang('town_hall_description'), $reg['production']);
+	    $html = '<div class="building_name"><strong>'.lang('town_hall').'</strong> - Nivel '.$reg["level"].'</div>
 
 				<div class="building_description">
-				El Foro es el centro de la ciudad, y agiliza los tiempos de construcción. Al tener el foro a este nivel los edificios tardarán un  <b>'. $reg['production'].'%</b> menos en construirse.
+				'. $text .'
 				</div>
 
-				<img src="'.base_url('design/skin/buildings/town_hall.png').'" class="img_recurso" title="Foro">
+				<img src="'.base_url('design/skin/buildings/town_hall.png').'" class="img_recurso" title="'.lang('town_hall').'">
 
 				<div class="building_costs">
 				<p>Subir a nivel '.$next_level.'</p>

@@ -158,7 +158,7 @@ class Village_Model extends CI_Model
 		$reg = $res->row_array();
 
 		$text = '<div id="solar'.$reg['slot'].'" class="solar">
-				 <a href="'.$reg['building'].'">';
+				 <a href="'.$reg['building'].'/'.$reg['slot'].'">';
 		
 		$text .= '<img src="'.base_url('design/skin/buildings/'.$building.'.png').'" title="'.$building.'" class="img_solar">';
 		$text .= '<div class="building_level">'.$reg['level'].'</div>
@@ -182,10 +182,10 @@ class Village_Model extends CI_Model
 			$recurso_tiempo = $horas.':'.date("i:s",mktime (0,0,$restoSegundos,0,0,0));
 
 			//Mostramos los recursos
-			$html = "<img src='".base_url('design/skin/resources/wood.png')."' class='recurso_coste' title='Madera'> ".$reg["wood"]."
-			 | <img src='".base_url('design/skin/resources/clay.png')."' class='recurso_coste' title='Ladrillo'> ".$reg["clay"]."
-			 | <img src='".base_url('design/skin/resources/iron.png')."' class='recurso_coste' title='Hierro'> ".$reg["iron"]."
-			 | <img src='".base_url('design/skin/resources/crop.png')."' class='recurso_coste' title='Cereal'> ".$reg["crop"]."
+			$html = "<img src='".base_url('design/skin/resources/wood.png')."' class='recurso_coste' title='".lang('wood')."'> ".$reg["wood"]."
+			 | <img src='".base_url('design/skin/resources/clay.png')."' class='recurso_coste' title='".lang('clay')."'> ".$reg["clay"]."
+			 | <img src='".base_url('design/skin/resources/iron.png')."' class='recurso_coste' title='".lang('iron')."'> ".$reg["iron"]."
+			 | <img src='".base_url('design/skin/resources/crop.png')."' class='recurso_coste' title='".lang('crop')."'> ".$reg["crop"]."
 			 | <img src='".base_url('design/skin/resources/time.png')."' class='recurso_coste' title='Tiempo'> ".$recurso_tiempo;
 			//Comprueba si tiene los recursos suficientes
 			$sql="select * from map where id_user = $this->id_user and wood >=".$reg["wood"]." and clay >=".$reg["clay"]."
