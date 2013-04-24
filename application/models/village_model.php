@@ -487,7 +487,7 @@ class Village_Model extends CI_Model
 		}
 		
 	}
-	public function comprobar_recursos($show, $procesar_tropas=null, $id_town=null, $time=null) //Es el motor del juego
+	public function check_resources($show, $procesar_tropas=null, $id_town=null, $time=null) //Es el motor del juego
 	{
 		if (isset($id_town)) //Si queremos que se calcule otra ciudad
 		{

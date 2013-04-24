@@ -40,7 +40,7 @@ class Game extends CI_Controller {
 				
 		$map = "<a href='map/".$this->Village_Model->x."/".$this->Village_Model->y."'><img src='".base_url('design/skin/menu/map.png')."'></a>";
 
-		$this->Village_Model->comprobar_recursos('si');
+		$this->Village_Model->check_resources('si');
 		$this->layout->bind(array('production' => $production, 'map_link' => $map));
     }
 	
@@ -62,7 +62,7 @@ class Game extends CI_Controller {
 	//TODO: check that we can upgrade the building
 	public function build($building, $slot) {
 	    $this->Village_Model->ordenar_ampliar($building, $slot);
-	    $this->Village_Model->comprobar_recursos('no');
+	    $this->Village_Model->check_resources('no');
 	}
 	
 	public function town_hall() {
